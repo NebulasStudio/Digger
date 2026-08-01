@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "provenance_id": "prov_replace_with_asset_id",
+  "asset_id": "replace_with_asset_id",
+  "status": "planned",
+  "source": {
+    "type": "generated_ai",
+    "provider": "Higgsfield",
+    "model": null,
+    "model_version": null,
+    "job_id": null,
+    "seed": null,
+    "prompt": null,
+    "negative_prompt": null,
+    "style_formula_ref": "SB-FORMULA-1",
+    "created_at": null,
+    "reference_inputs": []
+  },
+  "processing": [],
+  "rights": {
+    "commercial_use_reviewed": false,
+    "third_party_ip_reviewed": false,
+    "steam_ai_disclosure": "undetermined",
+    "license_notes": "Pending human rights and platform disclosure review."
+  },
+  "review": {
+    "style": "pending",
+    "readability": "pending",
+    "technical": "pending",
+    "human_approver": null,
+    "approved_at": null,
+    "notes": "Placeholder record. Do not ship or publish."
+  },
+  "artifacts": []
+}

@@ -1,0 +1,7 @@
+.env
+*.local
+cloudflare/.dev.vars
+cloudflare/.wrangler/
+cloudflare/.npm-cache/
+cloudflare/.wrangler-config/
+cloudflare/node_modules/

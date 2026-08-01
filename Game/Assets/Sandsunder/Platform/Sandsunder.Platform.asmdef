@@ -1,0 +1,14 @@
+{
+  "name": "Sandsunder.Platform",
+  "rootNamespace": "Sandsunder.Platform",
+  "references": ["Sandsunder.Domain"],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": true
+}

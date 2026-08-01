@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.sandsunder.invalid/v1/ticket-consume.schema.json",
+  "title": "Match ticket consumption request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ticket", "issued_at", "nonce"],
+  "properties": {
+    "ticket": { "$ref": "match-ticket.schema.json" },
+    "issued_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+    "nonce": { "$ref": "common.schema.json#/$defs/uuid" }
+  }
+}

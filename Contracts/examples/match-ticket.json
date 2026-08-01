@@ -1,0 +1,14 @@
+{
+  "payload": {
+    "ticket_id": "00000000-0000-4000-8000-000000000004",
+    "match_id": "00000000-0000-4000-8000-000000000001",
+    "account_id": "00000000-0000-4000-8000-000000000002",
+    "build_id": "win-0.1.0",
+    "ruleset_version": "mvp-1",
+    "endpoint": "127.0.0.1:7777",
+    "transport": "udp",
+    "issued_at": "2026-08-01T12:00:00Z",
+    "expires_at": "2026-08-01T12:01:00Z"
+  },
+  "signature": "v1=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}

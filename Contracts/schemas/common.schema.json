@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.sandsunder.invalid/v1/common.schema.json",
+  "title": "Sandsunder common types",
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signature": {
+      "type": "string",
+      "pattern": "^v1=[0-9a-f]{64}$"
+    },
+    "transport": {
+      "type": "string",
+      "enum": ["udp", "tcp", "websocket"]
+    },
+    "mapSeed": {
+      "type": "string",
+      "pattern": "^-?[0-9]{1,19}$",
+      "description": "Signed 64-bit seed serialized as a decimal string to avoid JSON precision loss."
+    }
+  }
+}

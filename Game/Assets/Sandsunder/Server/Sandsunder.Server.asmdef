@@ -1,0 +1,19 @@
+{
+  "name": "Sandsunder.Server",
+  "rootNamespace": "Sandsunder.Server",
+  "references": [
+    "Sandsunder.Domain",
+    "Sandsunder.Simulation",
+    "Sandsunder.Networking.Fusion",
+    "Sandsunder.Platform"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": ["UNITY_SERVER"],
+  "versionDefines": [],
+  "noEngineReferences": true
+}

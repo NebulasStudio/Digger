@@ -1,0 +1,14 @@
+{
+  "name": "Sandsunder.Networking.Fusion",
+  "rootNamespace": "Sandsunder.Networking.Fusion",
+  "references": ["Sandsunder.Domain", "Sandsunder.Simulation"],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": true
+}

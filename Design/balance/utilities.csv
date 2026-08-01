@@ -1,0 +1,5 @@
+ruleset_version,utility_id,display_name,charges,use_time_s,effect_duration_s,effect_summary,counterplay
+mvp-0.1.0,utility_salve,Sun Salve,1,0.2,2.0,"Restore 28 HP over 2 s; player damage interrupts remaining healing","Audible use cue and interruptible heal"
+mvp-0.1.0,utility_smoke,Veil Bomb,1,0.2,5.0,"Create a 3.5 m cloud; base mobs lose target and players beyond 2 m lose nameplate and aim assist","Bodies remain visible at close range and area attacks still connect"
+mvp-0.1.0,utility_snare,Glass Snare,1,0.6,12.0,"Place a mine that arms in 0.8 s; trigger deals 20 damage and 35% slow for 2 s","Visible coral glint and destructible for 10 damage after arming"
+mvp-0.1.0,utility_compass,Whisper Compass,1,0.4,6.0,"Reveal direction to the nearest incomplete personal objective source or active elite","Does not reveal buried loot identity or rival inventory"

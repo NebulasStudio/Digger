@@ -1,0 +1,60 @@
+id,role,type,description,size/ratio,style line ref,source,relative_scale,status,provenance_id
+char_nomad_sheet,Playable Nomad animation set,spritesheet,"idle move shovel fire active hit downed, eight directions",1:1,SB-FORMULA-1,generate,1.0,planned_placeholder,prov_char_nomad_sheet
+char_surveyor_sheet,Playable Surveyor animation set,spritesheet,"idle move shovel fire active hit downed, eight directions",1:1,SB-FORMULA-1,generate,1.0,planned_placeholder,prov_char_surveyor_sheet
+char_warden_sheet,Playable Warden animation set,spritesheet,"idle move shovel fire active hit downed, eight directions",1:1,SB-FORMULA-1,generate,1.0,planned_placeholder,prov_char_warden_sheet
+char_scavenger_sheet,Playable Scavenger animation set,spritesheet,"idle move shovel fire active hit downed, eight directions",1:1,SB-FORMULA-1,generate,1.0,planned_placeholder,prov_char_scavenger_sheet
+char_mirage_sheet,Playable Mirage animation set,spritesheet,"idle move shovel fire active hit downed, eight directions",1:1,SB-FORMULA-1,generate,1.0,planned_placeholder,prov_char_mirage_sheet
+char_mender_sheet,Playable Mender animation set,spritesheet,"idle move shovel fire active hit downed, eight directions",1:1,SB-FORMULA-1,generate,1.0,planned_placeholder,prov_char_mender_sheet
+mob_sandling_sheet,Sandling enemy animation set,spritesheet,"idle scuttle attack hit death, eight directions",1:1,SB-FORMULA-1,generate,0.55,planned_placeholder,prov_mob_sandling_sheet
+mob_spitter_sheet,Dune Spitter enemy animation set,spritesheet,"idle move spit hit death, eight directions",1:1,SB-FORMULA-1,generate,0.75,planned_placeholder,prov_mob_spitter_sheet
+mob_burrower_sheet,Burrower enemy animation set,spritesheet,"burrow emerge chase attack hit death, eight directions",1:1,SB-FORMULA-1,generate,0.9,planned_placeholder,prov_mob_burrower_sheet
+mob_scorpion_sheet,Glass Scorpion elite animation set,spritesheet,"idle strafe claw tail charge hit death, eight directions",1:1,SB-FORMULA-1,generate,1.55,planned_placeholder,prov_mob_scorpion_sheet
+mob_sun_maw_sheet,Sun Maw guardian animation set,spritesheet,"idle burrow sweep spit summon stagger death",1:1,SB-FORMULA-1,generate,4.5,planned_placeholder,prov_mob_sun_maw_sheet
+weapon_sunspike,Sunspike revolver world sprite and icon,sprite,"compact brass desert revolver",1:1,SB-FORMULA-1,generate,0.45,planned_placeholder,prov_weapon_sunspike
+weapon_twin_fangs,Twin Fangs repeater world sprite and icon,sprite,"paired turquoise machine pistols",1:1,SB-FORMULA-1,generate,0.5,planned_placeholder,prov_weapon_twin_fangs
+weapon_dune_carbine,Dune Carbine world sprite and icon,sprite,"angular cloth-wrapped desert carbine",1:1,SB-FORMULA-1,generate,0.75,planned_placeholder,prov_weapon_dune_carbine
+weapon_scarab_scattergun,Scarab Scattergun world sprite and icon,sprite,"wide beetle-shell scattergun",1:1,SB-FORMULA-1,generate,0.8,planned_placeholder,prov_weapon_scarab_scattergun
+weapon_ember_lance,Ember Lance world sprite and icon,sprite,"slender heated crystal beam weapon",1:1,SB-FORMULA-1,generate,0.85,planned_placeholder,prov_weapon_ember_lance
+weapon_salt_bow,Salt Bow world sprite and icon,sprite,"pale mineral recurve bow",1:1,SB-FORMULA-1,generate,0.8,planned_placeholder,prov_weapon_salt_bow
+weapon_quake_pot,Quake Pot launcher world sprite and icon,sprite,"ceramic drum grenade launcher",1:1,SB-FORMULA-1,generate,0.8,planned_placeholder,prov_weapon_quake_pot
+weapon_mirage_disc,Mirage Disc world sprite and icon,sprite,"cyan-edged returning throwing disc",1:1,SB-FORMULA-1,generate,0.5,planned_placeholder,prov_weapon_mirage_disc
+weapon_thorn_caster,Thorn Caster world sprite and icon,sprite,"barbed seed dart caster",1:1,SB-FORMULA-1,generate,0.65,planned_placeholder,prov_weapon_thorn_caster
+weapon_relic_hammer,Relic Hammer world sprite and icon,sprite,"heavy cracked-stone war hammer",1:1,SB-FORMULA-1,generate,0.9,planned_placeholder,prov_weapon_relic_hammer
+utility_salve,Sun Salve pickup and HUD icon,ui,"green ceramic healing vial",1:1,SB-FORMULA-1,generate,0.25,planned_placeholder,prov_utility_salve
+utility_smoke,Veil Bomb pickup and HUD icon,ui,"charcoal cloth smoke bomb",1:1,SB-FORMULA-1,generate,0.25,planned_placeholder,prov_utility_smoke
+utility_snare,Glass Snare pickup and HUD icon,ui,"coral glass jaw mine",1:1,SB-FORMULA-1,generate,0.3,planned_placeholder,prov_utility_snare
+utility_compass,Whisper Compass pickup and HUD icon,ui,"cyan needle brass compass",1:1,SB-FORMULA-1,generate,0.25,planned_placeholder,prov_utility_compass
+tile_outer_sand,Outer ring traversable ground,tile,"soft wind-rippled pale sand",1:1,SB-FORMULA-1,generate,NA,planned_placeholder,prov_tile_outer_sand
+tile_middle_sand,Middle ring traversable ground,tile,"packed ochre sand and gravel",1:1,SB-FORMULA-1,generate,NA,planned_placeholder,prov_tile_middle_sand
+tile_inner_sand,Inner ring traversable ground,tile,"dark glass-flecked scorched sand",1:1,SB-FORMULA-1,generate,NA,planned_placeholder,prov_tile_inner_sand
+tile_ruin_floor,Ruin interior traversable floor,tile,"cracked clay mosaic floor",1:1,SB-FORMULA-1,generate,NA,planned_placeholder,prov_tile_ruin_floor
+tile_ruin_wall,Ruin wall modular set,tile,"sun-baked geometric ruin wall",1:1,SB-FORMULA-1,generate,NA,planned_placeholder,prov_tile_ruin_wall
+atlas_dig_states,Authoritative dig-cell visual states,spritesheet,"intact cracked opened collapsed sand cells",1:1,SB-FORMULA-1,generate,1.0,planned_placeholder,prov_atlas_dig_states
+prop_chest,Public loot chest,sprite,"reinforced desert expedition chest",1:1,SB-FORMULA-1,generate,0.75,planned_placeholder,prov_prop_chest
+prop_buried_shrine,Buried Sigil source,sprite,"half-buried cyan desert shrine",1:1,SB-FORMULA-1,generate,1.6,planned_placeholder,prov_prop_buried_shrine
+prop_ritual_station,Ritual station objective,sprite,"tall cyan-ringed ritual station",1:1,SB-FORMULA-1,generate,2.0,planned_placeholder,prov_prop_ritual_station
+prop_relic,Guardian relic objective,sprite,"floating fractured sun relic",1:1,SB-FORMULA-1,generate,0.45,planned_placeholder,prov_prop_relic
+prop_extraction_gate,Relic extraction landmark,sprite,"cloth and stone extraction arch",1:1,SB-FORMULA-1,generate,2.4,planned_placeholder,prov_prop_extraction_gate
+prop_cover_set,Destructible and solid cover atlas,spritesheet,"rocks pottery barricades and pillars",1:1,SB-FORMULA-1,generate,1.2,planned_placeholder,prov_prop_cover_set
+prop_vegetation_set,Non-interactive desert dressing atlas,spritesheet,"dry grass thorn scrub and bones",1:1,SB-FORMULA-1,generate,0.6,planned_placeholder,prov_prop_vegetation_set
+vfx_shovel_dig,Shovel impact and sand displacement,VFX atlas,"dust arc chips and cell break",1:1,SB-FORMULA-1,generate,0.8,planned_placeholder,prov_vfx_shovel_dig
+vfx_weapon_impacts,Weapon hit readability,VFX atlas,"ballistic beam blast and melee impacts",1:1,SB-FORMULA-1,generate,0.5,planned_placeholder,prov_vfx_weapon_impacts
+vfx_damage_states,Damage heal shield and slow readability,VFX atlas,"coral hit green heal amber shield",1:1,SB-FORMULA-1,generate,1.0,planned_placeholder,prov_vfx_damage_states
+vfx_rarity_beams,Revealed loot rarity markers,VFX atlas,"common refined and relic pickup beams",1:1,SB-FORMULA-1,generate,1.2,planned_placeholder,prov_vfx_rarity_beams
+vfx_objectives,Ritual relic and extraction feedback,VFX atlas,"cyan channel rings interruption and completion",1:1,SB-FORMULA-1,generate,2.0,planned_placeholder,prov_vfx_objectives
+vfx_enemy_telegraphs,Enemy attack warning shapes,VFX atlas,"coral cones circles lines and burrow trails",1:1,SB-FORMULA-1,generate,2.0,planned_placeholder,prov_vfx_enemy_telegraphs
+ui_hud_frame,Gameplay HUD frame and slots,ui,"dark umber HUD frame with cream labels",16:9,SB-FORMULA-1,generate,NA,planned_placeholder,prov_ui_hud_frame
+ui_map_icons,Map and compass icon atlas,ui,"players mobs ritual relic exits and danger",1:1,SB-FORMULA-1,generate,NA,planned_placeholder,prov_ui_map_icons
+ui_objective_icons,Victory route and milestone icon atlas,ui,"Sigils stations guardian relic survivor clock",1:1,SB-FORMULA-1,generate,NA,planned_placeholder,prov_ui_objective_icons
+ui_character_portraits,Six selectable character portraits,spritesheet,"six contrasting desert expedition portraits",1:1,SB-FORMULA-1,generate,NA,planned_placeholder,prov_ui_character_portraits
+ui_results_badges,Match result and progression badges,ui,"ritual extraction survivor mastery badges",1:1,SB-FORMULA-1,generate,NA,planned_placeholder,prov_ui_results_badges
+ui_menu_background,Main menu desert expedition vista,background,"storm horizon around buried central ruin",16:9,SB-FORMULA-1,generate,NA,planned_placeholder,prov_ui_menu_background
+audio_music_scavenge,Opening exploration music loop,audio,"dry percussion and sparse desert strings",90s loop,SB-AUDIO-1,generate,NA,planned_placeholder,prov_audio_music_scavenge
+audio_music_escalation,Mid-match pressure music loop,audio,"layered hand drums and granular wind pulse",90s loop,SB-AUDIO-1,generate,NA,planned_placeholder,prov_audio_music_escalation
+audio_music_sudden_death,Final minute music loop,audio,"urgent asymmetric percussion and objective motif",60s loop,SB-AUDIO-1,generate,NA,planned_placeholder,prov_audio_music_sudden_death
+audio_ambience_desert,Spatial desert ambience bed,audio,"wind grit cloth creak and distant fauna",120s loop,SB-AUDIO-1,generate,NA,planned_placeholder,prov_audio_ambience_desert
+audio_sfx_player,Player movement shovel hit hurt and down bank,audio,"short dry readable player action cues",audio bank,SB-AUDIO-1,generate,NA,planned_placeholder,prov_audio_sfx_player
+audio_sfx_weapons,Ten weapon fire reload impact bank,audio,"distinct frequency and transient per weapon",audio bank,SB-AUDIO-1,generate,NA,planned_placeholder,prov_audio_sfx_weapons
+audio_sfx_enemies,Five enemy action and telegraph bank,audio,"directional mob warnings attacks and deaths",audio bank,SB-AUDIO-1,generate,NA,planned_placeholder,prov_audio_sfx_enemies
+audio_sfx_objectives,Ritual relic extraction and timer bank,audio,"priority cyan objective tones and interruptions",audio bank,SB-AUDIO-1,generate,NA,planned_placeholder,prov_audio_sfx_objectives
+audio_sfx_ui,Menus inventory ping and results bank,audio,"short tactile wood metal and sand UI cues",audio bank,SB-AUDIO-1,generate,NA,planned_placeholder,prov_audio_sfx_ui

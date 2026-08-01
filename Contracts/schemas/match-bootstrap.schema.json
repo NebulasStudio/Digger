@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.sandsunder.invalid/v1/match-bootstrap.schema.json",
+  "title": "Signed match bootstrap",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["payload", "signature"],
+  "properties": {
+    "payload": { "$ref": "#/$defs/payload" },
+    "signature": { "$ref": "common.schema.json#/$defs/signature" }
+  },
+  "$defs": {
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "match_id", "build_id", "ruleset_version", "map_seed", "endpoint",
+        "transport", "player_account_ids", "starts_at", "ticket_expires_at",
+        "issued_at", "nonce"
+      ],
+      "properties": {
+        "match_id": { "$ref": "common.schema.json#/$defs/uuid" },
+        "build_id": { "$ref": "common.schema.json#/$defs/identifier" },
+        "ruleset_version": { "$ref": "common.schema.json#/$defs/identifier" },
+        "map_seed": { "$ref": "common.schema.json#/$defs/mapSeed" },
+        "endpoint": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "transport": { "$ref": "common.schema.json#/$defs/transport" },
+        "player_account_ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "uniqueItems": true,
+          "items": { "$ref": "common.schema.json#/$defs/uuid" }
+        },
+        "starts_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "ticket_expires_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "issued_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "nonce": { "$ref": "common.schema.json#/$defs/uuid" }
+      }
+    }
+  }
+}

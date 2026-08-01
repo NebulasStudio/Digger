@@ -1,0 +1,21 @@
+{
+  "payload": {
+    "match_id": "00000000-0000-4000-8000-000000000001",
+    "account_id": "00000000-0000-4000-8000-000000000002",
+    "build_id": "win-0.1.0",
+    "ruleset_version": "mvp-1",
+    "placement": 1,
+    "outcome": "ritual",
+    "account_xp": 120,
+    "mastery": [
+      { "character_id": "dune_scout", "xp": 80 }
+    ],
+    "milestones": ["seal_one", "seal_two", "ritual_complete"],
+    "kills": 0,
+    "duration_seconds": 640,
+    "completed_at": "2026-08-01T12:00:00Z",
+    "issued_at": "2026-08-01T12:00:02Z",
+    "nonce": "00000000-0000-4000-8000-000000000003"
+  },
+  "signature": "v1=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}

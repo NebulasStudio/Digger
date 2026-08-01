@@ -1,0 +1,130 @@
+name: sandsunder-local
+
+services:
+  postgres:
+    image: "${POSTGRES_IMAGE:-postgres:16.8-alpine}"
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB:?copy Infra/.env.example to Infra/.env}"
+      POSTGRES_USER: "${POSTGRES_USER:?copy Infra/.env.example to Infra/.env}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?copy Infra/.env.example to Infra/.env}"
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - nakama-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    networks:
+      - backend
+
+  backend-build:
+    build:
+      context: ..
+      dockerfile: Infra/nakama-runtime/Dockerfile
+      target: module-export
+      args:
+        NODE_IMAGE: "${NODE_IMAGE:-node:22.18.0-alpine3.22}"
+        ALPINE_IMAGE: "${ALPINE_IMAGE:-alpine:3.22.1}"
+    restart: "no"
+    network_mode: none
+    read_only: true
+    volumes:
+      - nakama-modules:/output
+
+  nakama-schema-migrate:
+    image: "${NAKAMA_IMAGE:-registry.heroiclabs.com/heroiclabs/nakama:3.37.0}"
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - >-
+        exec /nakama/nakama migrate up
+        --database.address "$${POSTGRES_USER}:$${POSTGRES_PASSWORD}@postgres:5432/$${POSTGRES_DB}"
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB:?copy Infra/.env.example to Infra/.env}"
+      POSTGRES_USER: "${POSTGRES_USER:?copy Infra/.env.example to Infra/.env}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?copy Infra/.env.example to Infra/.env}"
+    networks:
+      - backend
+
+  sandsunder-schema-migrate:
+    image: "${POSTGRES_IMAGE:-postgres:16.8-alpine}"
+    restart: "no"
+    depends_on:
+      nakama-schema-migrate:
+        condition: service_completed_successfully
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - |
+        for migration in /migrations/*.sql; do
+          echo "Applying $${migration}"
+          psql --host=postgres --username="$${POSTGRES_USER}" --dbname="$${POSTGRES_DB}" \
+            --set=ON_ERROR_STOP=1 --file="$${migration}"
+        done
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB:?copy Infra/.env.example to Infra/.env}"
+      POSTGRES_USER: "${POSTGRES_USER:?copy Infra/.env.example to Infra/.env}"
+      PGPASSWORD: "${POSTGRES_PASSWORD:?copy Infra/.env.example to Infra/.env}"
+    volumes:
+      - ../Backend/migrations:/migrations:ro
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - backend
+
+  nakama:
+    image: "${NAKAMA_IMAGE:-registry.heroiclabs.com/heroiclabs/nakama:3.37.0}"
+    restart: unless-stopped
+    depends_on:
+      backend-build:
+        condition: service_completed_successfully
+      sandsunder-schema-migrate:
+        condition: service_completed_successfully
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - >-
+        exec /nakama/nakama
+        --name sandsunder-local
+        --database.address "$${POSTGRES_USER}:$${POSTGRES_PASSWORD}@postgres:5432/$${POSTGRES_DB}"
+        --logger.level "$${NAKAMA_LOG_LEVEL}"
+        --runtime.path /nakama/data
+        --session.token_expiry_sec "$${NAKAMA_SESSION_TOKEN_EXPIRY_SEC}"
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB:?copy Infra/.env.example to Infra/.env}"
+      POSTGRES_USER: "${POSTGRES_USER:?copy Infra/.env.example to Infra/.env}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?copy Infra/.env.example to Infra/.env}"
+      NAKAMA_LOG_LEVEL: "${NAKAMA_LOG_LEVEL:-DEBUG}"
+      NAKAMA_SESSION_TOKEN_EXPIRY_SEC: "${NAKAMA_SESSION_TOKEN_EXPIRY_SEC:-7200}"
+      SANDSUNDER_MATCH_HMAC_SECRET: "${SANDSUNDER_MATCH_HMAC_SECRET:?set a local 32+ character value in Infra/.env}"
+    volumes:
+      - nakama-modules:/nakama/data/modules:ro
+    ports:
+      - "127.0.0.1:7349:7349"
+      - "127.0.0.1:7350:7350"
+      - "127.0.0.1:7351:7351"
+    healthcheck:
+      test: ["CMD", "/nakama/nakama", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - backend
+
+networks:
+  backend:
+    internal: false
+
+volumes:
+  nakama-postgres:
+  nakama-modules:

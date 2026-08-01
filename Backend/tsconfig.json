@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "none",
+    "lib": ["ES5"],
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "outFile": "dist/sandsunder.js",
+    "removeComments": false,
+    "sourceMap": true
+  },
+  "files": [
+    "src/types/nakama.d.ts",
+    "src/domain.ts",
+    "src/security.ts",
+    "src/validation.ts",
+    "src/repository.ts",
+    "src/runtime.ts",
+    "src/test-exports.ts"
+  ]
+}

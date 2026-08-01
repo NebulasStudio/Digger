@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sandsunder.example.invalid/schemas/edgegap-application-template.json",
+  "title": "Sandsunder Edgegap application version review template",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["template_version", "provider", "image", "ports", "session", "runtime_environment_file"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "template_version": { "const": 1 },
+    "provider": { "const": "edgegap" },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference", "dockerfile"],
+      "properties": {
+        "reference": { "type": "string", "pattern": "@sha256:" },
+        "dockerfile": { "const": "Infra/unity-server/Dockerfile" }
+      }
+    },
+    "ports": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "internal", "protocol", "external"],
+        "properties": {
+          "name": { "type": "string" },
+          "internal": { "type": "integer", "minimum": 1, "maximum": 65535 },
+          "protocol": { "enum": ["UDP", "TCP"] },
+          "external": { "const": "dynamic" }
+        }
+      }
+    },
+    "session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_players", "max_duration_seconds", "shutdown_grace_seconds"],
+      "properties": {
+        "max_players": { "type": "integer", "minimum": 1 },
+        "max_duration_seconds": { "type": "integer", "minimum": 1 },
+        "shutdown_grace_seconds": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "runtime_environment_file": { "type": "string" },
+    "notes": { "type": "string" }
+  }
+}
+

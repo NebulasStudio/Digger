@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sandsunder - Brochure MVP</title>
+  <style>
+    :root {
+      --ink: #211a19;
+      --umber: #2b211e;
+      --charcoal: #3b2c29;
+      --sand: #d9a441;
+      --clay: #b87333;
+      --earth: #7a4e2d;
+      --paper: #f7ebd1;
+      --cream: #f3e4c2;
+      --turquoise: #3bc7c4;
+      --cobalt: #315c9b;
+      --coral: #d9695f;
+      --signal: #64f4e5;
+      --warning: #ef5b3f;
+      --safe: #77c66e;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #181311;
+      color: var(--ink);
+      font-family: "Arial Narrow", "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14mm;
+      padding: 14mm 0;
+    }
+
+    .page {
+      position: relative;
+      width: 210mm;
+      height: 297mm;
+      overflow: hidden;
+      background: var(--paper);
+      box-shadow: 0 4mm 12mm rgb(0 0 0 / 28%);
+      isolation: isolate;
+    }
+
+    .page::after {
+      content: "";
+      position: absolute;
+      inset: 5mm;
+      border: 0.7mm solid var(--umber);
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .pixel-corners {
+      position: absolute;
+      inset: 5mm;
+      z-index: 21;
+      pointer-events: none;
+      background:
+        linear-gradient(var(--signal), var(--signal)) 0 0 / 11mm 1.4mm no-repeat,
+        linear-gradient(var(--signal), var(--signal)) 0 0 / 1.4mm 11mm no-repeat,
+        linear-gradient(var(--signal), var(--signal)) 100% 0 / 11mm 1.4mm no-repeat,
+        linear-gradient(var(--signal), var(--signal)) 100% 0 / 1.4mm 11mm no-repeat,
+        linear-gradient(var(--signal), var(--signal)) 0 100% / 11mm 1.4mm no-repeat,
+        linear-gradient(var(--signal), var(--signal)) 0 100% / 1.4mm 11mm no-repeat,
+        linear-gradient(var(--signal), var(--signal)) 100% 100% / 11mm 1.4mm no-repeat,
+        linear-gradient(var(--signal), var(--signal)) 100% 100% / 1.4mm 11mm no-repeat;
+    }
+
+    .eyebrow {
+      margin: 0 0 3mm;
+      color: var(--clay);
+      font-size: 3.2mm;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1, h2, h3 {
+      font-family: Impact, "Arial Black", "Segoe UI Black", sans-serif;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin-bottom: 3mm;
+      color: var(--umber);
+      font-size: 11mm;
+      line-height: 0.94;
+      letter-spacing: 0.015em;
+    }
+
+    .rule {
+      width: 22mm;
+      height: 2mm;
+      margin: 0 0 6mm;
+      background: var(--signal);
+      box-shadow: 3mm 0 0 var(--umber);
+    }
+
+    .page-number {
+      position: absolute;
+      right: 11mm;
+      bottom: 8.5mm;
+      z-index: 22;
+      display: flex;
+      gap: 2mm;
+      align-items: center;
+      color: var(--paper);
+      font-size: 2.6mm;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .page-number b {
+      display: grid;
+      place-items: center;
+      width: 7mm;
+      height: 7mm;
+      background: var(--signal);
+      color: var(--ink);
+      box-shadow: 1.2mm 1.2mm 0 var(--ink);
+      font-size: 3.2mm;
+    }
+
+    /* COVER */
+    .cover {
+      background:
+        linear-gradient(135deg, transparent 0 68%, rgb(33 26 25 / 16%) 68% 70%, transparent 70%) 0 0 / 22mm 22mm,
+        var(--sand);
+    }
+
+    .cover::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(160deg, transparent 0 62%, var(--clay) 62% 76%, var(--earth) 76% 88%, var(--charcoal) 88%),
+        linear-gradient(20deg, transparent 0 67%, rgb(247 235 209 / 13%) 67% 68%, transparent 68%);
+      z-index: -1;
+    }
+
+    .cover-header {
+      position: absolute;
+      top: 18mm;
+      left: 18mm;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 3mm;
+      color: var(--umber);
+      font-size: 3.2mm;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .cover-header::before {
+      content: "";
+      width: 8mm;
+      height: 3mm;
+      background: var(--signal);
+      box-shadow: 2mm 2mm 0 var(--umber);
+    }
+
+    .cover-copy {
+      position: absolute;
+      top: 48mm;
+      left: 18mm;
+      width: 174mm;
+      z-index: 4;
+    }
+
+    .descriptor {
+      display: inline-block;
+      margin: 0 0 5mm;
+      padding: 2.4mm 3.6mm 2.2mm;
+      background: var(--umber);
+      color: var(--signal);
+      font-size: 4mm;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      box-shadow: 2mm 2mm 0 rgb(33 26 25 / 25%);
+    }
+
+    .brand {
+      margin: 0;
+      color: var(--paper);
+      font-size: 27mm;
+      line-height: 0.8;
+      letter-spacing: -0.025em;
+      text-shadow:
+        1.2mm 1.2mm 0 var(--umber),
+        2.4mm 2.4mm 0 var(--earth);
+    }
+
+    .tagline {
+      width: 95mm;
+      margin: 8mm 0 0 2mm;
+      color: var(--umber);
+      font-family: Impact, "Arial Black", sans-serif;
+      font-size: 8mm;
+      line-height: 1.05;
+      text-transform: uppercase;
+    }
+
+    .cover-art {
+      position: absolute;
+      right: 8mm;
+      bottom: 30mm;
+      z-index: 2;
+      width: 128mm;
+      height: 128mm;
+      image-rendering: pixelated;
+    }
+
+    .cover-badge {
+      position: absolute;
+      left: 18mm;
+      bottom: 24mm;
+      z-index: 6;
+      width: 47mm;
+      padding: 4mm 4mm 3.5mm;
+      border: 1.2mm solid var(--umber);
+      background: var(--paper);
+      box-shadow: 2.4mm 2.4mm 0 var(--umber);
+      color: var(--umber);
+    }
+
+    .cover-badge strong {
+      display: block;
+      color: var(--cobalt);
+      font-family: Impact, "Arial Black", sans-serif;
+      font-size: 10mm;
+      line-height: 0.9;
+      text-transform: uppercase;
+    }
+
+    .cover-badge span {
+      display: block;
+      margin-top: 2mm;
+      font-size: 3mm;
+      font-weight: 900;
+      line-height: 1.3;
+      text-transform: uppercase;
+    }
+
+    /* COMMON INNER PAGES */
+    .inner {
+      padding: 16mm 16mm 15mm;
+      background:
+        linear-gradient(90deg, transparent 0 48%, rgb(43 33 30 / 4%) 48% 52%, transparent 52%) 0 0 / 8mm 8mm,
+        var(--paper);
+    }
+
+    .inner::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 15mm;
+      background: var(--umber);
+      z-index: 18;
+    }
+
+    .inner-header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10mm;
+    }
+
+    .mini-mark {
+      flex: none;
+      margin-top: 1mm;
+      padding: 2.2mm 2.8mm;
+      background: var(--umber);
+      color: var(--paper);
+      font-family: Impact, "Arial Black", sans-serif;
+      font-size: 4.8mm;
+      line-height: 1;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      box-shadow: 1.5mm 1.5mm 0 var(--signal);
+    }
+
+    .lead {
+      max-width: 160mm;
+      margin: 0 0 7mm;
+      color: var(--charcoal);
+      font-size: 4.2mm;
+      line-height: 1.48;
+      font-weight: 650;
+    }
+
+    .lead strong { color: var(--earth); }
+
+    /* PAGE 2 */
+    .promise-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2.4mm;
+      margin-bottom: 7mm;
+    }
+
+    .promise {
+      min-height: 26mm;
+      padding: 3.5mm;
+      border: 0.8mm solid var(--umber);
+      background: #f3e4c2;
+      box-shadow: 1.5mm 1.5mm 0 var(--clay);
+    }
+
+    .promise .index {
+      display: block;
+      margin-bottom: 2mm;
+      color: var(--cobalt);
+      font-family: Impact, "Arial Black", sans-serif;
+      font-size: 6mm;
+      line-height: 1;
+    }
+
+    .promise strong {
+      display: block;
+      margin-bottom: 1mm;
+      font-size: 3.5mm;
+      line-height: 1.15;
+      text-transform: uppercase;
+    }
+
+    .promise p {
+      margin: 0;
+      color: var(--charcoal);
+      font-size: 2.7mm;
+      line-height: 1.32;
+    }
+
+    .loop-panel {
+      position: relative;
+      padding: 5mm;
+      border: 1mm solid var(--umber);
+      background: var(--sand);
+      box-shadow: 2mm 2mm 0 var(--umber);
+    }
+
+    .loop-panel h3 {
+      margin: 0 0 4mm;
+      color: var(--umber);
+      font-size: 6mm;
+      letter-spacing: 0.04em;
+    }
+
+    .loop {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 3mm;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .loop li {
+      position: relative;
+      min-height: 55mm;
+      padding: 4mm 3mm 3mm;
+      border: 0.7mm solid var(--umber);
+      background: var(--paper);
+    }
+
+    .loop li:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 18mm;
+      right: -3.8mm;
+      z-index: 3;
+      width: 4mm;
+      height: 4mm;
+      border-top: 1.6mm solid var(--signal);
+      border-right: 1.6mm solid var(--signal);
+      background: var(--umber);
+      transform: rotate(45deg);
+    }
+
+    .loop-icon {
+      display: grid;
+      place-items: center;
+      width: 13mm;
+      height: 13mm;
+      margin-bottom: 3mm;
+      background: var(--cobalt);
+      color: var(--paper);
+      box-shadow: 1.5mm 1.5mm 0 var(--umber);
+      font-family: Impact, "Arial Black", sans-serif;
+      font-size: 6mm;
+    }
+
+    .loop li:nth-child(2) .loop-icon,
+    .loop li:nth-child(4) .loop-icon { background: var(--turquoise); color: var(--ink); }
+    .loop li:nth-child(5) .loop-icon { background: var(--signal); color: var(--ink); }
+
+    .loop strong {
+      display: block;
+      margin-bottom: 2mm;
+      color: var(--umber);
+      font-size: 3.2mm;
+      line-height: 1.05;
+      text-transform: uppercase;
+    }
+
+    .loop p {
+      margin: 0;
+      color: var(--charcoal);
+      font-size: 2.55mm;
+      line-height: 1.35;
+    }
+
+    .match-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1.4fr;
+      margin-top: 7mm;
+      border: 0.8mm solid var(--umber);
+      background: var(--umber);
+      gap: 0.7mm;
+    }
+
+    .stat {
+      min-height: 21mm;
+      padding: 3mm;
+      background: var(--paper);
+    }
+
+    .stat b {
+      display: block;
+      color: var(--clay);
+      font-family: Impact, "Arial Black", sans-serif;
+      font-size: 6mm;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 1.5mm;
+      color: var(--umber);
+      font-size: 2.5mm;
+      font-weight: 900;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .stat:last-child { background: var(--cobalt); }
+    .stat:last-child b { color: var(--signal); }
+    .stat:last-child span { color: var(--paper); }
+
+    /* PAGE 3 */
+    .victory-lead {
+      display: grid;
+      grid-template-columns: 1fr 48mm;
+      gap: 6mm;
+      align-items: start;
+      margin-bottom: 6mm;
+    }
+
+    .victory-lead .lead { margin-bottom: 0; }
+
+    .one-winner {
+      padding: 3mm;
+      border: 0.8mm solid var(--umber);
+      background: var(--signal);
+      box-shadow: 1.5mm 1.5mm 0 var(--umber);
+      color: var(--ink);
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .one-winner b {
+      display: block;
+      font-family: Impact, "Arial Black", sans-serif;
+      font-size: 8mm;
+      line-height: 0.9;
+    }
+
+    .one-winner span {
+      font-size: 2.4mm;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+    }
+
+    .victory-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4mm;
+    }
+
+    .victory-card {
+      position: relative;
+      min-height: 119mm;
+      padding: 4mm;
+      border: 1mm solid var(--umber);
+      background: var(--cream);
+      box-shadow: 2mm 2mm 0 var(--umber);
+    }
+
+    .victory-card.ritual { border-top: 4mm solid var(--turquoise); }
+    .victory-card.relic { border-top: 4mm solid var(--signal); }
+    .victory-card.survival { border-top: 4mm solid var(--coral); }
+
+    .victory-icon {
+      width: 30mm;
+      height: 30mm;
+      margin: 0 auto 4mm;
+      image-rendering: pixelated;
+    }
+
+    .victory-card h3 {
+      min-height: 15mm;
+      margin: 0 0 3mm;
+      color: var(--umber);
+      font-size: 5.5mm;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .victory-card .route {
+      display: block;
+      margin-bottom: 3mm;
+      color: var(--earth);
+      font-size: 2.5mm;
+      font-weight: 900;
+      letter-spacing: 0.11em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .victory-card ol {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: steps;
+    }
+
+    .victory-card li {
+      position: relative;
+      min-height: 16mm;
+      padding: 0 0 3mm 10mm;
+      color: var(--charcoal);
+      font-size: 2.85mm;
+      line-height: 1.35;
+      counter-increment: steps;
+    }
+
+    .victory-card li::before {
+      content: counter(steps);
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: grid;
+      place-items: center;
+      width: 6.5mm;
+      height: 6.5mm;
+      background: var(--umber);
+      color: var(--paper);
+      font-family: Impact, "Arial Black", sans-serif;
+      font-size: 3.5mm;
+      box-shadow: 1mm 1mm 0 var(--clay);
+    }
+
+    .victory-card strong { color: var(--ink); }
+
+    .pressure {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 4mm;
+      margin-top: 7mm;
+    }
+
+    .pressure-box {
+      min-height: 34mm;
+      padding: 4mm;
+      border: 0.8mm solid var(--umber);
+      background: var(--sand);
+    }
+
+    .pressure-box.dark { background: var(--umber); color: var(--paper); }
+
+    .pressure-box h3 {
+      margin: 0 0 2mm;
+      color: inherit;
+      font-size: 4mm;
+      line-height: 1;
+    }
+
+    .pressure-box p {
+      margin: 0;
+      font-size: 2.65mm;
+      line-height: 1.35;
+    }
+
+    .pressure-box.dark strong { color: var(--signal); }
+
+    svg { display: block; }
+
+    @page { size: A4 portrait; margin: 0; }
+
+    @media print {
+      html, body {
+        width: 210mm;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+      }
+
+      body { display: block; }
+
+      .page {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        box-shadow: none;
+        break-after: page;
+        page-break-after: always;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .page:last-child {
+        break-after: auto;
+        page-break-after: auto;
+      }
+    }
+
+    @media screen and (max-width: 850px) {
+      body { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <section class="page cover" aria-label="Copertina">
+    <div class="pixel-corners"></div>
+    <div class="cover-header">Dossier di spedizione · MVP</div>
+
+    <div class="cover-copy">
+      <p class="descriptor">Una spedizione competitiva PvPvE</p>
+      <h1 class="brand">Sand<br>sunder</h1>
+      <p class="tagline">Scava.<br>Improvvisa.<br>Conquista il centro.</p>
+    </div>
+
+    <svg class="cover-art" viewBox="0 0 256 256" role="img" aria-label="Arena desertica pixel-art vista dall’alto">
+      <g shape-rendering="crispEdges">
+        <path fill="#2b211e" d="M112 8h32v8h24v8h16v8h16v16h16v24h8v40h8v40h-8v32h-16v24h-24v16h-32v8h-40v-8H80v-16H56v-24H40v-32h-8v-40h8V72h16V48h24V32h32z"/>
+        <path fill="#7a4e2d" d="M112 16h32v8h24v8h16v16h16v24h8v32h8v40h-8v32h-16v24h-24v16h-24v8h-32v-8H80v-16H56v-24H48v-32h-8v-40h8V72h16V48h24V32h24z"/>
+        <path fill="#b87333" d="M104 32h48v8h24v16h16v24h8v32h8v32h-8v32h-16v16h-24v16h-32v8H96v-8H72v-16H56v-24H48v-32h8v-32h8V80h16V56h24z"/>
+        <path fill="#d9a441" d="M104 48h48v8h24v16h8v24h8v40h-8v32h-16v16h-24v8h-32v-8H88v-16H72v-24h-8v-32h8V88h8V72h24z"/>
+        <path fill="#f3e4c2" d="M112 72h32v8h16v16h8v40h-8v24h-24v8h-24v-8H96v-16H88v-32h8V96h16z"/>
+        <path fill="#315c9b" d="M120 88h24v8h8v16h8v24h-8v16h-16v8h-24v-8H96v-16h-8v-24h8V96h24z"/>
+        <path fill="#211a19" d="M120 96h16v8h8v16h8v16h-8v8h-16v8h-16v-8h-8v-16h-8v-16h8v-8h16z"/>
+        <path fill="#64f4e5" d="M120 104h16v8h8v16h-8v16h-16v-8h-8v-16h8z"/>
+        <path fill="#f7ebd1" d="M120 112h8v8h8v8h-8v8h-8v-8h-8v-8h8z"/>
+        <path fill="#3b2c29" d="M24 112h40v16H24zm168 8h48v16h-48zM112 8h16v48h-16zm8 184h16v56h-16z"/>
+        <path fill="#64f4e5" d="M32 116h24v8H32zm168 8h32v8h-32zM116 16h8v32h-8zm8 184h8v40h-8z"/>
+        <path fill="#211a19" d="M64 56h16v8h8v16h-8v8H64v-8h-8V64h8zm112 104h16v8h8v16h-8v8h-16v-8h-8v-16h8z"/>
+        <path fill="#3bc7c4" d="M64 64h16v16H64z"/>
+        <path fill="#d9695f" d="M176 168h16v16h-16z"/>
+        <path fill="#211a19" d="M168 56h16v8h8v16h-8v8h-16v-8h-8V64h8zM64 168h16v8h8v16h-8v8H64v-8h-8v-16h8z"/>
+        <path fill="#f3e4c2" d="M168 64h16v16h-16z"/>
+        <path fill="#315c9b" d="M64 176h16v16H64z"/>
+      </g>
+    </svg>
+
+    <div class="cover-badge">
+      <strong>6</strong>
+      <span>esploratori<br>un solo vincitore</span>
+    </div>
+    <div class="page-number"><span>Sandsunder</span><b>01</b></div>
+  </section>
+
+  <section class="page inner" aria-label="Introduzione e ciclo di gioco">
+    <div class="pixel-corners"></div>
+    <header class="inner-header">
+      <div>
+        <p class="eyebrow">La spedizione</p>
+        <h2>Ogni scavo<br>è una scelta.</h2>
+        <div class="rule"></div>
+      </div>
+      <div class="mini-mark">Sandsunder</div>
+    </header>
+
+    <p class="lead">Sei esploratori partono alla pari in un’arena desertica circolare. <strong>Scavare rivela risorse e percorsi</strong>, ma costa tempo, espone la posizione e avvicina tutti al centro, dove rischio e valore crescono insieme.</p>
+
+    <div class="promise-strip" aria-label="Pilastri di gioco">
+      <article class="promise">
+        <span class="index">01</span>
+        <strong>Informazione</strong>
+        <p>Il bottino sepolto resta ignoto finché il server non convalida lo scavo.</p>
+      </article>
+      <article class="promise">
+        <span class="index">02</span>
+        <strong>Improvvisazione</strong>
+        <p>Armi e utilità formano build rapide da leggere, cambiare e contrastare.</p>
+      </article>
+      <article class="promise">
+        <span class="index">03</span>
+        <strong>Tensione condivisa</strong>
+        <p>Creature, rivali e obiettivi visibili trasformano ogni incontro.</p>
+      </article>
+    </div>
+
+    <section class="loop-panel" aria-labelledby="loop-title">
+      <h3 id="loop-title">Il ciclo della partita</h3>
+      <ol class="loop">
+        <li>
+          <span class="loop-icon">1</span>
+          <strong>Esplora</strong>
+          <p>Leggi terreno, aperture e intenzioni dei cinque rivali.</p>
+        </li>
+        <li>
+          <span class="loop-icon">2</span>
+          <strong>Scava</strong>
+          <p>Investi tempo per aprire celle, trovare equipaggiamento e nuove vie.</p>
+        </li>
+        <li>
+          <span class="loop-icon">3</span>
+          <strong>Costruisci</strong>
+          <p>Combina fino a due armi e due utilità in una build leggibile.</p>
+        </li>
+        <li>
+          <span class="loop-icon">4</span>
+          <strong>Resisti</strong>
+          <p>Affronta creature sempre più forti e incursioni dei concorrenti.</p>
+        </li>
+        <li>
+          <span class="loop-icon">5</span>
+          <strong>Convergi</strong>
+          <p>Scegli una rotta di vittoria e contendila fino all’ultimo secondo.</p>
+        </li>
+      </ol>
+    </section>
+
+    <div class="match-bar" aria-label="Dati chiave della partita">
+      <div class="stat"><b>6</b><span>giocatori<br>free-for-all</span></div>
+      <div class="stat"><b>10-12 min</b><span>durata<br>obiettivo</span></div>
+      <div class="stat"><b>3</b><span>anelli<br>rischio-valore</span></div>
+      <div class="stat"><b>15′</b><span>risoluzione certa<br>nessuna partita infinita</span></div>
+    </div>
+
+    <div class="page-number"><span>La spedizione</span><b>02</b></div>
+  </section>
+
+  <section class="page inner" aria-label="Rotte di vittoria">
+    <div class="pixel-corners"></div>
+    <header class="inner-header">
+      <div>
+        <p class="eyebrow">La conquista</p>
+        <h2>Tre strade.<br>Una vittoria.</h2>
+        <div class="rule"></div>
+      </div>
+      <div class="mini-mark">Sandsunder</div>
+    </header>
+
+    <div class="victory-lead">
+      <p class="lead">Le tre rotte restano credibili nello stesso match. Il combattimento crea opportunità, ma <strong>non serve eliminare un avversario per vincere</strong>: conta leggere la partita e impegnarsi nel momento giusto.</p>
+      <div class="one-winner"><b>1° tick</b><span>vittoria valida confermata dal server</span></div>
+    </div>
+
+    <div class="victory-grid">
+      <article class="victory-card ritual">
+        <svg class="victory-icon" viewBox="0 0 64 64" role="img" aria-label="Sigillo rituale pixel-art">
+          <g shape-rendering="crispEdges">
+            <path fill="#2b211e" d="M24 4h16v4h8v8h4v8h8v16h-8v8h-8v8h-8v4H24v-4h-8v-8H8v-8H4V24h8v-8h4V8h8z"/>
+            <path fill="#3bc7c4" d="M24 8h16v8h8v12h8v8h-8v12h-8v8H24v-8h-8V36H8v-8h8V16h8z"/>
+            <path fill="#64f4e5" d="M28 16h8v8h8v16h-8v8h-8v-8h-8V24h8z"/>
+            <path fill="#f7ebd1" d="M28 24h8v16h-8z"/>
+          </g>
+        </svg>
+        <span class="route">Rito · Obiettivo</span>
+        <h3>Corsa rituale</h3>
+        <ol>
+          <li><strong>Ottieni 3 Sigilli</strong> personali da tre fonti PvE diverse.</li>
+          <li><strong>Attiva 2 stazioni</strong> con interazioni interrompibili.</li>
+          <li><strong>Completa il canale centrale</strong> senza subire danni, spostamenti o abbandonare l’area.</li>
+        </ol>
+      </article>
+
+      <article class="victory-card relic">
+        <svg class="victory-icon" viewBox="0 0 64 64" role="img" aria-label="Reliquia pixel-art">
+          <g shape-rendering="crispEdges">
+            <path fill="#2b211e" d="M20 4h24v8h8v12h8v24h-8v8H40v4H24v-4H12v-8H4V24h8V12h8z"/>
+            <path fill="#315c9b" d="M20 8h24v8h8v12h4v16h-8v8H16v-8H8V28h8V16h4z"/>
+            <path fill="#64f4e5" d="M24 12h16v8h8v20h-8v8H24v-8h-8V20h8z"/>
+            <path fill="#f7ebd1" d="M28 20h8v8h8v8h-8v8h-8v-8h-8v-8h8z"/>
+          </g>
+        </svg>
+        <span class="route">Reliquia · Estrazione</span>
+        <h3>Fuga con il tesoro</h3>
+        <ol>
+          <li><strong>Sconfiggi il guardiano</strong> del centro e raccogli la reliquia pubblica.</li>
+          <li><strong>Accetta il rischio:</strong> il portatore è visibile, rallentato e perde il tesoro se cade.</li>
+          <li><strong>Raggiungi un’uscita</strong> e completa il canale di estrazione.</li>
+        </ol>
+      </article>
+
+      <article class="victory-card survival">
+        <svg class="victory-icon" viewBox="0 0 64 64" role="img" aria-label="Ultimo esploratore pixel-art">
+          <g shape-rendering="crispEdges">
+            <path fill="#2b211e" d="M24 4h16v4h8v8h4v12h8v24h-8v8H12v-8H4V28h8V16h4V8h8z"/>
+            <path fill="#d9695f" d="M24 8h16v8h8v20h8v12h-8v8H16v-8H8V36h8V16h8z"/>
+            <path fill="#f3e4c2" d="M24 16h16v8h8v12h-8v8H24v-8h-8V24h8z"/>
+            <path fill="#315c9b" d="M16 44h32v12H16z"/>
+            <path fill="#2b211e" d="M28 24h4v4h-4zm12 0h4v4h-4zM32 36h8v4h-8z"/>
+          </g>
+        </svg>
+        <span class="route">Resistenza · PvPvE</span>
+        <h3>Ultimo superstite</h3>
+        <ol>
+          <li><strong>Sopravvivi</strong> alla pressione crescente di arena, creature e rivali.</li>
+          <li><strong>Gestisci la seconda chance:</strong> un giocatore in attesa di rientro conta ancora.</li>
+          <li><strong>Rimani l’unico contendente</strong> e la vittoria scatta immediatamente.</li>
+        </ol>
+      </article>
+    </div>
+
+    <div class="pressure">
+      <article class="pressure-box">
+        <h3>Il deserto stringe la presa</h3>
+        <p>Dal minuto <strong>06:00</strong> si apre il centro. Al <strong>14:00</strong> scatta la morte improvvisa: niente rientri, più creature e una sola estrazione.</p>
+      </article>
+      <article class="pressure-box dark">
+        <h3>Una conclusione garantita</h3>
+        <p>Al <strong>15:00</strong> i traguardi obiettivo già conquistati determinano un unico vincitore. Uccisioni e rarità del bottino non spezzano la parità.</p>
+      </article>
+    </div>
+
+    <div class="page-number"><span>Rotte di vittoria</span><b>03</b></div>
+  </section>
+</body>
+</html>

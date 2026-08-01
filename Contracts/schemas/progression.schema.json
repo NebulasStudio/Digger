@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.sandsunder.invalid/v1/progression.schema.json",
+  "title": "Horizontal account progression",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["account_id", "account_xp", "account_level", "mastery", "unlocks"],
+  "properties": {
+    "account_id": { "$ref": "common.schema.json#/$defs/uuid" },
+    "account_xp": { "type": "integer", "minimum": 0 },
+    "account_level": { "type": "integer", "minimum": 1 },
+    "mastery": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["character_id", "xp", "level"],
+        "properties": {
+          "character_id": { "$ref": "common.schema.json#/$defs/identifier" },
+          "xp": { "type": "integer", "minimum": 0 },
+          "level": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "unlocks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["unlock_id", "unlock_type", "granted_at"],
+        "properties": {
+          "unlock_id": { "$ref": "common.schema.json#/$defs/identifier" },
+          "unlock_type": { "type": "string", "enum": ["character_sidegrade", "cosmetic"] },
+          "granted_at": { "$ref": "common.schema.json#/$defs/timestamp" }
+        }
+      }
+    }
+  }
+}

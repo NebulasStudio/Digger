@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sandsunder.invalid/schemas/asset-provenance-1.0.0.json",
+  "title": "Sandsunder asset provenance record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "provenance_id",
+    "asset_id",
+    "status",
+    "source",
+    "rights",
+    "review",
+    "artifacts"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "provenance_id": { "type": "string", "pattern": "^prov_[a-z0-9_]+$" },
+    "asset_id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+    "status": {
+      "enum": ["planned", "generated", "in_review", "approved", "rejected", "retired"]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "provider", "model", "prompt", "style_formula_ref", "created_at"],
+      "properties": {
+        "type": { "enum": ["generated_ai", "human_original", "licensed", "reference_only"] },
+        "provider": { "type": ["string", "null"] },
+        "model": { "type": ["string", "null"] },
+        "model_version": { "type": ["string", "null"] },
+        "job_id": { "type": ["string", "null"] },
+        "seed": { "type": ["string", "integer", "null"] },
+        "prompt": { "type": ["string", "null"] },
+        "negative_prompt": { "type": ["string", "null"] },
+        "style_formula_ref": { "type": ["string", "null"] },
+        "created_at": { "type": ["string", "null"], "format": "date-time" },
+        "reference_inputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["uri", "owner", "license", "sha256"],
+            "properties": {
+              "uri": { "type": "string" },
+              "owner": { "type": "string" },
+              "license": { "type": "string" },
+              "sha256": { "type": ["string", "null"], "pattern": "^[a-fA-F0-9]{64}$" }
+            }
+          },
+          "default": []
+        }
+      }
+    },
+    "processing": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["tool", "version", "operation", "operator", "performed_at"],
+        "properties": {
+          "tool": { "type": "string" },
+          "version": { "type": ["string", "null"] },
+          "operation": { "type": "string" },
+          "operator": { "type": "string" },
+          "performed_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "default": []
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commercial_use_reviewed", "third_party_ip_reviewed", "steam_ai_disclosure", "license_notes"],
+      "properties": {
+        "commercial_use_reviewed": { "type": "boolean" },
+        "third_party_ip_reviewed": { "type": "boolean" },
+        "steam_ai_disclosure": { "enum": ["required", "not_required", "undetermined"] },
+        "license_notes": { "type": "string" }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["style", "readability", "technical", "human_approver", "approved_at", "notes"],
+      "properties": {
+        "style": { "enum": ["pending", "pass", "fail"] },
+        "readability": { "enum": ["pending", "pass", "fail"] },
+        "technical": { "enum": ["pending", "pass", "fail"] },
+        "human_approver": { "type": ["string", "null"] },
+        "approved_at": { "type": ["string", "null"], "format": "date-time" },
+        "notes": { "type": "string" }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "path_or_uri", "sha256", "content_type", "published"],
+        "properties": {
+          "kind": { "enum": ["original", "job_metadata", "intermediate", "runtime", "thumbnail"] },
+          "path_or_uri": { "type": "string" },
+          "sha256": { "type": ["string", "null"], "pattern": "^[a-fA-F0-9]{64}$" },
+          "content_type": { "type": "string" },
+          "published": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

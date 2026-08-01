@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.sandsunder.invalid/v1/match-ticket.schema.json",
+  "title": "Signed single-use match ticket",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["payload", "signature"],
+  "properties": {
+    "payload": { "$ref": "#/$defs/payload" },
+    "signature": { "$ref": "common.schema.json#/$defs/signature" }
+  },
+  "$defs": {
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ticket_id", "match_id", "account_id", "build_id", "ruleset_version",
+        "endpoint", "transport", "issued_at", "expires_at"
+      ],
+      "properties": {
+        "ticket_id": { "$ref": "common.schema.json#/$defs/uuid" },
+        "match_id": { "$ref": "common.schema.json#/$defs/uuid" },
+        "account_id": { "$ref": "common.schema.json#/$defs/uuid" },
+        "build_id": { "$ref": "common.schema.json#/$defs/identifier" },
+        "ruleset_version": { "$ref": "common.schema.json#/$defs/identifier" },
+        "endpoint": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "transport": { "$ref": "common.schema.json#/$defs/transport" },
+        "issued_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "expires_at": { "$ref": "common.schema.json#/$defs/timestamp" }
+      }
+    }
+  }
+}

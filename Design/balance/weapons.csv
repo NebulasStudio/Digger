@@ -1,0 +1,11 @@
+ruleset_version,weapon_id,display_name,class,fire_model,damage_per_hit,pellets,shots_per_s,magazine,reload_s,range_m,projectile_speed_mps,approx_sustained_dps,mechanical_identity,ammo_family
+mvp-0.1.0,weapon_sunspike,Sunspike,sidearm,hitscan,14,1,2.2,8,1.4,15,NA,25.0,"Accurate first shot; bloom grows on repeated fire",light
+mvp-0.1.0,weapon_twin_fangs,Twin Fangs,repeater,projectile,6,1,5.0,24,1.8,11,24,21.8,"High movement accuracy; strong tracking pressure",light
+mvp-0.1.0,weapon_dune_carbine,Dune Carbine,rifle,hitscan,10,1,3.0,15,1.7,20,NA,24.2,"Reliable mid-range burst with mild falloff after 14 m",medium
+mvp-0.1.0,weapon_scarab_scattergun,Scarab Scattergun,scatter,projectile,5,7,0.8,5,2.2,8,18,20.3,"Wide close-range cone; listed DPS assumes five pellets connect",shell
+mvp-0.1.0,weapon_ember_lance,Ember Lance,beam,beam_tick,4,1,7.5,30,2.0,13,NA,20.0,"Continuous aim ramps tick damage by up to 25% after 0.8 s",energy
+mvp-0.1.0,weapon_salt_bow,Salt Bow,precision,projectile,24,1,1.2,1,0.45,24,28,28.8,"Hold up to 0.8 s for full speed and damage; release is telegraphed",shaft
+mvp-0.1.0,weapon_quake_pot,Quake Pot,launcher,projectile_splash,32,1,0.75,4,2.4,14,12,18.8,"2.5 m splash with damage falloff; self-displacement but no self-damage",heavy
+mvp-0.1.0,weapon_mirage_disc,Mirage Disc,returning,projectile,16,1,1.8,3,1.5,12,20,21.1,"Returns once; return hit deals 50% and rewards repositioning",special
+mvp-0.1.0,weapon_thorn_caster,Thorn Caster,damage_over_time,projectile,8,1,3.2,12,1.6,16,22,24.0,"First hit applies 8 damage over 2 s; subsequent hits refresh rather than stack",medium
+mvp-0.1.0,weapon_relic_hammer,Relic Hammer,melee,arc,30,1,1.0,NA,NA,2.0,NA,30.0,"Wide committed arc with 0.35 s wind-up and strong knockback",special

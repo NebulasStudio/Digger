@@ -1,0 +1,6 @@
+ruleset_version,enemy_id,display_name,tier,base_hp,move_speed_mps,contact_or_hit_damage,attack_interval_s,preferred_ring,behaviour_exam,drop_role
+mvp-0.1.0,mob_sandling,Sandling,base,40,4.2,10,1.1,outer,"Simple chase with a clear pre-lunge pause",light_ammo
+mvp-0.1.0,mob_spitter,Dune Spitter,base,55,3.2,12,1.8,middle,"Telegraphed line projectile that rewards lateral movement",medium_ammo
+mvp-0.1.0,mob_burrower,Burrower,base,70,3.8,16,2.4,middle,"Visible burrow trail followed by delayed emergence",healing_chance
+mvp-0.1.0,mob_scorpion,Glass Scorpion,elite,240,4.0,22,1.6,middle_inner,"Alternates frontal claws with a marked tail cone and charge",personal_elite_sigil_contribution
+mvp-0.1.0,mob_sun_maw,Sun Maw,guardian,1000,2.6,26,2.0,centre,"Sweeps spits burrow lanes and add summons combine learned patterns",single_relic

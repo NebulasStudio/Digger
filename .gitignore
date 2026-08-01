@@ -1,0 +1,82 @@
+# Unity generated directories
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+
+# Unity generated files and crash reports
+sysinfo.txt
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.stackdump
+crashlytics-build.properties
+
+# Keep Unity asset metadata tracked; ignore only generated solution files
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.unityproj
+*.tmp
+
+# .NET and test outputs
+bin/
+obj/
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# Node and backend tooling
+node_modules/
+.npm/
+.npm-cache/
+.pnpm-store/
+dist/
+.cache/
+.tmp/
+*.tsbuildinfo
+
+# Local infrastructure and secrets
+.env
+.env.*
+!.env.example
+*.local
+*.secret
+*.secrets
+secrets/
+.wrangler/
+.dev.vars
+docker-compose.override.yml
+
+# IDE and OS metadata
+.vs/
+.vscode/
+.idea/
+.fleet/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Generated packages and archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+.setup/
+
+# Local reports and replay payloads
+artifacts/
+replays/
+reports/

@@ -1,0 +1,158 @@
+openapi: 3.1.0
+info:
+  title: Sandsunder Backend API
+  version: 1.0.0
+  description: >-
+    Provider-neutral logical contract. The current Nakama adapter exposes the operationIds
+    as RPC ids listed in x-nakama-rpc-id. Internal operations require Nakama's server HTTP
+    key and signed payloads; they must never be called from the game client.
+servers:
+  - url: https://backend.invalid
+    description: Placeholder; supplied per environment.
+tags:
+  - name: Internal Match Control
+  - name: Progression
+paths:
+  /v1/internal/matches/bootstrap:
+    post:
+      tags: [Internal Match Control]
+      operationId: bootstrapMatch
+      x-nakama-rpc-id: sandsunder_match_bootstrap_v1
+      security:
+        - nakamaServerKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/match-bootstrap.schema.json
+      responses:
+        '200':
+          description: One single-use signed ticket per roster entry.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [match_id, tickets]
+                properties:
+                  match_id:
+                    $ref: ../schemas/common.schema.json#/$defs/uuid
+                  tickets:
+                    type: array
+                    minItems: 1
+                    maxItems: 6
+                    items:
+                      $ref: ../schemas/match-ticket.schema.json
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /v1/internal/match-tickets/consume:
+    post:
+      tags: [Internal Match Control]
+      operationId: consumeMatchTicket
+      x-nakama-rpc-id: sandsunder_match_ticket_consume_v1
+      security:
+        - nakamaServerKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/ticket-consume.schema.json
+      responses:
+        '200':
+          description: Ticket atomically consumed.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [consumed, match_id, account_id]
+                properties:
+                  consumed: { type: boolean, const: true }
+                  match_id: { $ref: ../schemas/common.schema.json#/$defs/uuid }
+                  account_id: { $ref: ../schemas/common.schema.json#/$defs/uuid }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /v1/internal/matches/results:
+    post:
+      tags: [Internal Match Control]
+      operationId: submitMatchResult
+      x-nakama-rpc-id: sandsunder_match_result_submit_v1
+      security:
+        - nakamaServerKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/match-result.schema.json
+      responses:
+        '200':
+          description: Receipt; duplicate=true means the prior settlement is authoritative.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettlementReceipt'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /v1/account/progression:
+    get:
+      tags: [Progression]
+      operationId: getProgression
+      x-nakama-rpc-id: sandsunder_progression_get_v1
+      security:
+        - nakamaSession: []
+      responses:
+        '200':
+          description: The authenticated player's horizontal progression.
+          content:
+            application/json:
+              schema:
+                $ref: ../schemas/progression.schema.json
+        '401': { $ref: '#/components/responses/Unauthorized' }
+components:
+  securitySchemes:
+    nakamaSession:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    nakamaServerKey:
+      type: apiKey
+      in: header
+      name: X-Nakama-Server-Key
+  schemas:
+    SettlementReceipt:
+      type: object
+      additionalProperties: false
+      required: [accepted, duplicate, match_id, account_id]
+      properties:
+        accepted: { type: boolean, const: true }
+        duplicate: { type: boolean }
+        match_id: { $ref: ../schemas/common.schema.json#/$defs/uuid }
+        account_id: { $ref: ../schemas/common.schema.json#/$defs/uuid }
+    Error:
+      type: object
+      additionalProperties: false
+      required: [code, message]
+      properties:
+        code: { type: string }
+        message: { type: string }
+  responses:
+    BadRequest:
+      description: Malformed, stale or incorrectly signed request.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Missing or invalid server/session authentication.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Conflict:
+      description: Nonce, match or ticket was already consumed.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }

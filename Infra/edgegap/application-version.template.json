@@ -1,0 +1,25 @@
+{
+  "$schema": "./application-version.template.schema.json",
+  "template_version": 1,
+  "provider": "edgegap",
+  "image": {
+    "reference": "registry.example.invalid/sandsunder/server@sha256:replace-with-image-digest",
+    "dockerfile": "Infra/unity-server/Dockerfile"
+  },
+  "ports": [
+    {
+      "name": "gameplay",
+      "internal": 7777,
+      "protocol": "UDP",
+      "external": "dynamic"
+    }
+  ],
+  "session": {
+    "max_players": 6,
+    "max_duration_seconds": 900,
+    "shutdown_grace_seconds": 60
+  },
+  "runtime_environment_file": "Infra/edgegap/deployment.env.example",
+  "notes": "Review artifact only; translate through the Edgegap adapter. Do not POST directly."
+}
+

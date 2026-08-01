@@ -1,0 +1,11 @@
+# Merge these entries into the repository-root .dockerignore when Unity creates the project.
+.git
+**/Library
+**/Logs
+**/Temp
+**/UserSettings
+**/obj
+**/.vs
+**/*.pdb
+!Game/Build/LinuxServer/**
+

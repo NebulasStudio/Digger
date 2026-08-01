@@ -1,0 +1,19 @@
+{
+  "name": "@sandsunder/public-assets-worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "cf-typegen": "wrangler types",
+    "check": "npm run cf-typegen && tsc --noEmit",
+    "dev": "wrangler dev"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.2",
+    "typescript": "7.0.2",
+    "wrangler": "4.118.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

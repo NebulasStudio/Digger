@@ -1,0 +1,145 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      run_unity_tests:
+        description: Run licensed Unity EditMode and PlayMode tests
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  infrastructure:
+    name: Infrastructure configuration
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Compose model
+        run: docker compose --env-file Infra/.env.example -f Infra/compose.yaml config --quiet
+
+      - name: Build Nakama runtime module image
+        run: docker compose --env-file Infra/.env.example -f Infra/compose.yaml build backend-build
+
+      - name: Parse infrastructure JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            node -e 'JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8"))' "$file"
+          done < <(find Infra -type f -name '*.json' -not -path '*/node_modules/*' -print0)
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: Infra/cloudflare/package-lock.json
+
+      - name: Install Worker dependencies
+        working-directory: Infra/cloudflare
+        run: npm ci
+
+      - name: Type-check Worker and Wrangler bindings
+        working-directory: Infra/cloudflare
+        run: npm run check
+
+  contracts-backend:
+    name: Contracts and backend checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Parse JSON contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -d Contracts ]]; then
+            echo "Contracts directory is not present yet; skipping JSON contract parsing."
+            exit 0
+          fi
+          while IFS= read -r -d '' file; do
+            node -e 'JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8"))' "$file"
+          done < <(find Contracts -type f -name '*.json' -print0)
+
+      - name: Run Node lint, tests, and build when configured
+        shell: bash
+        run: |
+          set -euo pipefail
+          for directory in Contracts Backend; do
+            if [[ -f "$directory/package-lock.json" ]]; then
+              npm --prefix "$directory" ci
+              npm --prefix "$directory" run lint --if-present
+              npm --prefix "$directory" test --if-present
+            elif [[ -f "$directory/package.json" ]]; then
+              echo "::error file=$directory/package.json::Commit package-lock.json to enable reproducible CI."
+              exit 1
+            fi
+          done
+
+      - name: Run .NET tests when configured
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -d '' projects < <(find Backend Contracts -type f \( -name '*.sln' -o -name '*Tests.csproj' \) -print0 2>/dev/null || true)
+          for project in "${projects[@]}"; do
+            dotnet test "$project" --configuration Release --nologo
+          done
+
+  unity-tests:
+    name: Unity tests (explicitly gated)
+    if: ${{ vars.RUN_UNITY_TESTS == 'true' || inputs.run_unity_tests == true }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Verify Unity project and license configuration
+        shell: bash
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        run: |
+          set -euo pipefail
+          test -f Game/ProjectSettings/ProjectVersion.txt
+          test -n "$UNITY_LICENSE"
+
+      - uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          projectPath: Game
+          testMode: all
+          artifactsPath: artifacts/unity-tests
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Unity test results
+
+      - name: Upload Unity test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unity-test-results
+          path: artifacts/unity-tests
+          if-no-files-found: warn
+          retention-days: 14

@@ -56,7 +56,7 @@ namespace Sandsunder.Editor
                 Spitter = spitter,
                 PlayerAnimator = animator,
                 Shadow = CreateProceduralSprite("BlobShadow", 32, 16, 32f, DrawShadow),
-                Pistol = CreateProceduralSprite("BrassPistol", 20, 10, 32f, DrawPistol),
+                Pistol = ImportTile("Assets/Sandsunder/Art/Source/Higgsfield/brass_rifle_sprite.jpg", 32f) ?? CreateProceduralSprite("BrassPistol", 20, 10, 32f, DrawPistol),
                 Shovel = CreateProceduralSprite("StarterShovel", 24, 12, 32f, DrawShovel),
                 Scimitar = CreateProceduralSprite("DesertScimitar", 28, 14, 32f, DrawScimitar),
                 Shotgun = CreateProceduralSprite("HeavyShotgun", 30, 12, 32f, DrawShotgun),
@@ -510,22 +510,26 @@ namespace Sandsunder.Editor
         public static RuntimeAnimatorController LoadOrCreatePlayerAnimator()
         {
             string controllerPath = $"{GeneratedRoot}/NomadAnimatorController.controller";
-            var existingController = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(controllerPath);
-            if (existingController != null) return existingController;
+            AssetDatabase.DeleteAsset(controllerPath); // Force regenerate to apply new transitions and states
 
             var controller = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
             controller.AddParameter("IsMoving", AnimatorControllerParameterType.Bool);
             controller.AddParameter("IsRolling", AnimatorControllerParameterType.Bool);
             controller.AddParameter("IsDigging", AnimatorControllerParameterType.Bool);
+            controller.AddParameter("Speed", AnimatorControllerParameterType.Float);
 
-            AnimationClip idleClip = CreateClip($"{GeneratedRoot}/Player_Idle.anim", "Idle");
-            AnimationClip runClip = CreateClip($"{GeneratedRoot}/Player_Run.anim", "Run");
-            AnimationClip rollClip = CreateClip($"{GeneratedRoot}/Player_Roll.anim", "Roll");
-            AnimationClip digClip = CreateClip($"{GeneratedRoot}/Player_Dig.anim", "Dig");
+            AnimationClip idleClip = CreateClip($"{GeneratedRoot}/Nomad_Idle.anim", "Nomad_Idle");
+            AnimationClip walkClip = CreateClip($"{GeneratedRoot}/Nomad_Walk.anim", "Nomad_Walk");
+            AnimationClip runClip = CreateClip($"{GeneratedRoot}/Nomad_Run.anim", "Nomad_Run");
+            AnimationClip rollClip = CreateClip($"{GeneratedRoot}/Nomad_Roll.anim", "Nomad_Roll");
+            AnimationClip digClip = CreateClip($"{GeneratedRoot}/Nomad_Dig.anim", "Nomad_Dig");
 
             var rootStateMach = controller.layers[0].stateMachine;
             var idleState = rootStateMach.AddState("Idle");
             idleState.motion = idleClip;
+
+            var walkState = rootStateMach.AddState("Walk");
+            walkState.motion = walkClip;
 
             var runState = rootStateMach.AddState("Run");
             runState.motion = runClip;
@@ -536,6 +540,58 @@ namespace Sandsunder.Editor
             var digState = rootStateMach.AddState("Dig");
             digState.motion = digClip;
 
+            // Any State -> Roll (if IsRolling == true)
+            var rollTransition = rootStateMach.AddAnyStateTransition(rollState);
+            rollTransition.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "IsRolling");
+            rollTransition.duration = 0.05f;
+
+            // Roll -> Idle (if IsRolling == false)
+            var rollToIdle = rollState.AddTransition(idleState);
+            rollToIdle.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "IsRolling");
+            rollToIdle.duration = 0.1f;
+
+            // Idle -> Walk (if IsMoving == true && Speed <= 0.75)
+            var idleToWalk = idleState.AddTransition(walkState);
+            idleToWalk.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "IsMoving");
+            idleToWalk.AddCondition(UnityEditor.Animations.AnimatorConditionMode.Less, 0.75f, "Speed");
+            idleToWalk.duration = 0.15f;
+
+            // Walk -> Idle (if IsMoving == false)
+            var walkToIdle = walkState.AddTransition(idleState);
+            walkToIdle.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "IsMoving");
+            walkToIdle.duration = 0.15f;
+
+            // Idle -> Run (if IsMoving == true && Speed > 0.75)
+            var idleToRun = idleState.AddTransition(runState);
+            idleToRun.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "IsMoving");
+            idleToRun.AddCondition(UnityEditor.Animations.AnimatorConditionMode.Greater, 0.75f, "Speed");
+            idleToRun.duration = 0.15f;
+
+            // Run -> Idle (if IsMoving == false)
+            var runToIdle = runState.AddTransition(idleState);
+            runToIdle.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "IsMoving");
+            runToIdle.duration = 0.15f;
+
+            // Walk -> Run (if Speed > 0.75)
+            var walkToRun = walkState.AddTransition(runState);
+            walkToRun.AddCondition(UnityEditor.Animations.AnimatorConditionMode.Greater, 0.75f, "Speed");
+            walkToRun.duration = 0.15f;
+
+            // Run -> Walk (if Speed <= 0.75)
+            var runToWalk = runState.AddTransition(walkState);
+            runToWalk.AddCondition(UnityEditor.Animations.AnimatorConditionMode.Less, 0.75f, "Speed");
+            runToWalk.duration = 0.15f;
+
+            // Any State -> Dig (if IsDigging == true)
+            var digTransition = rootStateMach.AddAnyStateTransition(digState);
+            digTransition.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "IsDigging");
+            digTransition.duration = 0.05f;
+
+            // Dig -> Idle (if IsDigging == false)
+            var digToIdle = digState.AddTransition(idleState);
+            digToIdle.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "IsDigging");
+            digToIdle.duration = 0.1f;
+
             rootStateMach.defaultState = idleState;
             AssetDatabase.SaveAssets();
             return controller;
@@ -544,10 +600,146 @@ namespace Sandsunder.Editor
         private static AnimationClip CreateClip(string path, string name)
         {
             var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(path);
-            if (clip != null) return clip;
+            if (clip == null)
+            {
+                clip = new AnimationClip { name = name };
+                AssetDatabase.CreateAsset(clip, path);
+            }
 
-            clip = new AnimationClip { name = name };
-            AssetDatabase.CreateAsset(clip, path);
+            var settings = AnimationUtility.GetAnimationClipSettings(clip);
+            settings.loopTime = true;
+            AnimationUtility.SetAnimationClipSettings(clip, settings);
+
+            if (name == "Nomad_Idle")
+            {
+                clip.ClearCurves();
+                // Breathing: light rhythmic vertical scaling (bobbing)
+                AnimationCurve scaleY = new(
+                    new Keyframe(0f, 1.0f),
+                    new Keyframe(0.5f, 1.03f),
+                    new Keyframe(1.0f, 1.0f)
+                );
+                clip.SetCurve("", typeof(Transform), "m_LocalScale.y", scaleY);
+
+                AnimationCurve posY = new(
+                    new Keyframe(0f, 0.16f),
+                    new Keyframe(0.5f, 0.175f),
+                    new Keyframe(1.0f, 0.16f)
+                );
+                clip.SetCurve("", typeof(Transform), "m_LocalPosition.y", posY);
+            }
+            else if (name == "Nomad_Walk")
+            {
+                clip.ClearCurves();
+                // Walk: alternating stride/tilt of 5 degrees (approx 0.043f in Quaternion.z)
+                AnimationCurve rotZ = new(
+                    new Keyframe(0f, 0f),
+                    new Keyframe(0.25f, 0.043f),
+                    new Keyframe(0.5f, 0f),
+                    new Keyframe(0.75f, -0.043f),
+                    new Keyframe(1.0f, 0f)
+                );
+                clip.SetCurve("", typeof(Transform), "m_LocalRotation.z", rotZ);
+
+                AnimationCurve rotW = new(
+                    new Keyframe(0f, 1f),
+                    new Keyframe(0.25f, 0.999f),
+                    new Keyframe(0.5f, 1f),
+                    new Keyframe(0.75f, 0.999f),
+                    new Keyframe(1.0f, 1f)
+                );
+                clip.SetCurve("", typeof(Transform), "m_LocalRotation.w", rotW);
+
+                AnimationCurve posY = new(
+                    new Keyframe(0f, 0.16f),
+                    new Keyframe(0.25f, 0.18f),
+                    new Keyframe(0.5f, 0.16f),
+                    new Keyframe(0.75f, 0.18f),
+                    new Keyframe(1.0f, 0.16f)
+                );
+                clip.SetCurve("", typeof(Transform), "m_LocalPosition.y", posY);
+            }
+            else if (name == "Nomad_Run")
+            {
+                clip.ClearCurves();
+                // Run: lean forward/aerodynamic tilt at 12 degrees (approx 0.104f in Quaternion.z)
+                AnimationCurve rotZ = new(
+                    new Keyframe(0f, 0.104f),
+                    new Keyframe(0.5f, 0.12f),
+                    new Keyframe(1.0f, 0.104f)
+                );
+                clip.SetCurve("", typeof(Transform), "m_LocalRotation.z", rotZ);
+
+                AnimationCurve rotW = new(
+                    new Keyframe(0f, 0.994f),
+                    new Keyframe(0.5f, 0.992f),
+                    new Keyframe(1.0f, 0.994f)
+                );
+                clip.SetCurve("", typeof(Transform), "m_LocalRotation.w", rotW);
+
+                AnimationCurve posY = new(
+                    new Keyframe(0f, 0.14f),
+                    new Keyframe(0.25f, 0.16f),
+                    new Keyframe(0.5f, 0.14f),
+                    new Keyframe(0.75f, 0.16f),
+                    new Keyframe(1.0f, 0.14f)
+                );
+                clip.SetCurve("", typeof(Transform), "m_LocalPosition.y", posY);
+            }
+            else if (name == "Nomad_Roll")
+            {
+                clip.ClearCurves();
+                // Roll: 360 rotation around z
+                AnimationCurve rotZ = new(
+                    new Keyframe(0f, 0f),
+                    new Keyframe(0.5f, 1.0f),
+                    new Keyframe(1.0f, 0f)
+                );
+                clip.SetCurve("", typeof(Transform), "m_LocalRotation.z", rotZ);
+
+                AnimationCurve rotW = new(
+                    new Keyframe(0f, 1f),
+                    new Keyframe(0.5f, 0f),
+                    new Keyframe(1.0f, -1f)
+                );
+                clip.SetCurve("", typeof(Transform), "m_LocalRotation.w", rotW);
+            }
+            else if (name == "Nomad_Dig")
+            {
+                clip.ClearCurves();
+                // Dig: rapid back/forth shaking and downward scaling
+                AnimationCurve scaleY = new(
+                    new Keyframe(0f, 1.0f),
+                    new Keyframe(0.25f, 0.85f),
+                    new Keyframe(0.5f, 1.0f),
+                    new Keyframe(0.75f, 0.85f),
+                    new Keyframe(1.0f, 1.0f)
+                );
+                clip.SetCurve("", typeof(Transform), "m_LocalScale.y", scaleY);
+
+                AnimationCurve rotZ = new(
+                    new Keyframe(0f, 0f),
+                    new Keyframe(0.2f, 0.08f),
+                    new Keyframe(0.4f, -0.08f),
+                    new Keyframe(0.6f, 0.08f),
+                    new Keyframe(0.8f, -0.08f),
+                    new Keyframe(1.0f, 0f)
+                );
+                clip.SetCurve("", typeof(Transform), "m_LocalRotation.z", rotZ);
+
+                AnimationCurve rotW = new(
+                    new Keyframe(0f, 1f),
+                    new Keyframe(0.2f, 0.997f),
+                    new Keyframe(0.4f, 0.997f),
+                    new Keyframe(0.6f, 0.997f),
+                    new Keyframe(0.8f, 0.997f),
+                    new Keyframe(1.0f, 1f)
+                );
+                clip.SetCurve("", typeof(Transform), "m_LocalRotation.w", rotW);
+            }
+
+            EditorUtility.SetDirty(clip);
+            AssetDatabase.SaveAssets();
             return clip;
         }
     }

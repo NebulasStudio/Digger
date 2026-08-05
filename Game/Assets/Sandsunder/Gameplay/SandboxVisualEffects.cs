@@ -87,6 +87,52 @@ namespace Sandsunder.Gameplay
             }
         }
 
+        internal static void SpawnSandSpiral(Vector2 center)
+        {
+            Color sandColor = new Color(0.85f, 0.72f, 0.45f, 0.85f);
+            int count = 4;
+            for (int i = 0; i < count; i++)
+            {
+                float angle = (i * (360f / count)) + (Time.time * 90f);
+                float rad = angle * Mathf.Deg2Rad;
+                float radius = 1.1f;
+                Vector2 spawnOffset = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)) * radius;
+                Vector2 spawnPos = center + spawnOffset;
+                
+                // Spiral velocity: tangent + negative radial (inwards)
+                Vector2 radialDir = -spawnOffset.normalized;
+                Vector2 tangentDir = new Vector2(-radialDir.y, radialDir.x);
+                Vector2 velocity = (radialDir * 1.6f + tangentDir * 1.0f); // inward and swirling
+                
+                SpawnTransient(
+                    "Sand Spiral",
+                    spawnPos,
+                    PrototypePixelArt.GetCachedSprite(PrototypePixelKind.Projectile, sandColor),
+                    sandColor,
+                    Vector3.one * 0.12f,
+                    0.50f, // fast lifetime so they reach the center
+                    velocity,
+                    SortingFor(center, 2),
+                    radialDir);
+            }
+        }
+
+        internal static void SpawnShellCasing(Vector2 position, Vector2 direction, Color color)
+        {
+            // Shell casings are ejected outwards/upwards from the weapon
+            Vector2 ejectDir = new Vector2(-direction.y, direction.x) * Random.Range(1.3f, 1.9f) + (-direction * Random.Range(0.2f, 0.5f));
+            SpawnTransient(
+                "Shell Casing",
+                position,
+                PrototypePixelArt.GetCachedSprite(PrototypePixelKind.Projectile, color),
+                color,
+                new Vector3(0.08f, 0.04f, 1f),
+                1.5f, // casing stays on ground for 1.5 seconds
+                ejectDir,
+                SortingFor(position, -1),
+                ejectDir);
+        }
+
         private static void SpawnTransient(
             string name,
             Vector2 position,

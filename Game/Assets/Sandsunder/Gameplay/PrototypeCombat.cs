@@ -244,13 +244,7 @@ namespace Sandsunder.Gameplay
                 ? movement.AimDirection.normalized
                 : Vector2.right;
 
-            string itemId = "rifle.brass";
-            if (PrototypeInventoryHUD.Instance != null)
-            {
-                int sel = PrototypeInventoryHUD.Instance.SelectedIndex;
-                var items = PrototypeInventoryHUD.Instance.InventoryItems;
-                if (sel >= 0 && sel < items.Count) itemId = items[sel];
-            }
+            string itemId = GetEquippedItemId();
 
             if (itemId == "shotgun.heavy")
             {
@@ -265,7 +259,9 @@ namespace Sandsunder.Gameplay
                 }
                 GetComponent<SandboxActorVisual>()?.PlayFire(aim);
                 SandboxVisualEffects.SpawnMuzzle(transform.position, aim, new Color(0.98f, 0.75f, 0.30f));
-                SandboxVisualEffects.SpawnDust(transform.position, 8, new Color(0.60f, 0.60f, 0.65f)); // Shell Casing Eject
+                SandboxVisualEffects.SpawnShellCasing(transform.position, aim, new Color(0.35f, 0.30f, 0.25f));
+                SandboxVisualEffects.SpawnDust(transform.position, 4, new Color(0.60f, 0.60f, 0.65f));
+                SandboxReloadBar.Instance?.StartReload(1.8f);
                 return true;
             }
             else if (itemId == "blaster.rune")
@@ -276,7 +272,9 @@ namespace Sandsunder.Gameplay
                     38, 22.0f, 16.0f, 0f, new Color(0.20f, 0.95f, 0.90f));
                 GetComponent<SandboxActorVisual>()?.PlayFire(aim);
                 SandboxVisualEffects.SpawnMuzzle(transform.position, aim, new Color(0.20f, 0.95f, 0.90f));
-                SandboxVisualEffects.SpawnDust(transform.position, 4, new Color(0.20f, 0.95f, 0.90f));
+                SandboxVisualEffects.SpawnShellCasing(transform.position, aim, new Color(0.20f, 0.95f, 0.90f));
+                SandboxVisualEffects.SpawnDust(transform.position, 2, new Color(0.20f, 0.95f, 0.90f));
+                SandboxReloadBar.Instance?.StartReload(0.9f);
                 return true;
             }
             else if (itemId == "sword.scimitar" || itemId == "shovel.default")
@@ -284,9 +282,29 @@ namespace Sandsunder.Gameplay
                 return TryShovelForTesting();
             }
 
+            // Rifle Brass (Firearm)
             GetComponent<SandboxActorVisual>()?.PlayFire(aim);
             SandboxVisualEffects.SpawnMuzzle(transform.position, aim, new Color(0.95f, 0.85f, 0.40f));
-            SandboxVisualEffects.SpawnDust(transform.position, 4, new Color(0.85f, 0.65f, 0.25f)); // Rifle Casing
+            SandboxVisualEffects.SpawnShellCasing(transform.position, aim, new Color(0.95f, 0.75f, 0.30f));
+            SandboxVisualEffects.SpawnDust(transform.position, 2, new Color(0.85f, 0.65f, 0.25f));
+            PrototypeProjectile.Spawn(
+                (Vector2)transform.position + (aim * 0.42f),
+                aim,
+                nextProjectileId++,
+                health.EntityId,
+                health.Team,
+                rules.PistolDamage,
+                rules.PistolProjectileSpeedMillimetresPerSecond / 1000f,
+                rules.PistolRangeMillimetres / 1000f,
+                telegraphSeconds: 0f,
+                new Color(0.95f, 0.85f, 0.40f));
+            SandboxReloadBar.Instance?.StartReload(1.2f);
+            return true;
+
+            GetComponent<SandboxActorVisual>()?.PlayFire(aim);
+            SandboxVisualEffects.SpawnMuzzle(transform.position, aim, new Color(0.95f, 0.85f, 0.40f));
+            SandboxVisualEffects.SpawnShellCasing(transform.position, aim, new Color(0.95f, 0.75f, 0.30f)); // Golden Brass Casing
+            SandboxVisualEffects.SpawnDust(transform.position, 2, new Color(0.85f, 0.65f, 0.25f));
             PrototypeProjectile.Spawn(
                 (Vector2)transform.position + (aim * 0.42f),
                 aim,
@@ -427,6 +445,18 @@ namespace Sandsunder.Gameplay
         private float reloadTimer = 0f;
         private bool isReloading = false;
 
+        public string GetEquippedItemId()
+        {
+            string itemId = "rifle.brass";
+            if (PrototypeInventoryHUD.Instance != null)
+            {
+                int sel = PrototypeInventoryHUD.Instance.SelectedIndex;
+                var items = PrototypeInventoryHUD.Instance.InventoryItems;
+                if (sel >= 0 && sel < items.Count) itemId = items[sel];
+            }
+            return itemId;
+        }
+
         private void Update()
         {
             EnsureReferences();
@@ -434,10 +464,15 @@ namespace Sandsunder.Gameplay
 
             if (Input.GetKeyDown(KeyCode.R) && !isReloading)
             {
-                isReloading = true;
-                reloadTimer = 1.2f;
-                Debug.Log("[Combat] RICARICA ARMA IN CORSO...");
-                SandboxVisualEffects.SpawnDust(transform.position, 6, new Color(0.95f, 0.70f, 0.30f));
+                string itemId = GetEquippedItemId();
+                if (itemId == "rifle.brass" || itemId == "shotgun.heavy" || itemId == "blaster.rune")
+                {
+                    isReloading = true;
+                    reloadTimer = 1.2f;
+                    Debug.Log("[Combat] RICARICA ARMA IN CORSO...");
+                    SandboxVisualEffects.SpawnDust(transform.position, 6, new Color(0.95f, 0.70f, 0.30f));
+                    SandboxReloadBar.Instance?.StartReload(1.2f);
+                }
             }
 
             if (isReloading)
@@ -460,7 +495,7 @@ namespace Sandsunder.Gameplay
                 PrototypeMobSpawnerToggle.Instance?.TriggerRespawnAll();
             }
 
-            if (shovelAction != null && shovelAction.IsPressed() && movement.CurrentStamina > 0.1f)
+            if (shovelAction != null && shovelAction.IsPressed() && movement.CurrentStamina > 0.1f && GetEquippedItemId() == "shovel.default")
             {
                 if (!isDiggingChannel)
                 {
@@ -476,11 +511,15 @@ namespace Sandsunder.Gameplay
                     ? movement.AimDirection.normalized
                     : Vector2.right;
 
+                Vector2 digCenter = (Vector2)transform.position + (facing * 0.75f);
+                // Dynamically spawn spiral sand waves converging to the center!
+                SandboxVisualEffects.SpawnSandSpiral(digCenter);
+
                 if (Mathf.FloorToInt(previousTimer / 0.40f) != Mathf.FloorToInt(digChannelTimer / 0.40f))
                 {
                     GetComponent<SandboxActorVisual>()?.PlayMelee(facing);
                     SandboxVisualEffects.SpawnDust(
-                        (Vector2)transform.position + (facing * 0.65f),
+                        digCenter,
                         4,
                         new Color(0.86f, 0.70f, 0.43f));
                 }
@@ -562,7 +601,15 @@ namespace Sandsunder.Gameplay
 
         private void OnFirePerformed(InputAction.CallbackContext context)
         {
-            TryShovelMeleeAttack();
+            string itemId = GetEquippedItemId();
+            if (itemId == "rifle.brass" || itemId == "shotgun.heavy" || itemId == "blaster.rune")
+            {
+                TryFireForTesting();
+            }
+            else if (itemId == "sword.scimitar" || itemId == "shovel.default")
+            {
+                TryShovelForTesting();
+            }
         }
 
         private void OnShovelPerformed(InputAction.CallbackContext context)
@@ -891,24 +938,49 @@ namespace Sandsunder.Gameplay
 
     internal sealed class PrototypeArcFlash : MonoBehaviour
     {
+        private float duration = 0.12f;
         private float remaining = 0.12f;
+        private float startAngle;
+        private float sweepAngle = 180f;
+        private Vector2 origin;
+        private float radius;
+        private Vector2 baseDir;
 
         internal static void Spawn(Vector2 origin, Vector2 direction, float reach)
         {
-            GameObject flash = new("Shovel Arc Proxy");
-            flash.transform.position = origin + (direction * reach * 0.5f);
+            GameObject flash = new("Melee Cyan Arc Flash");
+            flash.transform.position = origin;
             flash.transform.right = direction;
-            flash.transform.localScale = new Vector3(reach, 0.12f, 1f);
+            
+            // Scaled arc representation
+            flash.transform.localScale = new Vector3(reach * 1.2f, reach * 0.6f, 1f);
+            
             SpriteRenderer renderer = flash.AddComponent<SpriteRenderer>();
             renderer.sortingOrder = 25;
+            
             PrototypePixelArt art = flash.AddComponent<PrototypePixelArt>();
-            art.Configure(PrototypePixelKind.Projectile, new Color(0.95f, 0.89f, 0.76f));
-            flash.AddComponent<PrototypeArcFlash>();
+            // Color is now native cyan arc flash!
+            art.Configure(PrototypePixelKind.Projectile, new Color(0.20f, 0.90f, 0.95f, 0.90f));
+            
+            PrototypeArcFlash behavior = flash.AddComponent<PrototypeArcFlash>();
+            behavior.origin = origin;
+            behavior.radius = reach;
+            behavior.baseDir = direction;
+            behavior.startAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
         }
 
         private void Update()
         {
             remaining -= Time.deltaTime;
+            float progress = 1f - (remaining / duration);
+            
+            // Sweep rotation over 180 degrees!
+            float currentAngle = startAngle + (progress * sweepAngle);
+            transform.rotation = Quaternion.Euler(0f, 0f, currentAngle);
+            
+            // Arc moves outward slightly during swing
+            transform.position = origin + (Vector2)(Quaternion.Euler(0f, 0f, currentAngle - 90f) * baseDir * (radius * 0.4f * progress));
+
             if (remaining <= 0f)
             {
                 Destroy(gameObject);

@@ -49,7 +49,7 @@ namespace Sandsunder.Gameplay
             reloadBarObj.transform.SetParent(canvasObj.transform, false);
 
             RectTransform frameRect = reloadBarObj.AddComponent<RectTransform>();
-            frameRect.sizeDelta = new Vector2(60, 10);
+            frameRect.sizeDelta = new Vector2(40, 6);
 
             Image bg = reloadBarObj.AddComponent<Image>();
             bg.color = new Color(0.10f, 0.08f, 0.06f, 0.85f);
@@ -60,11 +60,14 @@ namespace Sandsunder.Gameplay
             RectTransform fillRect = fillObj.AddComponent<RectTransform>();
             fillRect.anchorMin = Vector2.zero;
             fillRect.anchorMax = Vector2.one;
-            fillRect.offsetMin = new Vector2(2, 2);
-            fillRect.offsetMax = new Vector2(-2, -2);
+            fillRect.offsetMin = new Vector2(1, 1);
+            fillRect.offsetMax = new Vector2(-1, -1);
 
             fillImage = fillObj.AddComponent<Image>();
             fillImage.color = new Color(0.20f, 0.95f, 0.90f, 1.0f);
+            fillImage.type = Image.Type.Filled;
+            fillImage.fillMethod = Image.FillMethod.Horizontal;
+            fillImage.fillOrigin = (int)Image.OriginHorizontal.Left;
 
             reloadBarObj.SetActive(false);
         }

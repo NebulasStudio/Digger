@@ -28,10 +28,29 @@ namespace Sandsunder.Gameplay
             }
         }
 
+        private Color targetBgColor = new Color(0.86f, 0.70f, 0.43f);
+        private Color targetAmbient = new Color(0.95f, 0.85f, 0.70f);
+        private float transitionSpeed = 3.5f;
+
         private void Awake()
         {
             Instance = this;
             mainCamera = Camera.main;
+            if (mainCamera != null)
+            {
+                mainCamera.backgroundColor = targetBgColor;
+            }
+            RenderSettings.ambientLight = targetAmbient;
+        }
+
+        private void Update()
+        {
+            if (mainCamera == null) mainCamera = Camera.main;
+            if (mainCamera != null)
+            {
+                mainCamera.backgroundColor = Color.Lerp(mainCamera.backgroundColor, targetBgColor, Time.deltaTime * transitionSpeed);
+            }
+            RenderSettings.ambientLight = Color.Lerp(RenderSettings.ambientLight, targetAmbient, Time.deltaTime * transitionSpeed);
         }
 
         public void TransitionToLayer(MatrixLayerDepth targetLayer)
@@ -39,21 +58,19 @@ namespace Sandsunder.Gameplay
             CurrentLayer = targetLayer;
             Debug.Log($"[TunnelSystem] Transizione al layer matriciale: {targetLayer}");
 
-            if (mainCamera == null) mainCamera = Camera.main;
-
             switch (targetLayer)
             {
                 case MatrixLayerDepth.Surface_L0:
-                    if (mainCamera != null) mainCamera.backgroundColor = new Color(0.86f, 0.70f, 0.43f);
-                    RenderSettings.ambientLight = new Color(0.95f, 0.85f, 0.70f);
+                    targetBgColor = new Color(0.86f, 0.70f, 0.43f);
+                    targetAmbient = new Color(0.95f, 0.85f, 0.70f);
                     break;
                 case MatrixLayerDepth.Subterranean_L1:
-                    if (mainCamera != null) mainCamera.backgroundColor = new Color(0.18f, 0.14f, 0.10f);
-                    RenderSettings.ambientLight = new Color(0.40f, 0.32f, 0.22f);
+                    targetBgColor = new Color(0.18f, 0.14f, 0.10f);
+                    targetAmbient = new Color(0.40f, 0.32f, 0.22f);
                     break;
                 case MatrixLayerDepth.RuneVault_L2:
-                    if (mainCamera != null) mainCamera.backgroundColor = new Color(0.05f, 0.12f, 0.18f);
-                    RenderSettings.ambientLight = new Color(0.15f, 0.45f, 0.55f);
+                    targetBgColor = new Color(0.05f, 0.12f, 0.18f);
+                    targetAmbient = new Color(0.15f, 0.45f, 0.55f);
                     break;
             }
 

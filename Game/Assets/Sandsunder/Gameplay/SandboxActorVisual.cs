@@ -36,6 +36,8 @@ namespace Sandsunder.Gameplay
 
         private Transform bodyRoot;
         private Transform weaponRoot;
+        private Animator animator;
+        private RuntimeAnimatorController runtimeAnimatorController;
         private Vector3 previousWorldPosition;
         private Vector2 explicitAim = Vector2.right;
         private float walkPhase;
@@ -44,6 +46,7 @@ namespace Sandsunder.Gameplay
         private float meleeRemaining;
         private float hitRemaining;
         private float afterimageCountdown;
+        private float dustSpawnTimer;
         private bool initialized;
 
         public Transform VisualRoot => visualRoot;
@@ -80,11 +83,21 @@ namespace Sandsunder.Gameplay
             Sprite weapon,
             TopDownPlayerController configuredController,
             PrototypePlayerCombat configuredCombat,
-            bool isHostile)
+            bool isHostile,
+            RuntimeAnimatorController animatorController = null)
         {
             controller = configuredController;
             combat = configuredCombat;
             hostile = isHostile;
+            runtimeAnimatorController = animatorController;
+
+#if UNITY_EDITOR
+            if (runtimeAnimatorController == null && !hostile)
+            {
+                runtimeAnimatorController = UnityEditor.AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Sandsunder/Art/Generated/NomadAnimatorController.controller");
+            }
+#endif
+
             EnsureHierarchy();
 
             bodyRenderer.sprite = body != null
@@ -202,7 +215,10 @@ namespace Sandsunder.Gameplay
             meleeRemaining = Mathf.Max(0f, meleeRemaining - Time.deltaTime);
             hitRemaining = Mathf.Max(0f, hitRemaining - Time.deltaTime);
 
-            bodyRoot.localPosition = new Vector3(0f, -0.05f, 0f);
+            if (animator == null || animator.runtimeAnimatorController == null)
+            {
+                bodyRoot.localPosition = new Vector3(0f, -0.05f, 0f);
+            }
             shadowRenderer.transform.localScale = new Vector3(0.95f, 0.42f, 1f);
 
             UpdateHeldItemSprite();
@@ -254,6 +270,16 @@ namespace Sandsunder.Gameplay
             bool isShiftHeld = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
             bool isSubterranean = isShiftHeld || (controller != null && controller.CurrentDepth > 0);
             bool isMoving = controller != null && controller.CurrentMoveInput.sqrMagnitude > 0.01f;
+            bool isDigging = controller != null && controller.IsDiggingChanneling;
+
+            // Set Animator parameters dynamically
+            if (animator != null && animator.runtimeAnimatorController != null)
+            {
+                animator.SetBool("IsMoving", isMoving);
+                animator.SetBool("IsRolling", rollRemaining > 0f);
+                animator.SetBool("IsDigging", isDigging);
+                animator.SetFloat("Speed", controller != null ? controller.CurrentMoveInput.magnitude : 0f);
+            }
 
             if (rollRemaining > 0f)
             {
@@ -265,7 +291,7 @@ namespace Sandsunder.Gameplay
                 if (afterimageCountdown <= 0f)
                 {
                     SandboxAfterimage.Spawn(bodyRenderer, bodyRenderer.transform.position, bodyRenderer.sortingOrder - 1);
-                    afterimageCountdown = 0.055f;
+                    afterimageCountdown = 0.05f; // Emit exactly every 0.05s!
                 }
             }
             else if (isSubterranean)
@@ -283,6 +309,14 @@ namespace Sandsunder.Gameplay
                     // Running
                     float lean = explicitAim.x >= 0f ? 12f : -12f;
                     visualRoot.localRotation = Quaternion.Euler(0f, 0f, lean);
+
+                    // Emetti polvere sollevata dai piedi per la corsa
+                    dustSpawnTimer += Time.deltaTime;
+                    if (dustSpawnTimer >= 0.10f)
+                    {
+                        dustSpawnTimer = 0f;
+                        SandboxVisualEffects.SpawnDust(transform.position, 1, new Color(0.85f, 0.75f, 0.55f));
+                    }
                 }
                 else
                 {
@@ -365,15 +399,20 @@ namespace Sandsunder.Gameplay
             bodyRenderer = GetOrAddRenderer(bodyRoot);
             weaponRenderer = GetOrAddRenderer(weaponRoot);
 
-            Animator anim = bodyRoot.GetComponent<Animator>();
-            if (anim == null)
+            animator = bodyRoot.GetComponent<Animator>();
+            if (animator == null)
             {
-                anim = bodyRoot.gameObject.AddComponent<Animator>();
+                animator = bodyRoot.gameObject.AddComponent<Animator>();
+            }
+
+            if (animator.runtimeAnimatorController == null && runtimeAnimatorController != null)
+            {
+                animator.runtimeAnimatorController = runtimeAnimatorController;
             }
 
             if (!initialized)
             {
-                Configure(null, null, null, controller, combat, hostile);
+                Configure(null, null, null, controller, combat, hostile, runtimeAnimatorController);
             }
         }
 

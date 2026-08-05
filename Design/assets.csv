@@ -58,3 +58,20 @@ audio_sfx_weapons,Ten weapon fire reload impact bank,audio,"distinct frequency a
 audio_sfx_enemies,Five enemy action and telegraph bank,audio,"directional mob warnings attacks and deaths",audio bank,SB-AUDIO-1,generate,NA,planned_placeholder,prov_audio_sfx_enemies
 audio_sfx_objectives,Ritual relic extraction and timer bank,audio,"priority cyan objective tones and interruptions",audio bank,SB-AUDIO-1,generate,NA,planned_placeholder,prov_audio_sfx_objectives
 audio_sfx_ui,Menus inventory ping and results bank,audio,"short tactile wood metal and sand UI cues",audio bank,SB-AUDIO-1,generate,NA,planned_placeholder,prov_audio_sfx_ui
+sandbox_sand_variant_set,Immediate arena sand base tile,tile,"single post-processed wind-rippled sand tile with sparse pebble detail",1:1,SB-FORMULA-1,generate,NA,in_review,prov_sandbox_sand_variant_set
+sandbox_shadow_ellipse,Separate actor and prop shadow,sprite,"soft pixel-edged charcoal ellipse with transparent surround",2:1,SB-FORMULA-1,generate,NA,planned_placeholder,prov_sandbox_shadow_ellipse
+sandbox_ruin_modules,Immediate arena ruin base tile,tile,"single post-processed clay-block tile layered into floor wall face cap and pillar modules",1:1,SB-FORMULA-1,generate,variable,in_review,prov_sandbox_ruin_modules
+sandbox_hero_proxy,Immediate playable hero proxy,sprite,"single top-down three-quarter desert explorer pose with procedural flip bob recoil and tool attachment",1:1,SB-FORMULA-1,generate,1.0,in_review,prov_sandbox_hero_proxy
+sandbox_spitter_proxy,Immediate Dune Spitter proxy,sprite,"single top-down three-quarter sand predator pose with procedural flip bob recoil and telegraph",1:1,SB-FORMULA-1,generate,0.9,in_review,prov_sandbox_spitter_proxy
+sandbox_pistol_proxy,Immediate pistol attachment and icon,sprite,"compact turquoise-and-brass sidearm with clear forward barrel",1:1,SB-FORMULA-1,generate,0.55,planned_placeholder,prov_sandbox_pistol_proxy
+sandbox_shovel_proxy,Immediate shovel attachment and icon,sprite,"short steel shovel with cream wrap and broad readable digging blade",1:1,SB-FORMULA-1,generate,0.8,planned_placeholder,prov_sandbox_shovel_proxy
+sandbox_player_bullet,Player bullet core and short trail,spritesheet,"narrow cream core with turquoise edge and forward trail",1:1,SB-FORMULA-1,generate,0.22,planned_placeholder,prov_sandbox_player_bullet
+sandbox_spitter_bullet,Spitter projectile core and short trail,spritesheet,"ember-red orb with pale hot core and forward trail",1:1,SB-FORMULA-1,generate,0.26,planned_placeholder,prov_sandbox_spitter_bullet
+sandbox_vfx_muzzle,Immediate fire acknowledgement,VFX atlas,"two-frame directional muzzle flash and brass spark",1:1,SB-FORMULA-1,generate,0.6,planned_placeholder,prov_sandbox_vfx_muzzle
+sandbox_vfx_hit,Immediate combat impact set,VFX atlas,"short coral enemy hit and cream-turquoise player hit starbursts",1:1,SB-FORMULA-1,generate,0.5,planned_placeholder,prov_sandbox_vfx_hit
+sandbox_vfx_dig,Immediate shovel impact and dig progress,VFX atlas,"sand chip arc dust puff and three-stage crack emphasis",1:1,SB-FORMULA-1,generate,1.1,planned_placeholder,prov_sandbox_vfx_dig
+sandbox_vfx_dust,Immediate walk and roll dust,VFX atlas,"small warm sand puffs and short trailing roll dust",1:1,SB-FORMULA-1,generate,0.8,planned_placeholder,prov_sandbox_vfx_dust
+sandbox_vfx_spitter_telegraph,Immediate Spitter charge warning,VFX atlas,"ember-red cone ring and pulsing mouth-core charge marks",1:1,SB-FORMULA-1,generate,1.4,planned_placeholder,prov_sandbox_vfx_spitter_telegraph
+sandbox_pickup_scrap,Immediate dig reward pickup,sprite,"cream salvage bundle with cyan diamond tag",1:1,SB-FORMULA-1,generate,0.45,planned_placeholder,prov_sandbox_pickup_scrap
+sandbox_pickup_heal,Immediate recovery pickup,sprite,"green ceramic vial with clear plus-like silhouette",1:1,SB-FORMULA-1,generate,0.4,planned_placeholder,prov_sandbox_pickup_heal
+sandbox_hud_core,Immediate gameplay HUD frame and icons,ui atlas,"health weapon shovel dodge cooldown pickup and enemy-charge indicators",16:9,SB-FORMULA-1,generate,NA,planned_placeholder,prov_sandbox_hud_core

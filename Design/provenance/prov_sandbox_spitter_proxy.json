@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "provenance_id": "prov_sandbox_spitter_proxy",
+  "asset_id": "sandbox_spitter_proxy",
+  "status": "in_review",
+  "source": {
+    "type": "generated_ai",
+    "provider": "Higgsfield",
+    "model": "nano_banana_flash",
+    "model_version": "Nano Banana 2",
+    "job_id": "cc67c436-ee54-4f76-865f-8b269c12a330",
+    "seed": null,
+    "prompt": "game sprite of low wide dune spitter creature with clay-red armored shell, dark mouth and coral attack sacs, single character, full body visible, centered, Modern chunky pixel art with a crisp 32x32 grid feel, selective sub-pixel highlights, and no texture filtering. Use bold, readable silhouettes with two-pixel deep umber outlines, angular desert-worn shapes, and restrained interior detail. Environments use warm ochre, sand, clay, and charcoal shadows; playable characters use cool turquoise, cobalt, cream, and coral contrasts; hazards, rare loot, and objectives use luminous acid-cyan signals. Keep a tense yet adventurous desert mood under flat directional sunlight, with high gameplay contrast, clean readable silhouettes, and a consistent top-down three-quarter perspective across all assets., on a solid uniform bright magenta #FF00FF background, no shadows cast on the background, no ground plane, nothing cropped at the edges",
+    "negative_prompt": null,
+    "style_formula_ref": "SB-FORMULA-1",
+    "created_at": "2026-08-02T14:15:04.117838Z",
+    "reference_inputs": []
+  },
+  "processing": [
+    { "tool": "Higgsfield Image Background Remover", "version": null, "operation": "Background-removal source pass, job 75b30384-78da-4547-9811-c2106d9f27d4", "operator": "Codex", "performed_at": "2026-08-02T14:16:50.151310Z" },
+    { "tool": "Tools/art/key_magenta_sprite.py", "version": "1", "operation": "Global magenta key including enclosed regions, padded union crop and nearest-neighbour downscale to 29 logical pixels high", "operator": "Codex", "performed_at": "2026-08-02T15:03:23.8140115Z" }
+  ],
+  "rights": {
+    "commercial_use_reviewed": false,
+    "third_party_ip_reviewed": false,
+    "steam_ai_disclosure": "required",
+    "license_notes": "Original non-IP prompt. Human commercial-rights and platform disclosure review remains mandatory."
+  },
+  "review": {
+    "style": "pending",
+    "readability": "pending",
+    "technical": "pending",
+    "human_approver": null,
+    "approved_at": null,
+    "notes": "Internal sandbox proxy only; requires direction sheet, animation cleanup, pivot and hurtbox review before shipping."
+  },
+  "artifacts": [
+    { "kind": "original", "path_or_uri": "Game/Assets/Sandsunder/Art/Source/Higgsfield/spitter_source.png", "sha256": "b8496f32db2ac679872fe6cd248e6fc3041179aae8fe883c6212f5df0206960e", "content_type": "image/png", "published": false },
+    { "kind": "intermediate", "path_or_uri": "Game/Assets/Sandsunder/Art/Runtime/spitter.png", "sha256": "df8eb8dc28e6957c4ee0667fd9e6de53c306a9f61ef971b4931d4cae9a78abce", "content_type": "image/png", "published": false },
+    { "kind": "runtime", "path_or_uri": "Game/Assets/Sandsunder/Art/Runtime/Processed/spitter_32.png", "sha256": "15a932523b7d25daa271bf23e1a5cae5c98c1c59f7d87a810713348e93d4592b", "content_type": "image/png", "published": false }
+  ]
+}

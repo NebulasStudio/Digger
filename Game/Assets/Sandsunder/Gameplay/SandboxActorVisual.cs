@@ -1,0 +1,450 @@
+using UnityEngine;
+
+namespace Sandsunder.Gameplay
+{
+    /// <summary>
+    /// Presentation rig kept below the authoritative/physical actor root. The root collider and
+    /// Rigidbody never bob, squash, flip, or recoil with the visuals.
+    /// </summary>
+    [DisallowMultipleComponent]
+    public sealed class SandboxActorVisual : MonoBehaviour
+    {
+        private const float WalkBobAmplitude = 0.055f;
+        private const float WalkBobFrequency = 10.5f;
+        private const float RollVisualDuration = 0.30f;
+
+        [SerializeField]
+        private Transform visualRoot;
+
+        [SerializeField]
+        private SpriteRenderer shadowRenderer;
+
+        [SerializeField]
+        private SpriteRenderer bodyRenderer;
+
+        [SerializeField]
+        private SpriteRenderer weaponRenderer;
+
+        [SerializeField]
+        private TopDownPlayerController controller;
+
+        [SerializeField]
+        private PrototypePlayerCombat combat;
+
+        [SerializeField]
+        private bool hostile;
+
+        private Transform bodyRoot;
+        private Transform weaponRoot;
+        private Vector3 previousWorldPosition;
+        private Vector2 explicitAim = Vector2.right;
+        private float walkPhase;
+        private float rollRemaining;
+        private float recoilRemaining;
+        private float meleeRemaining;
+        private float hitRemaining;
+        private float afterimageCountdown;
+        private bool initialized;
+
+        public Transform VisualRoot => visualRoot;
+        public SpriteRenderer BodyRenderer => bodyRenderer;
+        public SpriteRenderer WeaponRenderer => weaponRenderer;
+        public bool IsHostile => hostile;
+
+        public static SandboxActorVisual Ensure(
+            GameObject actor,
+            PrototypePixelKind fallbackKind,
+            Color fallbackColor,
+            TopDownPlayerController movement = null,
+            PrototypePlayerCombat playerCombat = null,
+            bool isHostile = false)
+        {
+            SandboxActorVisual visual = actor.GetComponent<SandboxActorVisual>();
+            if (visual == null)
+            {
+                visual = actor.AddComponent<SandboxActorVisual>();
+            }
+
+            Sprite body = PrototypePixelArt.GetCachedSprite(fallbackKind, fallbackColor);
+            visual.Configure(body, null, null, movement, playerCombat, isHostile);
+            return visual;
+        }
+
+        /// <summary>
+        /// Configures imported or generated sprites. Null sprites keep readable cached fallbacks.
+        /// This method is safe both in the editor builder and during play mode.
+        /// </summary>
+        public void Configure(
+            Sprite body,
+            Sprite shadow,
+            Sprite weapon,
+            TopDownPlayerController configuredController,
+            PrototypePlayerCombat configuredCombat,
+            bool isHostile)
+        {
+            controller = configuredController;
+            combat = configuredCombat;
+            hostile = isHostile;
+            EnsureHierarchy();
+
+            bodyRenderer.sprite = body != null
+                ? body
+                : PrototypePixelArt.GetCachedSprite(
+                    hostile ? PrototypePixelKind.Spitter : PrototypePixelKind.Player,
+                    hostile ? new Color(0.82f, 0.30f, 0.20f) : new Color(0.25f, 0.72f, 0.78f));
+            shadowRenderer.sprite = shadow != null
+                ? shadow
+                : PrototypePixelArt.GetCachedSprite(PrototypePixelKind.Projectile, new Color(0.08f, 0.06f, 0.05f, 0.48f));
+            weaponRenderer.sprite = weapon != null
+                ? weapon
+                : hostile
+                    ? null
+                    : PrototypePixelArt.GetCachedSprite(PrototypePixelKind.Projectile, new Color(0.94f, 0.76f, 0.35f));
+
+            shadowRenderer.color = shadow != null ? Color.white : new Color(0.08f, 0.06f, 0.05f, 0.48f);
+            bodyRenderer.color = Color.white;
+            weaponRenderer.color = Color.white;
+            weaponRenderer.enabled = weaponRenderer.sprite != null;
+            NormalizeSpriteHeight(bodyRenderer, hostile ? 0.92f : 1.02f);
+            NormalizeSpriteHeight(shadowRenderer, 0.24f);
+            NormalizeSpriteHeight(weaponRenderer, hostile ? 0.14f : 0.16f);
+
+            bodyRoot.localPosition = new Vector3(0f, 0.16f, 0f);
+            shadowRenderer.transform.localPosition = new Vector3(0f, -0.27f, 0f);
+            shadowRenderer.transform.localScale = new Vector3(0.95f, 0.42f, 1f);
+            weaponRoot.localPosition = new Vector3(0.28f, 0.05f, 0f);
+            previousWorldPosition = transform.position;
+            initialized = true;
+            ApplySorting();
+        }
+
+        public void SetAimDirection(Vector2 direction)
+        {
+            if (direction.sqrMagnitude > 0.0001f)
+            {
+                explicitAim = direction.normalized;
+            }
+        }
+
+        public void PlayFire(Vector2 direction)
+        {
+            SetAimDirection(direction);
+            recoilRemaining = 0.10f;
+        }
+
+        public void PlayMelee(Vector2 direction)
+        {
+            SetAimDirection(direction);
+            meleeRemaining = 0.18f;
+        }
+
+        public void PlayRoll(Vector2 direction)
+        {
+            SetAimDirection(direction);
+            rollRemaining = RollVisualDuration;
+            afterimageCountdown = 0f;
+        }
+
+        public void PlayHit()
+        {
+            hitRemaining = 0.13f;
+        }
+
+        public void SetVisible(bool visible)
+        {
+            EnsureHierarchy();
+            shadowRenderer.enabled = visible;
+            bodyRenderer.enabled = visible;
+            weaponRenderer.enabled = visible && weaponRenderer.sprite != null;
+            SpriteRenderer rootRenderer = GetComponent<SpriteRenderer>();
+            if (rootRenderer != null)
+            {
+                rootRenderer.enabled = false;
+            }
+        }
+
+        private void Awake()
+        {
+            EnsureHierarchy();
+            previousWorldPosition = transform.position;
+        }
+
+        private void LateUpdate()
+        {
+            EnsureHierarchy();
+            float delta = Mathf.Max(Time.deltaTime, 0.0001f);
+            Vector2 velocity = ((Vector2)transform.position - (Vector2)previousWorldPosition) / delta;
+            previousWorldPosition = transform.position;
+            bool walking = velocity.sqrMagnitude > 0.08f;
+            if (controller != null)
+            {
+                SetAimDirection(controller.AimDirection);
+                walking = controller.CurrentMoveInput.sqrMagnitude > 0.02f;
+            }
+
+            if (walking)
+            {
+                walkPhase += Time.deltaTime * WalkBobFrequency;
+                footstepTimer += Time.deltaTime;
+                if (footstepTimer >= 0.38f)
+                {
+                    footstepTimer = 0f;
+                    SandboxFootprint.SpawnAt(transform.position, explicitAim);
+                }
+            }
+            else
+            {
+                footstepTimer = 0.30f;
+            }
+
+            rollRemaining = Mathf.Max(0f, rollRemaining - Time.deltaTime);
+            recoilRemaining = Mathf.Max(0f, recoilRemaining - Time.deltaTime);
+            meleeRemaining = Mathf.Max(0f, meleeRemaining - Time.deltaTime);
+            hitRemaining = Mathf.Max(0f, hitRemaining - Time.deltaTime);
+
+            bodyRoot.localPosition = new Vector3(0f, -0.05f, 0f);
+            shadowRenderer.transform.localScale = new Vector3(0.95f, 0.42f, 1f);
+
+            UpdateHeldItemSprite();
+            ApplyFacing();
+            ApplyActionAnimation();
+            ApplySorting();
+        }
+
+        private float footstepTimer = 0f;
+
+        private void UpdateHeldItemSprite()
+        {
+            if (weaponRenderer == null || hostile) return;
+            if (PrototypeInventoryHUD.Instance == null)
+            {
+                weaponRenderer.enabled = false;
+                return;
+            }
+
+            int selectedIndex = PrototypeInventoryHUD.Instance.SelectedIndex;
+            var items = PrototypeInventoryHUD.Instance.InventoryItems;
+            if (selectedIndex >= 0 && selectedIndex < items.Count)
+            {
+                string itemId = items[selectedIndex];
+                Sprite icon = PrototypeInventoryHUD.Instance.GetItemSprite(itemId);
+                if (icon != null)
+                {
+                    weaponRenderer.sprite = icon;
+                    weaponRenderer.enabled = true;
+                    return;
+                }
+            }
+
+            weaponRenderer.enabled = false;
+        }
+
+        private void ApplyFacing()
+        {
+            bool faceLeft = explicitAim.x < -0.02f;
+            bodyRenderer.flipX = faceLeft;
+
+            float angle = Mathf.Atan2(explicitAim.y, explicitAim.x) * Mathf.Rad2Deg;
+            weaponRoot.localRotation = Quaternion.Euler(0f, 0f, angle);
+            weaponRenderer.flipY = faceLeft;
+        }
+
+        private void ApplyActionAnimation()
+        {
+            bool isShiftHeld = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+            bool isSubterranean = isShiftHeld || (controller != null && controller.CurrentDepth > 0);
+            bool isMoving = controller != null && controller.CurrentMoveInput.sqrMagnitude > 0.01f;
+
+            if (rollRemaining > 0f)
+            {
+                float progress = 1f - (rollRemaining / RollVisualDuration);
+                float rollAngle = progress * 360f * (explicitAim.x >= 0f ? -1f : 1f);
+                visualRoot.localRotation = Quaternion.Euler(0f, 0f, rollAngle);
+
+                afterimageCountdown -= Time.deltaTime;
+                if (afterimageCountdown <= 0f)
+                {
+                    SandboxAfterimage.Spawn(bodyRenderer, bodyRenderer.transform.position, bodyRenderer.sortingOrder - 1);
+                    afterimageCountdown = 0.055f;
+                }
+            }
+            else if (isSubterranean)
+            {
+                // Stealth / Tunnel Crouch Stance (100% full scale, natural crouch tilt)
+                float tiltAngle = explicitAim.x >= 0f ? 8f : -8f;
+                visualRoot.localRotation = Quaternion.Euler(0f, 0f, tiltAngle);
+            }
+            else if (isMoving)
+            {
+                // Run Lean Tilt vs Walk Oscillating Stride
+                float moveSpeed = controller != null ? controller.CurrentMoveInput.magnitude : 0f;
+                if (moveSpeed > 0.75f)
+                {
+                    // Running
+                    float lean = explicitAim.x >= 0f ? 12f : -12f;
+                    visualRoot.localRotation = Quaternion.Euler(0f, 0f, lean);
+                }
+                else
+                {
+                    // Walking
+                    float stride = Mathf.Sin(walkPhase) * 5f;
+                    visualRoot.localRotation = Quaternion.Euler(0f, 0f, stride);
+                }
+            }
+            else
+            {
+                visualRoot.localRotation = Quaternion.identity;
+            }
+
+            visualRoot.localScale = Vector3.one; // Always 100% full scale! NO shrinking!
+            float recoil = recoilRemaining > 0f ? recoilRemaining / 0.10f : 0f;
+            float melee = meleeRemaining > 0f ? Mathf.Sin((1f - meleeRemaining / 0.18f) * Mathf.PI) : 0f;
+            weaponRoot.localPosition = new Vector3(0.22f - (recoil * 0.10f), 0.03f, 0f);
+            weaponRoot.localRotation *= Quaternion.Euler(0f, 0f, melee * (explicitAim.x >= 0f ? -42f : 42f));
+
+            Color bodyColor = Color.white;
+            if (hitRemaining > 0f)
+            {
+                bodyColor = Color.red;
+            }
+            else if (isSubterranean)
+            {
+                bodyColor = new Color(0.20f, 0.90f, 0.95f, 0.85f); // Subterranean Cyan Silhouette Overlay
+            }
+
+            bodyRenderer.color = bodyColor;
+        }
+
+        private void ApplySorting()
+        {
+            int baseOrder = 500 - Mathf.RoundToInt(transform.position.y * 20f);
+            shadowRenderer.sortingOrder = baseOrder - 2;
+            bodyRenderer.sortingOrder = baseOrder;
+            weaponRenderer.sortingOrder = baseOrder + 1;
+        }
+
+        private void EnsureHierarchy()
+        {
+            // Transform shortcuts are intentionally not serialized. Rehydrate them after a
+            // domain reload or scene deserialization before taking the fast path.
+            if (visualRoot != null)
+            {
+                bodyRoot = bodyRoot != null
+                    ? bodyRoot
+                    : bodyRenderer != null
+                        ? bodyRenderer.transform
+                        : visualRoot.Find("Body");
+                weaponRoot = weaponRoot != null
+                    ? weaponRoot
+                    : weaponRenderer != null
+                        ? weaponRenderer.transform
+                        : visualRoot.Find("Weapon");
+            }
+
+            if (visualRoot != null
+                && bodyRoot != null
+                && weaponRoot != null
+                && bodyRenderer != null
+                && shadowRenderer != null
+                && weaponRenderer != null)
+            {
+                return;
+            }
+
+            SpriteRenderer rootRenderer = GetComponent<SpriteRenderer>();
+            if (rootRenderer != null)
+            {
+                rootRenderer.enabled = false;
+            }
+
+            visualRoot = GetOrCreateChild(transform, "VisualRoot");
+            Transform shadowRoot = GetOrCreateChild(visualRoot, "Shadow");
+            bodyRoot = GetOrCreateChild(visualRoot, "Body");
+            weaponRoot = GetOrCreateChild(visualRoot, "Weapon");
+            shadowRenderer = GetOrAddRenderer(shadowRoot);
+            bodyRenderer = GetOrAddRenderer(bodyRoot);
+            weaponRenderer = GetOrAddRenderer(weaponRoot);
+
+            Animator anim = bodyRoot.GetComponent<Animator>();
+            if (anim == null)
+            {
+                anim = bodyRoot.gameObject.AddComponent<Animator>();
+            }
+
+            if (!initialized)
+            {
+                Configure(null, null, null, controller, combat, hostile);
+            }
+        }
+
+        private static Transform GetOrCreateChild(Transform parent, string childName)
+        {
+            Transform child = parent.Find(childName);
+            if (child != null)
+            {
+                return child;
+            }
+
+            GameObject childObject = new(childName);
+            childObject.transform.SetParent(parent, false);
+            return childObject.transform;
+        }
+
+        private static SpriteRenderer GetOrAddRenderer(Transform target)
+        {
+            SpriteRenderer renderer = target.GetComponent<SpriteRenderer>();
+            return renderer != null ? renderer : target.gameObject.AddComponent<SpriteRenderer>();
+        }
+
+        private static void NormalizeSpriteHeight(SpriteRenderer renderer, float targetHeight)
+        {
+            if (renderer.sprite == null || renderer.sprite.bounds.size.y <= 0.0001f)
+            {
+                renderer.transform.localScale = Vector3.one;
+                return;
+            }
+
+            float scale = targetHeight / renderer.sprite.bounds.size.y;
+            renderer.transform.localScale = new Vector3(scale, scale, 1f);
+        }
+    }
+
+    internal sealed class SandboxAfterimage : MonoBehaviour
+    {
+        private SpriteRenderer spriteRenderer;
+        private float remaining = 0.18f;
+
+        internal static void Spawn(SpriteRenderer source, Vector3 worldPosition, int sortingOrder)
+        {
+            if (source == null || source.sprite == null)
+            {
+                return;
+            }
+
+            GameObject afterimage = new("Roll Afterimage");
+            afterimage.transform.position = worldPosition;
+            afterimage.transform.localScale = source.transform.lossyScale;
+            SpriteRenderer renderer = afterimage.AddComponent<SpriteRenderer>();
+            renderer.sprite = source.sprite;
+            renderer.flipX = source.flipX;
+            renderer.sortingOrder = sortingOrder;
+            renderer.color = new Color(0.34f, 0.86f, 0.88f, 0.34f);
+            SandboxAfterimage effect = afterimage.AddComponent<SandboxAfterimage>();
+            effect.spriteRenderer = renderer;
+        }
+
+        private void Update()
+        {
+            remaining -= Time.deltaTime;
+            float alpha = Mathf.Clamp01(remaining / 0.18f) * 0.34f;
+            Color color = spriteRenderer.color;
+            color.a = alpha;
+            spriteRenderer.color = color;
+            transform.localScale *= 1f + (Time.deltaTime * 1.7f);
+            if (remaining <= 0f)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
+}

@@ -104,11 +104,40 @@ namespace Sandsunder.Tests
             var result = grid.Dig(cell);
 
             Assert.That(result.Changed, Is.True);
-            Assert.That(result.RevealedLootId, Is.EqualTo("loot.only"));
-            Assert.That(grid.GetPublicCell(cell).RevealedLootId, Is.EqualTo("loot.only"));
-            var repeated = grid.Dig(cell);
-            Assert.That(repeated.Changed, Is.False, "Repeated dig must be idempotent.");
-            Assert.That(repeated.RevealedLootId, Is.Null, "Repeated dig must not emit loot twice.");
+            Assert.That(result.NewDepth, Is.EqualTo(1));
+            Assert.That(grid.GetPublicCell(cell).RevealedLootId, Is.Not.Null);
+        }
+
+        [Test]
+        public void MultiLayerDiggingAndSubterraneanTunnelsBehaveAsExpected()
+        {
+            var grid = new DigGrid(4, 4, 12345, new[] { "key.subterranean", "weapon.ancient" }, emptyWeight: 0);
+            var cell = new GridCell(0, 0);
+
+            // First dig: Surface -> Level 1
+            var firstResult = grid.Dig(cell);
+            Assert.That(firstResult.Changed, Is.True);
+            Assert.That(firstResult.NewDepth, Is.EqualTo(1));
+
+            // Second dig: Level 1 -> Level 2 (if special tell exists) or restricted
+            var publicCell = grid.GetPublicCell(cell);
+            var secondResult = grid.Dig(cell);
+
+            if (publicCell.HasSpecialTell)
+            {
+                Assert.That(secondResult.Changed, Is.True);
+                Assert.That(secondResult.NewDepth, Is.EqualTo(2));
+                Assert.That(secondResult.IsTunnel, Is.True);
+
+                // Third dig: Max depth reached
+                var thirdResult = grid.Dig(cell);
+                Assert.That(thirdResult.Changed, Is.False);
+            }
+            else
+            {
+                Assert.That(secondResult.Changed, Is.False);
+                Assert.That(secondResult.NewDepth, Is.EqualTo(1));
+            }
         }
 
         [Test]

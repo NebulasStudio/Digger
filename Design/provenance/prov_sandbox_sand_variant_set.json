@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "provenance_id": "prov_sandbox_sand_variant_set",
+  "asset_id": "sandbox_sand_variant_set",
+  "status": "in_review",
+  "source": {
+    "type": "generated_ai",
+    "provider": "Higgsfield",
+    "model": "nano_banana_flash",
+    "model_version": "Nano Banana 2",
+    "job_id": "64fe4cbb-8398-491b-8b92-ecbf402afdef",
+    "seed": null,
+    "prompt": "seamless tileable game texture tile of wind-rippled pale desert sand with sparse small pebbles, uniform pattern density, Modern chunky pixel art with a crisp 32x32 grid feel, selective sub-pixel highlights, and no texture filtering. Use bold, readable silhouettes with two-pixel deep umber outlines, angular desert-worn shapes, and restrained interior detail. Environments use warm ochre, sand, clay, and charcoal shadows; playable characters use cool turquoise, cobalt, cream, and coral contrasts; hazards, rare loot, and objectives use luminous acid-cyan signals. Keep a tense yet adventurous desert mood under flat directional sunlight, with high gameplay contrast, clean readable silhouettes, and a consistent top-down three-quarter perspective across all assets., perfectly seamless edges that wrap horizontally and vertically, no border, no vignette, flat even lighting, no single focal object",
+    "negative_prompt": null,
+    "style_formula_ref": "SB-FORMULA-1",
+    "created_at": "2026-08-02T14:15:03.339292Z",
+    "reference_inputs": []
+  },
+  "processing": [
+    {
+      "tool": "higgsfield-game-generation texture pipeline",
+      "version": "0.12.0",
+      "operation": "Deterministic palette-preserving periodic seam pass and 2D basecolor export (--trim 0)",
+      "operator": "Codex",
+      "performed_at": "2026-08-02T15:01:17.4002779Z"
+    }
+  ],
+  "rights": {
+    "commercial_use_reviewed": false,
+    "third_party_ip_reviewed": false,
+    "steam_ai_disclosure": "required",
+    "license_notes": "Generated from an original Sandsunder prompt; commercial terms and Steam disclosure still require human review."
+  },
+  "review": {
+    "style": "pending",
+    "readability": "pending",
+    "technical": "pending",
+    "human_approver": null,
+    "approved_at": null,
+    "notes": "Used only in the internal visual sandbox. Verify tiling and visible repetition before shipping."
+  },
+  "artifacts": [
+    { "kind": "original", "path_or_uri": "Game/Assets/Sandsunder/Art/Source/Higgsfield/sand_source.png", "sha256": "afd90df0b0c44caf175d291e817bac74c1626fde440e24b8763f1b9e3e707bb5", "content_type": "image/png", "published": false },
+    { "kind": "intermediate", "path_or_uri": "Game/Assets/Sandsunder/Art/Runtime/sand_tile.png", "sha256": "afd90df0b0c44caf175d291e817bac74c1626fde440e24b8763f1b9e3e707bb5", "content_type": "image/png", "published": false },
+    { "kind": "runtime", "path_or_uri": "Game/Assets/Sandsunder/Art/Runtime/Processed/sand_basecolor.png", "sha256": "ee0cdb0068092f447617cc575be2ab623e4460c9ee1e6d531b48f8d3ed9cbcac", "content_type": "image/png", "published": false }
+  ]
+}

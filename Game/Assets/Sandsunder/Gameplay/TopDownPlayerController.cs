@@ -1,0 +1,442 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+using Sandsunder.Simulation;
+
+namespace Sandsunder.Gameplay
+{
+
+[DisallowMultipleComponent]
+[RequireComponent(typeof(Rigidbody2D), typeof(CircleCollider2D))]
+public sealed class TopDownPlayerController : MonoBehaviour
+{
+    [SerializeField]
+    private TopDownMovementProfile profile;
+
+    [SerializeField]
+    private Camera worldCamera;
+
+    private Rigidbody2D body;
+    private CircleCollider2D circleCollider;
+    private InputActionMap inputMap;
+    private InputAction moveAction;
+    private InputAction mouseDeltaAction;
+    private InputAction rightStickAction;
+    private AimInputArbiter aimArbiter;
+    private PlayerKinematics kinematics;
+    private CombatRollMotion rollMotion;
+    private Vector2 moveInput;
+    private Vector2 committedRollOffset;
+    private bool hasFocus = true;
+    private double simulationAccumulator;
+
+    public Vector2 AimDirection => aimArbiter?.LastValidAim ?? Vector2.right;
+
+    public AimInputDevice ActiveAimDevice => aimArbiter?.Owner ?? AimInputDevice.None;
+
+    public PlayerKinematicsState KinematicState
+    {
+        get
+        {
+            EnsureRuntimeState();
+            return kinematics.State;
+        }
+    }
+
+    public ulong KinematicStateHash
+    {
+        get
+        {
+            EnsureRuntimeState();
+            return kinematics.ComputeStateHash();
+        }
+    }
+
+    public Vector2 AuthoritativeWorldPosition
+    {
+        get
+        {
+            EnsureRuntimeState();
+            PlayerKinematicsState state = kinematics.State;
+            return new Vector2(
+                state.PositionXMillimetres / 1000f,
+                state.PositionYMillimetres / 1000f) + committedRollOffset;
+        }
+    }
+
+    private int currentDepth = 0;
+    private SpriteRenderer cachedRenderer;
+
+    public int CurrentDepth
+    {
+        get => currentDepth;
+        set
+        {
+            if (currentDepth != value)
+            {
+                currentDepth = value;
+                UpdateSubterraneanVisuals();
+            }
+        }
+    }
+
+    public void SetDepth(int depth)
+    {
+        CurrentDepth = depth;
+    }
+
+    private void UpdateSubterraneanVisuals()
+    {
+        if (cachedRenderer == null) cachedRenderer = GetComponentInChildren<SpriteRenderer>();
+        if (cachedRenderer == null) return;
+
+        if (currentDepth == 2)
+        {
+            // Level -2: Subterranean tunnel silhouette (semi-transparent cyan shadow)
+            cachedRenderer.color = new Color(0.15f, 0.55f, 0.65f, 0.60f);
+        }
+        else if (currentDepth == 1)
+        {
+            // Level -1: Slightly darkened
+            cachedRenderer.color = new Color(0.80f, 0.75f, 0.70f, 0.90f);
+        }
+        else
+        {
+            // Level 0: Surface normal
+            cachedRenderer.color = Color.white;
+        }
+    }
+
+    internal Vector2 CurrentMoveInput => moveInput;
+
+    public void Configure(TopDownMovementProfile movementProfile, Camera aimCamera)
+    {
+        profile = movementProfile;
+        worldCamera = aimCamera;
+
+        if (body != null)
+        {
+            ApplyPhysicsConfiguration();
+        }
+    }
+
+    public bool BeginPrototypeRoll(Vector2 direction)
+    {
+        EnsureRuntimeState();
+        if (direction.sqrMagnitude <= 0.0001f)
+        {
+            return false;
+        }
+
+        PlayerKinematicsState state = kinematics.State;
+        Vector2 current = new Vector2(
+            state.PositionXMillimetres / 1000f,
+            state.PositionYMillimetres / 1000f) + committedRollOffset;
+        return rollMotion.Begin(
+            Mathf.RoundToInt(current.x * 1000f),
+            Mathf.RoundToInt(current.y * 1000f),
+            Mathf.RoundToInt(direction.x * PlayerKinematicsRules.AxisUnits),
+            Mathf.RoundToInt(direction.y * PlayerKinematicsRules.AxisUnits));
+    }
+
+    private void Awake()
+    {
+        EnsureRuntimeState();
+    }
+
+    private void OnEnable()
+    {
+        EnsureRuntimeState();
+        if (hasFocus)
+        {
+            inputMap?.Enable();
+        }
+    }
+
+    private void OnDisable()
+    {
+        inputMap?.Disable();
+        ClearHeldInput();
+    }
+
+    private void OnDestroy()
+    {
+        if (inputMap == null)
+        {
+            return;
+        }
+
+        if (moveAction != null)
+        {
+            moveAction.performed -= OnMoveChanged;
+            moveAction.canceled -= OnMoveChanged;
+        }
+
+        if (mouseDeltaAction != null)
+        {
+            mouseDeltaAction.performed -= OnMouseMoved;
+        }
+
+        if (rightStickAction != null)
+        {
+            rightStickAction.performed -= OnRightStickChanged;
+        }
+
+        inputMap.Dispose();
+    }
+
+    private void FixedUpdate()
+    {
+        AdvanceSimulation(Time.fixedDeltaTime);
+    }
+
+    public bool IsDiggingChanneling { get; set; }
+    public float CurrentStamina { get; private set; } = 100f;
+    public float MaxStamina { get; } = 100f;
+
+    public bool TryConsumeStamina(float amount)
+    {
+        if (CurrentStamina >= amount)
+        {
+            CurrentStamina -= amount;
+            return true;
+        }
+        return false;
+    }
+
+    internal void AdvanceSimulation(double elapsedSeconds)
+    {
+        EnsureRuntimeState();
+        if (elapsedSeconds <= 0d)
+        {
+            return;
+        }
+
+        if (IsDiggingChanneling)
+        {
+            moveInput = Vector2.zero;
+            CurrentStamina = Mathf.Max(0f, CurrentStamina - (float)elapsedSeconds * 15f);
+        }
+        else if (!rollMotion.IsActive)
+        {
+            CurrentStamina = Mathf.Min(MaxStamina, CurrentStamina + (float)elapsedSeconds * 22f);
+        }
+
+        simulationAccumulator += elapsedSeconds;
+        double tickDuration = 1d / PlayerKinematicsRules.MilestoneOne.TicksPerSecond;
+        bool stepped = false;
+
+        while (simulationAccumulator + 0.000000000001d >= tickDuration)
+        {
+            Vector2 aim = aimArbiter.LastValidAim;
+            bool rollingThisTick = rollMotion.IsActive;
+            Vector2 effectiveMove = (IsDiggingChanneling || rollingThisTick) ? Vector2.zero : moveInput;
+            PlayerKinematicsInput input = PlayerKinematicsInput.Create(
+                Mathf.RoundToInt(effectiveMove.x * PlayerKinematicsRules.AxisUnits),
+                Mathf.RoundToInt(effectiveMove.y * PlayerKinematicsRules.AxisUnits),
+                Mathf.RoundToInt(aim.x * PlayerKinematicsRules.AxisUnits),
+                Mathf.RoundToInt(aim.y * PlayerKinematicsRules.AxisUnits),
+                hasFocus);
+
+            kinematics.Step(input);
+            if (rollingThisTick)
+            {
+                rollMotion.Step();
+                if (!rollMotion.IsActive)
+                {
+                    PlayerKinematicsState completedState = kinematics.State;
+                    committedRollOffset = new Vector2(
+                        (rollMotion.PositionXMillimetres - completedState.PositionXMillimetres) / 1000f,
+                        (rollMotion.PositionYMillimetres - completedState.PositionYMillimetres) / 1000f);
+                }
+            }
+
+            simulationAccumulator -= tickDuration;
+            stepped = true;
+        }
+
+        if (!stepped)
+        {
+            return;
+        }
+
+        if (body != null)
+        {
+            if (IsDiggingChanneling)
+            {
+                body.linearVelocity = Vector2.zero;
+            }
+            else if (rollMotion != null && rollMotion.IsActive)
+            {
+                Vector2 rollDir = moveInput.sqrMagnitude > 0.01f ? moveInput.normalized : AimDirection.normalized;
+                if (rollDir.sqrMagnitude <= 0.01f) rollDir = Vector2.right;
+                float speed = profile != null ? profile.BaseMoveSpeed : 5.5f;
+                body.linearVelocity = rollDir * (speed * 1.15f);
+            }
+            else
+            {
+                float speed = profile != null ? profile.BaseMoveSpeed : 5.5f;
+                body.linearVelocity = moveInput.normalized * speed;
+            }
+        }
+    }
+
+    private void OnApplicationFocus(bool focused)
+    {
+        HandleFocusChanged(focused);
+    }
+
+    internal void HandleFocusChanged(bool focused)
+    {
+        hasFocus = focused;
+        ClearHeldInput();
+
+        if (focused && isActiveAndEnabled)
+        {
+            inputMap?.Enable();
+        }
+        else
+        {
+            inputMap?.Disable();
+        }
+    }
+
+    internal void SetMoveInputForTesting(Vector2 input)
+    {
+        moveInput = TopDownMovementMath.ClampInput(input);
+    }
+
+    private void CreateInputActions()
+    {
+        inputMap = new InputActionMap("Top-down Gameplay");
+
+        moveAction = inputMap.AddAction("Move", InputActionType.Value);
+        moveAction.expectedControlType = "Vector2";
+        moveAction.AddCompositeBinding("2DVector")
+            .With("Up", "<Keyboard>/w")
+            .With("Down", "<Keyboard>/s")
+            .With("Left", "<Keyboard>/a")
+            .With("Right", "<Keyboard>/d");
+        moveAction.AddBinding("<Gamepad>/leftStick");
+
+        mouseDeltaAction = inputMap.AddAction("Mouse Aim Activity", InputActionType.PassThrough);
+        mouseDeltaAction.expectedControlType = "Vector2";
+        mouseDeltaAction.AddBinding("<Mouse>/delta");
+
+        rightStickAction = inputMap.AddAction("Gamepad Aim", InputActionType.PassThrough);
+        rightStickAction.expectedControlType = "Vector2";
+        rightStickAction.AddBinding("<Gamepad>/rightStick");
+
+        moveAction.performed += OnMoveChanged;
+        moveAction.canceled += OnMoveChanged;
+        mouseDeltaAction.performed += OnMouseMoved;
+        rightStickAction.performed += OnRightStickChanged;
+    }
+
+    private void OnMoveChanged(InputAction.CallbackContext context)
+    {
+        moveInput = TopDownMovementMath.ClampInput(context.ReadValue<Vector2>());
+    }
+
+    private void OnMouseMoved(InputAction.CallbackContext context)
+    {
+        EnsureRuntimeState();
+        if (profile == null || Mouse.current == null)
+        {
+            return;
+        }
+
+        Vector2 delta = context.ReadValue<Vector2>();
+        float threshold = profile.MouseActivityThreshold;
+        if (delta.sqrMagnitude <= threshold * threshold)
+        {
+            return;
+        }
+
+        Camera cameraForAim = worldCamera != null ? worldCamera : Camera.main;
+        if (cameraForAim == null)
+        {
+            return;
+        }
+
+        Vector2 pointerPosition = Mouse.current.position.ReadValue();
+        Vector3 worldPosition = cameraForAim.ScreenToWorldPoint(pointerPosition);
+        PlayerKinematicsState state = kinematics.State;
+        Vector2 authoritativePosition = new(
+            state.PositionXMillimetres / 1000f,
+            state.PositionYMillimetres / 1000f);
+        Vector2 worldDirection = (Vector2)worldPosition - authoritativePosition;
+        aimArbiter.SubmitMouseWorldDirection(worldDirection, context.time);
+    }
+
+    private void OnRightStickChanged(InputAction.CallbackContext context)
+    {
+        EnsureRuntimeState();
+        if (profile == null)
+        {
+            return;
+        }
+
+        aimArbiter.SubmitGamepadStick(
+            context.ReadValue<Vector2>(),
+            profile.GamepadAimDeadZone,
+            context.time);
+    }
+
+    private void ClearHeldInput()
+    {
+        moveInput = Vector2.zero;
+    }
+
+    private void EnsureRuntimeState()
+    {
+        body = body != null ? body : GetComponent<Rigidbody2D>();
+        circleCollider = circleCollider != null ? circleCollider : GetComponent<CircleCollider2D>();
+        aimArbiter = aimArbiter ?? new AimInputArbiter(transform.right);
+
+        if (kinematics == null)
+        {
+            kinematics = new PlayerKinematics(
+                PlayerKinematicsRules.MilestoneOne,
+                Mathf.RoundToInt(transform.position.x * 1000f),
+                Mathf.RoundToInt(transform.position.y * 1000f));
+            committedRollOffset = Vector2.zero;
+            simulationAccumulator = 0d;
+        }
+
+        rollMotion = rollMotion ?? new CombatRollMotion(
+            CombatRules.PrototypeOne,
+            PlayerKinematicsRules.MilestoneOne.ArenaHalfWidthMillimetres,
+            PlayerKinematicsRules.MilestoneOne.ArenaHalfHeightMillimetres,
+            PlayerKinematicsRules.MilestoneOne.CollisionRadiusMillimetres);
+        worldCamera = worldCamera != null ? worldCamera : Camera.main;
+
+        if (inputMap == null)
+        {
+            CreateInputActions();
+            if (hasFocus && isActiveAndEnabled)
+            {
+                inputMap.Enable();
+            }
+        }
+
+        ApplyPhysicsConfiguration();
+    }
+
+    private void ApplyPhysicsConfiguration()
+    {
+        if (body == null || circleCollider == null || profile == null)
+        {
+            return;
+        }
+
+        body.bodyType = RigidbodyType2D.Dynamic;
+        body.gravityScale = 0f;
+        body.freezeRotation = true;
+        body.interpolation = RigidbodyInterpolation2D.Interpolate;
+        body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+        circleCollider.radius = profile.CollisionRadius;
+        circleCollider.isTrigger = false;
+    }
+}
+}

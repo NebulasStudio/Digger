@@ -11,4 +11,4 @@ Rules:
 5. Rejected outputs remain recorded for audit but never enter runtime bundles.
 6. Never use living-artist imitation, third-party game IP, or unlicensed reference media in prompts.
 
-No current manifest item has media attached. Every row is a non-publishable `planned_placeholder`.
+The sandbox sand, ruin, hero, and Spitter proxies currently have generated media attached and remain non-publishable `in_review` assets. Every other row remains a non-publishable `planned_placeholder` until its own provenance record is created.

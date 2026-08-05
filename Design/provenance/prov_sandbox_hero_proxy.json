@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "provenance_id": "prov_sandbox_hero_proxy",
+  "asset_id": "sandbox_hero_proxy",
+  "status": "in_review",
+  "source": {
+    "type": "generated_ai",
+    "provider": "Higgsfield",
+    "model": "nano_banana_flash",
+    "model_version": "Nano Banana 2",
+    "job_id": "595f2dfa-c47d-4c87-ab2d-762f9aaa0c20",
+    "seed": null,
+    "prompt": "game sprite of compact desert explorer with turquoise scarf, cream hood, cobalt coat and visible small brass pistol, single character, full body visible, centered, Modern chunky pixel art with a crisp 32x32 grid feel, selective sub-pixel highlights, and no texture filtering. Use bold, readable silhouettes with two-pixel deep umber outlines, angular desert-worn shapes, and restrained interior detail. Environments use warm ochre, sand, clay, and charcoal shadows; playable characters use cool turquoise, cobalt, cream, and coral contrasts; hazards, rare loot, and objectives use luminous acid-cyan signals. Keep a tense yet adventurous desert mood under flat directional sunlight, with high gameplay contrast, clean readable silhouettes, and a consistent top-down three-quarter perspective across all assets., on a solid uniform bright magenta #FF00FF background, no shadows cast on the background, no ground plane, nothing cropped at the edges",
+    "negative_prompt": null,
+    "style_formula_ref": "SB-FORMULA-1",
+    "created_at": "2026-08-02T14:15:05.726272Z",
+    "reference_inputs": []
+  },
+  "processing": [
+    { "tool": "Higgsfield Image Background Remover", "version": null, "operation": "Background-removal source pass, job b4c55d5a-3c39-44c9-944d-03b7a7a8669e", "operator": "Codex", "performed_at": "2026-08-02T14:16:46.178184Z" },
+    { "tool": "Tools/art/key_magenta_sprite.py", "version": "1", "operation": "Global magenta key including enclosed regions, padded union crop and nearest-neighbour downscale to 33 logical pixels high", "operator": "Codex", "performed_at": "2026-08-02T15:03:23.8140115Z" }
+  ],
+  "rights": {
+    "commercial_use_reviewed": false,
+    "third_party_ip_reviewed": false,
+    "steam_ai_disclosure": "required",
+    "license_notes": "Original non-IP prompt. Human commercial-rights and platform disclosure review remains mandatory."
+  },
+  "review": {
+    "style": "pending",
+    "readability": "pending",
+    "technical": "pending",
+    "human_approver": null,
+    "approved_at": null,
+    "notes": "Internal sandbox proxy only; requires direction sheet, animation cleanup, pivot and hitbox review before shipping."
+  },
+  "artifacts": [
+    { "kind": "original", "path_or_uri": "Game/Assets/Sandsunder/Art/Source/Higgsfield/nomad_source.png", "sha256": "4632d2c4f6307664046d1f458d45056f1ef20652f8e8044e7703939b770bd1ec", "content_type": "image/png", "published": false },
+    { "kind": "intermediate", "path_or_uri": "Game/Assets/Sandsunder/Art/Runtime/nomad.png", "sha256": "e146bc99ded035095932d223ca5da8514be886c493fe8cd25c00f0e2f25190e4", "content_type": "image/png", "published": false },
+    { "kind": "runtime", "path_or_uri": "Game/Assets/Sandsunder/Art/Runtime/Processed/nomad_32.png", "sha256": "3bd1b7189c1c40df4b20f87438fc4c1bbc577c4a198757cb32195d91d5df2d8c", "content_type": "image/png", "published": false }
+  ]
+}

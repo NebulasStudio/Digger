@@ -1,6 +1,6 @@
 # Sandsunder visual style bible
 
-Status: foundation contract; no production media has been generated.  
+Status: foundation contract; generated sandbox media exists, but no production media is approved.  
 Canonical reference ID: `SB-FORMULA-1`
 
 ## Frozen STYLE FORMULA

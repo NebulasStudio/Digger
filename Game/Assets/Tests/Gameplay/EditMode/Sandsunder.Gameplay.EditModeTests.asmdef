@@ -1,0 +1,15 @@
+{
+  "name": "Sandsunder.Gameplay.EditModeTests",
+  "rootNamespace": "Sandsunder.Tests.Gameplay",
+  "references": ["Sandsunder.Domain", "Sandsunder.Gameplay", "Sandsunder.Simulation"],
+  "includePlatforms": ["Editor"],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+  "versionDefines": [],
+  "noEngineReferences": false,
+  "optionalUnityReferences": ["TestAssemblies"]
+}

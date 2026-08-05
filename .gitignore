@@ -80,3 +80,15 @@ Desktop.ini
 artifacts/
 replays/
 reports/
+
+# Private Higgsfield originals and non-shipping intermediates
+/Game/Assets/Sandsunder/Art/Source/Higgsfield/
+/Game/Assets/Sandsunder/Art/Source/Higgsfield.meta
+/Game/Assets/Sandsunder/Art/Runtime/sand_tile.png
+/Game/Assets/Sandsunder/Art/Runtime/sand_tile.png.meta
+/Game/Assets/Sandsunder/Art/Runtime/ruin_tile.png
+/Game/Assets/Sandsunder/Art/Runtime/ruin_tile.png.meta
+/Game/Assets/Sandsunder/Art/Runtime/nomad.png
+/Game/Assets/Sandsunder/Art/Runtime/nomad.png.meta
+/Game/Assets/Sandsunder/Art/Runtime/spitter.png
+/Game/Assets/Sandsunder/Art/Runtime/spitter.png.meta

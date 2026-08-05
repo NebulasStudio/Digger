@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "provenance_id": "prov_sandbox_ruin_modules",
+  "asset_id": "sandbox_ruin_modules",
+  "status": "in_review",
+  "source": {
+    "type": "generated_ai",
+    "provider": "Higgsfield",
+    "model": "nano_banana_flash",
+    "model_version": "Nano Banana 2",
+    "job_id": "4f8b236e-49e7-4a5f-8331-aa45696f00d9",
+    "seed": null,
+    "prompt": "seamless tileable game texture tile of sun-baked geometric ruin wall cap and cracked clay blocks, uniform pattern density, Modern chunky pixel art with a crisp 32x32 grid feel, selective sub-pixel highlights, and no texture filtering. Use bold, readable silhouettes with two-pixel deep umber outlines, angular desert-worn shapes, and restrained interior detail. Environments use warm ochre, sand, clay, and charcoal shadows; playable characters use cool turquoise, cobalt, cream, and coral contrasts; hazards, rare loot, and objectives use luminous acid-cyan signals. Keep a tense yet adventurous desert mood under flat directional sunlight, with high gameplay contrast, clean readable silhouettes, and a consistent top-down three-quarter perspective across all assets., perfectly seamless edges that wrap horizontally and vertically, no border, no vignette, flat even lighting, no single focal object",
+    "negative_prompt": null,
+    "style_formula_ref": "SB-FORMULA-1",
+    "created_at": "2026-08-02T14:15:02.675328Z",
+    "reference_inputs": []
+  },
+  "processing": [
+    {
+      "tool": "higgsfield-game-generation texture pipeline",
+      "version": "0.12.0",
+      "operation": "Deterministic palette-preserving periodic seam pass and 2D basecolor export (--trim 0)",
+      "operator": "Codex",
+      "performed_at": "2026-08-02T15:01:17.4002779Z"
+    }
+  ],
+  "rights": {
+    "commercial_use_reviewed": false,
+    "third_party_ip_reviewed": false,
+    "steam_ai_disclosure": "required",
+    "license_notes": "Generated from an original Sandsunder prompt; commercial terms and Steam disclosure still require human review."
+  },
+  "review": {
+    "style": "pending",
+    "readability": "pending",
+    "technical": "pending",
+    "human_approver": null,
+    "approved_at": null,
+    "notes": "Internal sandbox source. The current implementation uses it as a tiled ruin material, not a final modular atlas."
+  },
+  "artifacts": [
+    { "kind": "original", "path_or_uri": "Game/Assets/Sandsunder/Art/Source/Higgsfield/ruin_wall_source.png", "sha256": "d8b700f6e1a26d71d41023f66468889d10dcf64d2db336d763097d395279153f", "content_type": "image/png", "published": false },
+    { "kind": "intermediate", "path_or_uri": "Game/Assets/Sandsunder/Art/Runtime/ruin_tile.png", "sha256": "d8b700f6e1a26d71d41023f66468889d10dcf64d2db336d763097d395279153f", "content_type": "image/png", "published": false },
+    { "kind": "runtime", "path_or_uri": "Game/Assets/Sandsunder/Art/Runtime/Processed/ruin_basecolor.png", "sha256": "215ce2fad61002748c41b213d0e6c48310163ebfdadf9b851eeb2f25f5ba2b53", "content_type": "image/png", "published": false }
+  ]
+}

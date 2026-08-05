@@ -7,38 +7,61 @@ namespace Sandsunder.Simulation
     public readonly struct PublicDigCell
     {
         public PublicDigCell(GridCell cell, bool isDug, string revealedLootId)
+            : this(cell, isDug, revealedLootId, isDug ? 1 : 0, false)
+        {
+        }
+
+        public PublicDigCell(GridCell cell, bool isDug, string revealedLootId, int depth, bool hasSpecialTell)
         {
             Cell = cell;
             IsDug = isDug;
             RevealedLootId = revealedLootId;
+            Depth = depth;
+            HasSpecialTell = hasSpecialTell;
         }
 
         public GridCell Cell { get; }
         public bool IsDug { get; }
         public string RevealedLootId { get; }
+        public int Depth { get; }
+        public bool HasSpecialTell { get; }
     }
 
     public readonly struct DigResult
     {
         public DigResult(bool changed, string revealedLootId)
+            : this(changed, revealedLootId, changed ? 1 : 0, false)
+        {
+        }
+
+        public DigResult(bool changed, string revealedLootId, int newDepth, bool isTunnel)
         {
             Changed = changed;
             RevealedLootId = revealedLootId;
+            NewDepth = newDepth;
+            IsTunnel = isTunnel;
         }
 
         public bool Changed { get; }
         public string RevealedLootId { get; }
+        public int NewDepth { get; }
+        public bool IsTunnel { get; }
     }
 
     /// <summary>
-    /// Server-side dig state. Hidden loot is never exposed by the public snapshot API.
+    /// Server-side dig state. Hidden loot and deep tunnel structure are never exposed before reveal.
+    /// Supports 2 layers of depth: -1 (subsurface loot/items) and -2 (tunnels/special secrets).
     /// </summary>
     public sealed class DigGrid
     {
         private sealed class CellState
         {
-            public string HiddenLootId;
-            public bool IsDug;
+            public string HiddenLootIdLevel1;
+            public string HiddenLootIdLevel2;
+            public int Depth;
+            public bool HasSpecialTell;
+
+            public bool IsDug => Depth > 0;
         }
 
         private readonly int _width;
@@ -60,10 +83,19 @@ namespace Sandsunder.Simulation
 
             for (var index = 0; index < _cells.Length; index++)
             {
-                var roll = rng.NextInt(outcomes);
+                var roll1 = rng.NextInt(outcomes);
+                var roll2 = rng.NextInt(outcomes);
+                var specialTellRoll = rng.NextInt(100);
+
+                // Roughly 30% of cells have a special surface texture/tell allowing digging down to Level 2 (tunnels)
+                bool hasTell = specialTellRoll < 30;
+
                 _cells[index] = new CellState
                 {
-                    HiddenLootId = roll < lootTable.Count ? lootTable[roll] : null
+                    HiddenLootIdLevel1 = roll1 < lootTable.Count ? lootTable[roll1] : null,
+                    HiddenLootIdLevel2 = hasTell ? (roll2 < lootTable.Count ? lootTable[roll2] : "tunnel.level2") : null,
+                    Depth = 0,
+                    HasSpecialTell = hasTell
                 };
             }
         }
@@ -71,7 +103,11 @@ namespace Sandsunder.Simulation
         public PublicDigCell GetPublicCell(GridCell cell)
         {
             var state = GetCell(cell);
-            return new PublicDigCell(cell, state.IsDug, state.IsDug ? state.HiddenLootId : null);
+            string loot = null;
+            if (state.Depth == 1) loot = state.HiddenLootIdLevel1;
+            else if (state.Depth == 2) loot = state.HiddenLootIdLevel2;
+
+            return new PublicDigCell(cell, state.IsDug, loot, state.Depth, state.HasSpecialTell);
         }
 
         public IReadOnlyList<PublicDigCell> CreatePublicSnapshot()
@@ -86,11 +122,26 @@ namespace Sandsunder.Simulation
         public DigResult Dig(GridCell cell)
         {
             var state = GetCell(cell);
-            if (state.IsDug)
-                return new DigResult(false, null);
+            if (state.Depth == 0)
+            {
+                state.Depth = 1;
+                return new DigResult(true, state.HiddenLootIdLevel1, 1, false);
+            }
 
-            state.IsDug = true;
-            return new DigResult(true, state.HiddenLootId);
+            if (state.Depth == 1)
+            {
+                if (!state.HasSpecialTell)
+                {
+                    // Cannot dig to Level 2 unless cell has special tell
+                    return new DigResult(false, null, 1, false);
+                }
+
+                state.Depth = 2;
+                return new DigResult(true, state.HiddenLootIdLevel2, 2, true);
+            }
+
+            // Max depth 2 reached
+            return new DigResult(false, null, 2, true);
         }
 
         internal ulong ComputeFingerprint()
@@ -98,8 +149,10 @@ namespace Sandsunder.Simulation
             var hash = StableHash.Offset;
             for (var index = 0; index < _cells.Length; index++)
             {
-                StableHash.Add(ref hash, _cells[index].IsDug ? 1UL : 0UL);
-                StableHash.Add(ref hash, _cells[index].HiddenLootId);
+                StableHash.Add(ref hash, (ulong)_cells[index].Depth);
+                StableHash.Add(ref hash, _cells[index].HasSpecialTell ? 1UL : 0UL);
+                StableHash.Add(ref hash, _cells[index].HiddenLootIdLevel1);
+                StableHash.Add(ref hash, _cells[index].HiddenLootIdLevel2);
             }
             return hash;
         }
@@ -112,3 +165,4 @@ namespace Sandsunder.Simulation
         }
     }
 }
+

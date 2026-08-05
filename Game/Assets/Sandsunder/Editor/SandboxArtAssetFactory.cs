@@ -17,6 +17,8 @@ namespace Sandsunder.Editor
         public Sprite Scimitar { get; set; }
         public Sprite Shotgun { get; set; }
         public Sprite Blaster { get; set; }
+        public Sprite Mortar { get; set; }
+        public Sprite Relic { get; set; }
         public Sprite DigIntact { get; set; }
         public Sprite DigCracked { get; set; }
         public Sprite DigOpened { get; set; }
@@ -61,6 +63,8 @@ namespace Sandsunder.Editor
                 Scimitar = CreateProceduralSprite("DesertScimitar", 28, 14, 32f, DrawScimitar),
                 Shotgun = CreateProceduralSprite("HeavyShotgun", 30, 12, 32f, DrawShotgun),
                 Blaster = CreateProceduralSprite("RuneBlaster", 26, 12, 32f, DrawBlaster),
+                Mortar = ImportTile("Assets/Sandsunder/Art/Source/Higgsfield/sandstorm_mortar.png", 32f) ?? CreateProceduralSprite("SandstormMortar", 32, 14, 32f, DrawMortar),
+                Relic = ImportTile("Assets/Sandsunder/Art/Source/Higgsfield/cyan_relic.png", 32f) ?? CreateProceduralSprite("CyanRelic", 24, 24, 32f, DrawRelic),
                 DigIntact = CreateProceduralSprite("DigIntact", 32, 24, 32f,
                     (pixels, width, height) => DrawDigNode(pixels, width, height, 0)),
                 DigCracked = CreateProceduralSprite("DigCracked", 32, 24, 32f,
@@ -741,6 +745,46 @@ namespace Sandsunder.Editor
             EditorUtility.SetDirty(clip);
             AssetDatabase.SaveAssets();
             return clip;
+        }
+
+        private static void DrawMortar(Color[] pixels, int width, int height)
+        {
+            Color darkBrass = new(0.42f, 0.32f, 0.18f, 1f);
+            Color cyanRune = new(0.20f, 0.95f, 0.90f, 1f);
+            Color woodGrip = new(0.48f, 0.30f, 0.16f, 1f);
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (y >= 4 && y <= 9 && x >= 2 && x <= 26)
+                        pixels[y * width + x] = darkBrass;
+                    else if (y >= 5 && y <= 8 && (x == 10 || x == 18))
+                        pixels[y * width + x] = cyanRune;
+                    else if (y >= 3 && y <= 10 && x >= 24 && x <= 30)
+                        pixels[y * width + x] = woodGrip;
+                    else
+                        pixels[y * width + x] = Color.clear;
+                }
+            }
+        }
+
+        private static void DrawRelic(Color[] pixels, int width, int height)
+        {
+            Color goldRing = new(0.95f, 0.80f, 0.25f, 1f);
+            Color cyanOrb = new(0.20f, 0.95f, 0.90f, 1f);
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    float dist = Vector2.Distance(new Vector2(x, y), new Vector2(11.5f, 11.5f));
+                    if (dist <= 7f)
+                        pixels[y * width + x] = cyanOrb;
+                    else if (dist <= 10f && (x == y || x + y == width - 1))
+                        pixels[y * width + x] = goldRing;
+                    else
+                        pixels[y * width + x] = Color.clear;
+                }
+            }
         }
     }
 }

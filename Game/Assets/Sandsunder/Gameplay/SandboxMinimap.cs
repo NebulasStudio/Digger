@@ -51,7 +51,21 @@ namespace Sandsunder.Gameplay
             minimapFrame.sizeDelta = new Vector2(140, 100);
 
             Image border = frameObj.AddComponent<Image>();
+#if UNITY_EDITOR
+            Sprite glassSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/Processed/ui_glass_panel.png");
+            if (glassSprite != null)
+            {
+                border.sprite = glassSprite;
+                border.type = Image.Type.Sliced;
+                border.color = Color.white;
+            }
+            else
+            {
+                border.color = new Color(0.12f, 0.10f, 0.08f, 0.85f);
+            }
+#else
             border.color = new Color(0.12f, 0.10f, 0.08f, 0.85f);
+#endif
 
             // Inner Map Texture Display
             GameObject mapObj = new("MapDisplay");

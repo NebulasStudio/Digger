@@ -74,6 +74,7 @@ namespace Sandsunder.Gameplay
             renderer = _pool.Count > 0 ? _pool.Pop() : CreatePooledRenderer();
             renderer.sprite = stage;
             renderer.transform.position = new Vector3(cellCenter.x, cellCenter.y, 0f);
+            renderer.transform.localScale = new Vector3(1.25f, 1.25f, 1f);
             renderer.gameObject.SetActive(true);
             _overlays[key] = renderer;
         }
@@ -83,7 +84,7 @@ namespace Sandsunder.Gameplay
             GameObject go = new("DigOverlay");
             go.transform.SetParent(transform, false);
             SpriteRenderer renderer = go.AddComponent<SpriteRenderer>();
-            renderer.sortingOrder = OverlaySortingOrder;
+            renderer.sortingOrder = 10;
             go.SetActive(false);
             return renderer;
         }

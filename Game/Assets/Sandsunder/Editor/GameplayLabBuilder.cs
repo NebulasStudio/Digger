@@ -116,24 +116,53 @@ public static class GameplayLabBuilder
     {
         GameObject arena = new("Arena");
 
-        // Vast Desert Floor 48x32m
-        GameObject floor = CreateTiledSprite(
-            "Floor",
-            art.SandTile,
-            new Vector2(48f, 32f),
-            new Color(0.93f, 0.82f, 0.67f),
-            arena.transform,
-            sortingOrder: -1000);
+        // Real 1x1m Cell Ground Grid across 48x32m Arena
+        GameObject cellGrid = new("SandCellGrid");
+        cellGrid.transform.SetParent(arena.transform, false);
 
-        // Central Temple Ruins Floor
-        GameObject inset = CreateTiledSprite(
-            "Central Ruin Sanctuary Floor",
-            art.RuinTile,
-            new Vector2(16f, 12f),
-            new Color(0.70f, 0.53f, 0.39f),
-            arena.transform,
-            sortingOrder: -930);
-        inset.transform.position = new Vector3(0f, 0f, 0f);
+        GameObject subGrid = new("SubterraneanCellGrid");
+        subGrid.transform.SetParent(arena.transform, false);
+
+        Sprite[] sandVariants = { art.SandTile, art.SandFeather, art.SandFinal, art.SandRolled };
+
+        for (int x = -24; x < 24; x++)
+        {
+            for (int y = -16; y < 16; y++)
+            {
+                Vector3 pos = new(x + 0.5f, y + 0.5f, 0f);
+                bool inRuinSanctuary = Mathf.Abs(x) <= 8 && Mathf.Abs(y) <= 6;
+
+                // 1. Surface Cell Tile
+                GameObject cell = new($"Cell_{x}_{y}");
+                cell.transform.SetParent(cellGrid.transform, false);
+                cell.transform.position = pos;
+
+                SpriteRenderer sr = cell.AddComponent<SpriteRenderer>();
+                sr.sortingOrder = inRuinSanctuary ? -930 : -1000;
+
+                if (inRuinSanctuary)
+                {
+                    sr.sprite = art.RuinTile;
+                    sr.color = new Color(0.72f, 0.55f, 0.40f);
+                }
+                else
+                {
+                    int variantIndex = Mathf.Abs((x * 37 + y * 17) % sandVariants.Length);
+                    sr.sprite = sandVariants[variantIndex] != null ? sandVariants[variantIndex] : art.SandTile;
+                    sr.color = new Color(0.94f, 0.84f, 0.68f);
+                }
+
+                // 2. Subterranean Cell Tile (Tunnels Layer -1)
+                GameObject subCell = new($"SubCell_{x}_{y}");
+                subCell.transform.SetParent(subGrid.transform, false);
+                subCell.transform.position = pos;
+
+                SpriteRenderer subSr = subCell.AddComponent<SpriteRenderer>();
+                subSr.sprite = art.RuinTile != null ? art.RuinTile : art.SandTile;
+                subSr.color = new Color(0.18f, 0.14f, 0.10f); // Dark Amber/Bronze Cavern
+                subSr.sortingOrder = -1500;
+            }
+        }
 
         // Ancient Cyan Rune Energy Core
         GameObject rune = CreateSpriteObject(
@@ -165,8 +194,6 @@ public static class GameplayLabBuilder
         CreateRuinWall("Temple Pillar NE", new Vector2(7.5f, 5.5f), new Vector2(1.8f, 2.2f), squareSprite, art.RuinTile, cover.transform);
         CreateRuinWall("Temple Pillar SW", new Vector2(-7.5f, -5.5f), new Vector2(1.8f, 2.2f), squareSprite, art.RuinTile, cover.transform);
         CreateRuinWall("Temple Pillar SE", new Vector2(7.5f, -5.5f), new Vector2(1.8f, 2.2f), squareSprite, art.RuinTile, cover.transform);
-
-        _ = floor;
     }
 
     private static GameObject CreatePlayer(Sprite squareSprite, SandboxArtSet art)

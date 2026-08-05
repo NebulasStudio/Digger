@@ -8,6 +8,9 @@ namespace Sandsunder.Editor
     internal sealed class SandboxArtSet
     {
         public Sprite SandTile { get; set; }
+        public Sprite SandFeather { get; set; }
+        public Sprite SandFinal { get; set; }
+        public Sprite SandRolled { get; set; }
         public Sprite RuinTile { get; set; }
         public Sprite Nomad { get; set; }
         public Sprite Spitter { get; set; }
@@ -43,6 +46,9 @@ namespace Sandsunder.Editor
             EnsureAssetFolder(GeneratedRoot);
 
             Sprite sand = ImportTile($"{RuntimeRoot}/Processed/sand_basecolor.png", pixelsPerUnit: 256f);
+            Sprite sandFeather = ImportTileOptional($"{RuntimeRoot}/Processed/sand_feather_basecolor.png", 256f) ?? sand;
+            Sprite sandFinal = ImportTileOptional($"{RuntimeRoot}/Processed/sand_final_basecolor.png", 256f) ?? sand;
+            Sprite sandRolled = ImportTileOptional($"{RuntimeRoot}/Processed/sand_rolled.png", 256f) ?? sand;
             Sprite ruin = ImportTile($"{RuntimeRoot}/Processed/ruin_basecolor.png", pixelsPerUnit: 256f);
             Sprite nomad = ImportSprite(
                 $"{RuntimeRoot}/Processed/nomad_32.png",
@@ -58,6 +64,9 @@ namespace Sandsunder.Editor
             return new SandboxArtSet
             {
                 SandTile = sand,
+                SandFeather = sandFeather,
+                SandFinal = sandFinal,
+                SandRolled = sandRolled,
                 RuinTile = ruin,
                 Nomad = nomad,
                 Spitter = spitter,
@@ -124,6 +133,29 @@ namespace Sandsunder.Editor
             }
 
             return sprite;
+        }
+
+        private static Sprite ImportTileOptional(string assetPath, float pixelsPerUnit)
+        {
+            TextureImporter importer = AssetImporter.GetAtPath(assetPath) as TextureImporter;
+            if (importer == null) return null;
+
+            importer.textureType = TextureImporterType.Sprite;
+            importer.spriteImportMode = SpriteImportMode.Single;
+            importer.spritePixelsPerUnit = pixelsPerUnit;
+            importer.filterMode = FilterMode.Point;
+            importer.wrapMode = TextureWrapMode.Repeat;
+            importer.mipmapEnabled = false;
+            importer.alphaIsTransparency = false;
+            importer.textureCompression = TextureImporterCompression.Uncompressed;
+            importer.isReadable = false;
+            TextureImporterSettings importerSettings = new();
+            importer.ReadTextureSettings(importerSettings);
+            importerSettings.spriteMeshType = SpriteMeshType.FullRect;
+            importer.SetTextureSettings(importerSettings);
+            importer.SaveAndReimport();
+
+            return AssetDatabase.LoadAssetAtPath<Sprite>(assetPath);
         }
 
         private static Sprite ImportSprite(string assetPath, float pixelsPerUnit, Vector2 pivot)

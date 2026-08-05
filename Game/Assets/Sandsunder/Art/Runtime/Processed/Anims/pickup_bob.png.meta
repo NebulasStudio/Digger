@@ -119,10 +119,11 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
-      hasPhysicsShape: 0
+      bones: []
       spriteID: 5cb5139ed67a0bea7a1566d10ab2f3c9
       internalID: -3597656191039999996
       vertices: []
@@ -140,10 +141,11 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
-      hasPhysicsShape: 0
+      bones: []
       spriteID: b442d63d6f036271e9075c6eebd0e8ad
       internalID: 1589026219161515656
       vertices: []
@@ -161,10 +163,11 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
-      hasPhysicsShape: 0
+      bones: []
       spriteID: 1cccf3dabc4311381d7bcd20f9c5dc29
       internalID: -3051409716032930777
       vertices: []
@@ -182,10 +185,11 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
-      hasPhysicsShape: 0
+      bones: []
       spriteID: 4a51d8754b60e284f4e8150f37c7c909
       internalID: 5841701452185681273
       vertices: []
@@ -195,6 +199,7 @@ TextureImporter:
     outline: []
     customData: 
     physicsShape: []
+    bones: []
     spriteID: a3ab0c2046bf41d89d2276c8b9579eea
     internalID: 0
     vertices: []
@@ -205,10 +210,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-    pickup_bob_0_0: -3597656191039999996
-    pickup_bob_0_1: 1589026219161515656
-    pickup_bob_0_2: -3051409716032930777
-    pickup_bob_0_3: 5841701452185681273
+      pickup_bob_0_0: -3597656191039999996
+      pickup_bob_0_1: 1589026219161515656
+      pickup_bob_0_2: -3051409716032930777
+      pickup_bob_0_3: 5841701452185681273
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

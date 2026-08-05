@@ -119,10 +119,11 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
-      hasPhysicsShape: 0
+      bones: []
       spriteID: 1842e9263a439f34dd5c7667047b4720
       internalID: 5922401326310942305
       vertices: []
@@ -140,10 +141,11 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
-      hasPhysicsShape: 0
+      bones: []
       spriteID: 420d32d6383d8bdda3b605eff1407970
       internalID: -2019807934799820657
       vertices: []
@@ -161,10 +163,11 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
-      hasPhysicsShape: 0
+      bones: []
       spriteID: dbe2642c97470044333209aa3428db2d
       internalID: 3490878787023079510
       vertices: []
@@ -182,10 +185,11 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
-      hasPhysicsShape: 0
+      bones: []
       spriteID: 141d2602480e474a5d127ce1b112ca1f
       internalID: 9212694673050613738
       vertices: []
@@ -195,6 +199,7 @@ TextureImporter:
     outline: []
     customData: 
     physicsShape: []
+    bones: []
     spriteID: 26a65748829d40e585db4f91bb361bf6
     internalID: 0
     vertices: []
@@ -205,10 +210,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-    chest_open_0_0: 5922401326310942305
-    chest_open_0_1: -2019807934799820657
-    chest_open_0_2: 3490878787023079510
-    chest_open_0_3: 9212694673050613738
+      chest_open_0_0: 5922401326310942305
+      chest_open_0_1: -2019807934799820657
+      chest_open_0_2: 3490878787023079510
+      chest_open_0_3: 9212694673050613738
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

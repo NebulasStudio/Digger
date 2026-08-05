@@ -119,10 +119,11 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
-      hasPhysicsShape: 0
+      bones: []
       spriteID: 62cd1898e90a4b81afe3e91f02b73e56
       internalID: -4178077776580501197
       vertices: []
@@ -140,10 +141,11 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
-      hasPhysicsShape: 0
+      bones: []
       spriteID: cb1f515f804b73c311a74bceba891116
       internalID: 1650279735386421183
       vertices: []
@@ -161,10 +163,11 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
-      hasPhysicsShape: 0
+      bones: []
       spriteID: a8656b0fa8bf0d925a71f60f4f51d4d4
       internalID: -5664015869907175002
       vertices: []
@@ -182,10 +185,11 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
-      hasPhysicsShape: 0
+      bones: []
       spriteID: 36fd5b0bc42dea4a163d0406a9e34156
       internalID: -6648290017950382104
       vertices: []
@@ -195,6 +199,7 @@ TextureImporter:
     outline: []
     customData: 
     physicsShape: []
+    bones: []
     spriteID: 9ed09af058ec468e8f4a30804bbe2bb7
     internalID: 0
     vertices: []
@@ -205,10 +210,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-    rifle_reload_v2_0_0: -4178077776580501197
-    rifle_reload_v2_0_1: 1650279735386421183
-    rifle_reload_v2_0_2: -5664015869907175002
-    rifle_reload_v2_0_3: -6648290017950382104
+      rifle_reload_v2_0_0: -4178077776580501197
+      rifle_reload_v2_0_1: 1650279735386421183
+      rifle_reload_v2_0_2: -5664015869907175002
+      rifle_reload_v2_0_3: -6648290017950382104
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -79,9 +79,28 @@
 17. **Minimappa**: rifalla — rettangolo semitrasparente con bordo dorato, icone per player/nemici/chest (stile premium). Attualmente è un quadratino procedurale.
 18. **Barra HP/Stamina**: usa `StatBarWidget` (già in codice) con colori neon.
 
-### FASE F — Mondo di gioco
-19. Verifica che `Build Gameplay Lab` spawni: palme, colonne rovine, cactus, chest runica, vasi, obelischi, golem.
-20. Se manca qualcosa a runtime, aggiungi allo `SandboxSceneInitializer`.
+### FASE F — MONDO
+18. Verifica `Build Gameplay Lab` spawni: palme, colonne, cactus, chest runica, vasi, obelischi, golem.
+19. Se manca qualcosa a runtime, aggiungi a `SandboxSceneInitializer`.
+
+### FASE G — MOB E COMPORTAMENTI RICHIESTI IN PRECEDENZA (importante)
+20. **TARTARUGA DEL DESERTO (mob richiesto dall'utente)** — non esiste ancora nel repo. Va:
+    - Generata su Higgsfield come sprite 32×32 (o 64×64) con **animazioni** (idle, walk, attack, hurt, death) su fondo magenta, top-down 3/4, carapace di sabbia/arenaria con motivi runici.
+    - Aggiunta a `Design/balance/enemies.csv` con una riga (tier, hp, speed, damage, behaviour).
+    - Il comportamento richiesto: **si ritira nel guscio quando viene attaccata** (invulnerabile per qualche secondo, animazione di retrazione), **esce e attacca** a distanza ravvicinata, si muove lentamente in patrol. Se il player è sotterraneo (SubterraneanStealth) non la vede/aggro.
+    - Integrare l'AI in un nuovo script `SandstormTurtleAI.cs` (o simile) seguendo il pattern di `SandstormGolemAI`, spawnata nel builder.
+21. **Mob già pianificati ma NON ancora vivi/sprtate** (da `Design/balance/enemies.csv`) — implementare con sprite e AI:
+    - `mob_sandling` (Sandling): chase semplice con pausa pre-lunge.
+    - `mob_burrower` (Burrower): scia di scavo visibile + emergenza ritardata.
+    - `mob_scorpion` (Glass Scorpion, elite): alterna artigli frontali a una coda a cono marcata + carica.
+    - `mob_sun_maw` (Sun Maw, guardian): sputa, scava corsie, summon add.
+    - Nota: `mob_spitter` (Dune Spitter) è già presente come sprite+sheet — va collegato e animato (Fase C punto 9).
+22. Per ogni nuovo mob: registra sprite in `SandboxArtAssetFactory`, spawna nel builder, aggancia le animazioni, aggiorna `Design/balance/enemies.csv` e `Design/provenance/*.json`.
+
+### FASE H — GAMEPLAY SOTTERRANEO (sopra/sotto)
+23. Transizione completa: quando il player scende (depth>=2) → fade + switch layer + silhouette ciano `#00F0E6`. Quando risale → fade inverso.
+24. Gli elementi di superficie (chest, vasi, door) non interagibili da sotterraneo (già parzialmente in codice).
+25. Il golem e i mob di superficie non devono vedere/attaccare il player sotterraneo (già in codice per spitter/proiettili — estendi a tutti i mob).
 
 ---
 

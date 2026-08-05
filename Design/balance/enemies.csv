@@ -4,3 +4,4 @@ mvp-0.1.0,mob_spitter,Dune Spitter,base,55,3.2,12,1.8,middle,"Telegraphed line p
 mvp-0.1.0,mob_burrower,Burrower,base,70,3.8,16,2.4,middle,"Visible burrow trail followed by delayed emergence",healing_chance
 mvp-0.1.0,mob_scorpion,Glass Scorpion,elite,240,4.0,22,1.6,middle_inner,"Alternates frontal claws with a marked tail cone and charge",personal_elite_sigil_contribution
 mvp-0.1.0,mob_sun_maw,Sun Maw,guardian,1000,2.6,26,2.0,centre,"Sweeps spits burrow lanes and add summons combine learned patterns",single_relic
+mvp-0.1.0,mob_crystal_turtle,Crystal Turtle,base,90,1.6,18,2.0,inner,"Slow patrol; retracts into shell when hit (brief invulnerability), emerges and lunges at close range; ignores subterranean players",healing_chance

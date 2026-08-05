@@ -414,6 +414,25 @@ public static class GameplayLabBuilder
         golemRoot.AddComponent<PrototypeHealth>();
         golemRoot.AddComponent<Rigidbody2D>();
         golemRoot.AddComponent<SandstormGolemAI>();
+
+        // Crystal Turtle mob — spawns near the southern edge.
+        if (art.CrystalTurtle != null)
+        {
+            GameObject turtleRoot = new("Crystal Turtle");
+            turtleRoot.transform.SetParent(interactiveRoot.transform, false);
+            turtleRoot.transform.position = new Vector3(3.5f, -7.5f, 0f);
+            SpriteRenderer turtleSr = turtleRoot.AddComponent<SpriteRenderer>();
+            turtleSr.sprite = art.CrystalTurtle;
+            turtleSr.sortingOrder = 4;
+            Rigidbody2D turtleBody = turtleRoot.AddComponent<Rigidbody2D>();
+            turtleBody.bodyType = RigidbodyType2D.Kinematic;
+            turtleBody.gravityScale = 0f;
+            CircleCollider2D turtleCol = turtleRoot.AddComponent<CircleCollider2D>();
+            turtleCol.radius = 0.5f;
+            turtleCol.isTrigger = true;
+            turtleRoot.AddComponent<PrototypeHealth>();
+            turtleRoot.AddComponent<SandstormTurtleAI>();
+        }
     }
 
     private static void CreateRuinWall(

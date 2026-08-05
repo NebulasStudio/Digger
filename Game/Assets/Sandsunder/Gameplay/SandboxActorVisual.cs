@@ -41,6 +41,7 @@ namespace Sandsunder.Gameplay
         [SerializeField]
         private bool hostile;
 
+        private Sprite bodySprite;
         private Transform bodyRoot;
         private Transform weaponRoot;
         private Animator animator;
@@ -105,6 +106,7 @@ namespace Sandsunder.Gameplay
             }
 #endif
 
+            bodySprite = body;
             EnsureHierarchy();
 
             if (body == null && !hostile)
@@ -249,7 +251,10 @@ namespace Sandsunder.Gameplay
             {
                 bodyRoot.localPosition = new Vector3(0f, -0.05f, 0f);
             }
-            shadowRenderer.transform.localScale = new Vector3(0.95f, 0.42f, 1f);
+            if (bodySprite != null && !hostile)
+            {
+                bodyRenderer.sprite = bodySprite;
+            }
 
             UpdateHeldItemSprite();
             ApplyFacing();

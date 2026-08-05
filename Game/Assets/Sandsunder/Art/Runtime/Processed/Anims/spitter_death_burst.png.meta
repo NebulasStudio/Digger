@@ -17,6 +17,30 @@ TextureImporter:
   - first:
       213: 5224302941341869610
     second: spitter_death_burst_4
+  - first:
+      213: 8155540952886246177
+    second: spitter_death_burst_0_0
+  - first:
+      213: 1976102132001765110
+    second: spitter_death_burst_0_1
+  - first:
+      213: -7441225012887778496
+    second: spitter_death_burst_0_2
+  - first:
+      213: -4473645510044182235
+    second: spitter_death_burst_0_3
+  - first:
+      213: -1838281925082850320
+    second: spitter_death_burst_1_0
+  - first:
+      213: -5649373965225967021
+    second: spitter_death_burst_1_1
+  - first:
+      213: 8997900607787544525
+    second: spitter_death_burst_1_2
+  - first:
+      213: -870612526745715888
+    second: spitter_death_burst_1_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,7 +73,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -63,7 +87,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -87,7 +111,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -112,111 +136,177 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spitter_death_burst_0
+      name: spitter_death_burst_0_0
       rect:
         serializedVersion: 2
-        x: 7
-        y: 254
-        width: 227
-        height: 260
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 384
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a047c3b344b581010800000000000000
-      internalID: 1159777252657624074
+      spriteID: 12b7fe7694d4e2170800000000000000
+      internalID: 8155540952886246177
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spitter_death_burst_1
+      name: spitter_death_burst_0_1
       rect:
         serializedVersion: 2
-        x: 234
-        y: 254
-        width: 227
-        height: 260
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 344
+        y: 384
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 23b606a51855c3f20800000000000000
-      internalID: 3403689432440662834
+      spriteID: 6f67bd15b668c6b10800000000000000
+      internalID: 1976102132001765110
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spitter_death_burst_2
+      name: spitter_death_burst_0_2
       rect:
         serializedVersion: 2
-        x: 460
-        y: 254
-        width: 456
-        height: 260
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 688
+        y: 384
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 815eb0bb44a809b40800000000000000
-      internalID: 5445003977291457816
+      spriteID: 04b821da6457bb890800000000000000
+      internalID: -7441225012887778496
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spitter_death_burst_3
+      name: spitter_death_burst_0_3
       rect:
         serializedVersion: 2
-        x: 915
-        y: 254
-        width: 228
-        height: 260
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1032
+        y: 384
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 022b362bcd6a49800800000000000000
-      internalID: 618302515672494624
+      spriteID: 5299bca6c1b6ae1c0800000000000000
+      internalID: -4473645510044182235
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spitter_death_burst_4
+      name: spitter_death_burst_1_0
       rect:
         serializedVersion: 2
-        x: 1142
-        y: 254
-        width: 227
-        height: 260
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a26e5b978d3708840800000000000000
-      internalID: 5224302941341869610
+      spriteID: 0fb5a6a245c1d76e0800000000000000
+      internalID: -1838281925082850320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_death_burst_1_1
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 0
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 352cd5f6f446991b0800000000000000
+      internalID: -5649373965225967021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_death_burst_1_2
+      rect:
+        serializedVersion: 2
+        x: 688
+        y: 0
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcfa27b0ee6fedc70800000000000000
+      internalID: 8997900607787544525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_death_burst_1_3
+      rect:
+        serializedVersion: 2
+        x: 1032
+        y: 0
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05bf0560586fae3f0800000000000000
+      internalID: -870612526745715888
       vertices: []
       indices: 
       edges: []
@@ -236,7 +326,15 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       spitter_death_burst_0: 1159777252657624074
+      spitter_death_burst_0_0: 8155540952886246177
+      spitter_death_burst_0_1: 1976102132001765110
+      spitter_death_burst_0_2: -7441225012887778496
+      spitter_death_burst_0_3: -4473645510044182235
       spitter_death_burst_1: 3403689432440662834
+      spitter_death_burst_1_0: -1838281925082850320
+      spitter_death_burst_1_1: -5649373965225967021
+      spitter_death_burst_1_2: 8997900607787544525
+      spitter_death_burst_1_3: -870612526745715888
       spitter_death_burst_2: 5445003977291457816
       spitter_death_burst_3: 618302515672494624
       spitter_death_burst_4: 5224302941341869610

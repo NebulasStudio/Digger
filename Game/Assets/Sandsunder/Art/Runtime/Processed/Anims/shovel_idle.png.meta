@@ -14,6 +14,18 @@ TextureImporter:
   - first:
       213: -1535387811705774115
     second: shovel_idle_3
+  - first:
+      213: 8378733527008543440
+    second: shovel_idle_0_0
+  - first:
+      213: 232697595089122456
+    second: shovel_idle_0_1
+  - first:
+      213: -7194799914032174853
+    second: shovel_idle_0_2
+  - first:
+      213: 3840093526497433890
+    second: shovel_idle_0_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +58,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -60,7 +72,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -84,7 +96,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -109,89 +121,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: shovel_idle_0
+      name: shovel_idle_0_0
       rect:
         serializedVersion: 2
-        x: 101
-        y: 189
-        width: 114
-        height: 342
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3bc960216ed253080800000000000000
-      internalID: -9208403396920959821
+      spriteID: 0d2000910cd374470800000000000000
+      internalID: 8378733527008543440
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shovel_idle_1
+      name: shovel_idle_0_1
       rect:
         serializedVersion: 2
-        x: 409
-        y: 205
-        width: 140
-        height: 359
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 316
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1005da7b1b102b9c0800000000000000
-      internalID: -3913063263429111807
+      spriteID: 894ff57da35ba3300800000000000000
+      internalID: 232697595089122456
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shovel_idle_2
+      name: shovel_idle_0_2
       rect:
         serializedVersion: 2
-        x: 724
-        y: 297
-        width: 137
-        height: 367
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 632
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 55ebf41b4b2fd2f80800000000000000
-      internalID: -8129574894451048875
+      spriteID: bf8e91e099fe62c90800000000000000
+      internalID: -7194799914032174853
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shovel_idle_3
+      name: shovel_idle_0_3
       rect:
         serializedVersion: 2
-        x: 1048
-        y: 200
-        width: 136
-        height: 358
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 948
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ddf10da8be431bae0800000000000000
-      internalID: -1535387811705774115
+      spriteID: 229182777b0ca4530800000000000000
+      internalID: 3840093526497433890
       vertices: []
       indices: 
       edges: []
@@ -211,6 +223,10 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       shovel_idle_0: -9208403396920959821
+      shovel_idle_0_0: 8378733527008543440
+      shovel_idle_0_1: 232697595089122456
+      shovel_idle_0_2: -7194799914032174853
+      shovel_idle_0_3: 3840093526497433890
       shovel_idle_1: -3913063263429111807
       shovel_idle_2: -8129574894451048875
       shovel_idle_3: -1535387811705774115

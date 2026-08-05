@@ -14,6 +14,30 @@ TextureImporter:
   - first:
       213: -1275328294783106835
     second: spitter_idle_3
+  - first:
+      213: -6797887521479190561
+    second: spitter_idle_0_0
+  - first:
+      213: -4406425361269626068
+    second: spitter_idle_0_1
+  - first:
+      213: 3785130981036708355
+    second: spitter_idle_0_2
+  - first:
+      213: -7724312562052993533
+    second: spitter_idle_0_3
+  - first:
+      213: -5786483141344478951
+    second: spitter_idle_1_0
+  - first:
+      213: -3825559092182385535
+    second: spitter_idle_1_1
+  - first:
+      213: -3592976071228730487
+    second: spitter_idle_1_2
+  - first:
+      213: -3061853979968432360
+    second: spitter_idle_1_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +70,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -60,7 +84,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -84,7 +108,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -109,89 +133,177 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spitter_idle_0
+      name: spitter_idle_0_0
       rect:
         serializedVersion: 2
-        x: 15
-        y: 369
-        width: 287
-        height: 207
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 424
+        width: 316
+        height: 424
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b2ba6ef8b757738f0800000000000000
-      internalID: -560850455028651221
+      spriteID: fd71c23e05d09a1a0800000000000000
+      internalID: -6797887521479190561
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spitter_idle_1
+      name: spitter_idle_0_1
       rect:
         serializedVersion: 2
-        x: 327
-        y: 330
-        width: 285
-        height: 193
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 316
+        y: 424
+        width: 316
+        height: 424
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: aab0e68eea6c4b790800000000000000
-      internalID: -7515163423648379990
+      spriteID: c2b604cea7b39d2c0800000000000000
+      internalID: -4406425361269626068
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spitter_idle_2
+      name: spitter_idle_0_2
       rect:
         serializedVersion: 2
-        x: 641
-        y: 384
-        width: 299
-        height: 212
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 632
+        y: 424
+        width: 316
+        height: 424
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7dcf765d8f13dfbd0800000000000000
-      internalID: -2594862865493525289
+      spriteID: 302d401a29c778430800000000000000
+      internalID: 3785130981036708355
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spitter_idle_3
+      name: spitter_idle_0_3
       rect:
         serializedVersion: 2
-        x: 960
-        y: 305
-        width: 292
-        height: 197
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 948
+        y: 424
+        width: 316
+        height: 424
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: de0c2714caf1d4ee0800000000000000
-      internalID: -1275328294783106835
+      spriteID: 30e6eb466aabdc490800000000000000
+      internalID: -7724312562052993533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_idle_1_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 316
+        height: 424
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9193065bd3842bfa0800000000000000
+      internalID: -5786483141344478951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_idle_1_1
+      rect:
+        serializedVersion: 2
+        x: 316
+        y: 0
+        width: 316
+        height: 424
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18cf33b3642e8eac0800000000000000
+      internalID: -3825559092182385535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_idle_1_2
+      rect:
+        serializedVersion: 2
+        x: 632
+        y: 0
+        width: 316
+        height: 424
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 983dee3bc4f232ec0800000000000000
+      internalID: -3592976071228730487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_idle_1_3
+      rect:
+        serializedVersion: 2
+        x: 948
+        y: 0
+        width: 316
+        height: 424
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8179dd1170c1285d0800000000000000
+      internalID: -3061853979968432360
       vertices: []
       indices: 
       edges: []
@@ -211,7 +323,15 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       spitter_idle_0: -560850455028651221
+      spitter_idle_0_0: -6797887521479190561
+      spitter_idle_0_1: -4406425361269626068
+      spitter_idle_0_2: 3785130981036708355
+      spitter_idle_0_3: -7724312562052993533
       spitter_idle_1: -7515163423648379990
+      spitter_idle_1_0: -5786483141344478951
+      spitter_idle_1_1: -3825559092182385535
+      spitter_idle_1_2: -3592976071228730487
+      spitter_idle_1_3: -3061853979968432360
       spitter_idle_2: -2594862865493525289
       spitter_idle_3: -1275328294783106835
   mipmapLimitGroupName: 

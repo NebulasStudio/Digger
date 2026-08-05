@@ -20,6 +20,18 @@ TextureImporter:
   - first:
       213: -4453939373427880144
     second: shovel_swing_5
+  - first:
+      213: 8141284972236626172
+    second: shovel_swing_0_0
+  - first:
+      213: 3773296907031761565
+    second: shovel_swing_0_1
+  - first:
+      213: 7956240425600895292
+    second: shovel_swing_0_2
+  - first:
+      213: 6763077546604492484
+    second: shovel_swing_0_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -52,7 +64,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -66,7 +78,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -90,7 +102,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -115,133 +127,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: shovel_swing_0
+      name: shovel_swing_0_0
       rect:
         serializedVersion: 2
-        x: 11
-        y: 253
-        width: 300
-        height: 320
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d4bf1a518c3f87380800000000000000
-      internalID: -8973154216853767347
+      spriteID: cf8d3614c87abf070800000000000000
+      internalID: 8141284972236626172
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shovel_swing_1
+      name: shovel_swing_0_1
       rect:
         serializedVersion: 2
-        x: 483
-        y: 503
-        width: 18
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 316
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ac30d477d4628b320800000000000000
-      internalID: 2573849301198111690
+      spriteID: d9255bf8b817d5430800000000000000
+      internalID: 3773296907031761565
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shovel_swing_2
+      name: shovel_swing_0_2
       rect:
         serializedVersion: 2
-        x: 499
-        y: 498
-        width: 12
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 632
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5eee6d49415fc7190800000000000000
-      internalID: -7963220572352614683
+      spriteID: c394b8b538e3a6e60800000000000000
+      internalID: 7956240425600895292
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shovel_swing_3
+      name: shovel_swing_0_3
       rect:
         serializedVersion: 2
-        x: 953
-        y: 253
-        width: 300
-        height: 289
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 948
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8189cb3894e7564f0800000000000000
-      internalID: -836123301599471592
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: shovel_swing_4
-      rect:
-        serializedVersion: 2
-        x: 324
-        y: 253
-        width: 298
-        height: 247
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d3dd47921261c8ea0800000000000000
-      internalID: -5869291882685342403
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: shovel_swing_5
-      rect:
-        serializedVersion: 2
-        x: 642
-        y: 253
-        width: 299
-        height: 239
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 03f84b3ecbd6032c0800000000000000
-      internalID: -4453939373427880144
+      spriteID: 4c6f7c142374bdd50800000000000000
+      internalID: 6763077546604492484
       vertices: []
       indices: 
       edges: []
@@ -261,6 +229,10 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       shovel_swing_0: -8973154216853767347
+      shovel_swing_0_0: 8141284972236626172
+      shovel_swing_0_1: 3773296907031761565
+      shovel_swing_0_2: 7956240425600895292
+      shovel_swing_0_3: 6763077546604492484
       shovel_swing_1: 2573849301198111690
       shovel_swing_2: -7963220572352614683
       shovel_swing_3: -836123301599471592

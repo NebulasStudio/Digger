@@ -22,7 +22,7 @@ AnimationClip:
     curve:
     - time: 0
       value: {fileID: 5461489529902619158, guid: 8838368897ac453bbba48744bd82f1fb, type: 3}
-    - time: 0.083333333
+    - time: 0.083333336
       value: {fileID: 7719803666733658055, guid: 8838368897ac453bbba48744bd82f1fb, type: 3}
     - time: 0.16666667
       value: {fileID: 5893622419180085627, guid: 8838368897ac453bbba48744bd82f1fb, type: 3}
@@ -59,7 +59,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.33333333
+    m_StopTime: 0.33333334
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0

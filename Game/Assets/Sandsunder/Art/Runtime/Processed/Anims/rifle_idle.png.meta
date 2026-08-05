@@ -14,6 +14,18 @@ TextureImporter:
   - first:
       213: -4182752760825983596
     second: rifle_idle_3
+  - first:
+      213: 956921862175628182
+    second: rifle_idle_0_0
+  - first:
+      213: 2422927439699456087
+    second: rifle_idle_0_1
+  - first:
+      213: 6520222334677598464
+    second: rifle_idle_0_2
+  - first:
+      213: 5431022054452106319
+    second: rifle_idle_0_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +58,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -60,7 +72,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -84,7 +96,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -109,89 +121,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: rifle_idle_0
+      name: rifle_idle_0_0
       rect:
         serializedVersion: 2
-        x: 96
-        y: 215
-        width: 97
-        height: 427
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b5f5878b5f257c750800000000000000
-      internalID: 6325115416980512603
+      spriteID: 69b98c81d5ba74d00800000000000000
+      internalID: 956921862175628182
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rifle_idle_1
+      name: rifle_idle_0_1
       rect:
         serializedVersion: 2
-        x: 408
-        y: 206
-        width: 125
-        height: 432
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 316
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d0cd84e9f5c56e730800000000000000
-      internalID: 4028008482476710925
+      spriteID: 75035df4ba7ff9120800000000000000
+      internalID: 2422927439699456087
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rifle_idle_2
+      name: rifle_idle_0_2
       rect:
         serializedVersion: 2
-        x: 732
-        y: 215
-        width: 97
-        height: 427
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 632
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f74ba3dd1a374e6e0800000000000000
-      internalID: -1809194011257555841
+      spriteID: 001c603faab7c7a50800000000000000
+      internalID: 6520222334677598464
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rifle_idle_3
+      name: rifle_idle_0_3
       rect:
         serializedVersion: 2
-        x: 1049
-        y: 215
-        width: 99
-        height: 438
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 948
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 49dcea37680e3f5c0800000000000000
-      internalID: -4182752760825983596
+      spriteID: f441ee2a8cdde5b40800000000000000
+      internalID: 5431022054452106319
       vertices: []
       indices: 
       edges: []
@@ -211,6 +223,10 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       rifle_idle_0: 6325115416980512603
+      rifle_idle_0_0: 956921862175628182
+      rifle_idle_0_1: 2422927439699456087
+      rifle_idle_0_2: 6520222334677598464
+      rifle_idle_0_3: 5431022054452106319
       rifle_idle_1: 4028008482476710925
       rifle_idle_2: -1809194011257555841
       rifle_idle_3: -4182752760825983596

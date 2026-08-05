@@ -182,7 +182,10 @@ namespace Sandsunder.Editor
             }
 
             importer.textureType = TextureImporterType.Sprite;
-            importer.spriteImportMode = SpriteImportMode.Single;
+            if (importer.spriteImportMode != SpriteImportMode.Multiple)
+            {
+                importer.spriteImportMode = SpriteImportMode.Single;
+            }
             importer.spritePixelsPerUnit = pixelsPerUnit;
             importer.filterMode = FilterMode.Point;
             importer.wrapMode = TextureWrapMode.Clamp;
@@ -192,13 +195,21 @@ namespace Sandsunder.Editor
             importer.isReadable = false;
             TextureImporterSettings importerSettings = new();
             importer.ReadTextureSettings(importerSettings);
-            importerSettings.spriteAlignment = (int)SpriteAlignment.Custom;
-            importerSettings.spritePivot = pivot;
-            importerSettings.spriteMeshType = SpriteMeshType.FullRect;
+            if (importer.spriteImportMode == SpriteImportMode.Single)
+            {
+                importerSettings.spriteAlignment = (int)SpriteAlignment.Custom;
+                importerSettings.spritePivot = pivot;
+                importerSettings.spriteMeshType = SpriteMeshType.FullRect;
+            }
             importer.SetTextureSettings(importerSettings);
             importer.SaveAndReimport();
 
             Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(assetPath);
+            if (sprite == null)
+            {
+                var subSprites = AssetDatabase.LoadAllAssetsAtPath(assetPath).OfType<Sprite>().ToArray();
+                if (subSprites.Length > 0) sprite = subSprites[0];
+            }
             if (sprite == null)
             {
                 throw new InvalidOperationException($"Unable to import runtime sprite at {assetPath}.");

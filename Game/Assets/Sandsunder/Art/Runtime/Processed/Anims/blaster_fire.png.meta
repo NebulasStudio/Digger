@@ -23,6 +23,18 @@ TextureImporter:
   - first:
       213: -185063464715165516
     second: blaster_fire_6
+  - first:
+      213: 2967256155324868633
+    second: blaster_fire_0_0
+  - first:
+      213: -490674583866990298
+    second: blaster_fire_0_1
+  - first:
+      213: 4312104293899555914
+    second: blaster_fire_0_2
+  - first:
+      213: -3623190222168924695
+    second: blaster_fire_0_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -55,7 +67,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -69,7 +81,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -93,7 +105,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -118,155 +130,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: blaster_fire_0
+      name: blaster_fire_0_0
       rect:
         serializedVersion: 2
-        x: 402
-        y: 100
-        width: 146
-        height: 708
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0905f923860722b90800000000000000
-      internalID: -7268123255794347888
+      spriteID: 918eab780cfcd2920800000000000000
+      internalID: 2967256155324868633
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: blaster_fire_1
+      name: blaster_fire_0_1
       rect:
         serializedVersion: 2
-        x: 758
-        y: 672
-        width: 8
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 316
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 25887c33626f9abc0800000000000000
-      internalID: -3771212569008175022
+      spriteID: 621ab40d016c039f0800000000000000
+      internalID: -490674583866990298
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: blaster_fire_2
+      name: blaster_fire_0_2
       rect:
         serializedVersion: 2
-        x: 827
-        y: 667
-        width: 7
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 632
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8a8196649c64ed990800000000000000
-      internalID: -7359366910793148248
+      spriteID: a44d150420ca7db30800000000000000
+      internalID: 4312104293899555914
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: blaster_fire_3
+      name: blaster_fire_0_3
       rect:
         serializedVersion: 2
-        x: 689
-        y: 73
-        width: 194
-        height: 586
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 948
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 990a6b4c3f5d8c4a0800000000000000
-      internalID: -6572768413193166695
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: blaster_fire_4
-      rect:
-        serializedVersion: 2
-        x: 878
-        y: 528
-        width: 10
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d6dbe06feefdf69c0800000000000000
-      internalID: -3931677732247782035
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: blaster_fire_5
-      rect:
-        serializedVersion: 2
-        x: 85
-        y: 100
-        width: 145
-        height: 373
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0639b430b527518e0800000000000000
-      internalID: -1723345547176471712
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: blaster_fire_6
-      rect:
-        serializedVersion: 2
-        x: 1039
-        y: 100
-        width: 145
-        height: 373
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 4b0efb462c58e6df0800000000000000
-      internalID: -185063464715165516
+      spriteID: 9edd3fd70b7d7bdc0800000000000000
+      internalID: -3623190222168924695
       vertices: []
       indices: 
       edges: []
@@ -286,6 +232,10 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       blaster_fire_0: -7268123255794347888
+      blaster_fire_0_0: 2967256155324868633
+      blaster_fire_0_1: -490674583866990298
+      blaster_fire_0_2: 4312104293899555914
+      blaster_fire_0_3: -3623190222168924695
       blaster_fire_1: -3771212569008175022
       blaster_fire_2: -7359366910793148248
       blaster_fire_3: -6572768413193166695

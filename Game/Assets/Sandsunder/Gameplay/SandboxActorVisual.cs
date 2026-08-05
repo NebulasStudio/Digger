@@ -124,9 +124,9 @@ namespace Sandsunder.Gameplay
             bodyRenderer.color = Color.white;
             weaponRenderer.color = Color.white;
             weaponRenderer.enabled = weaponRenderer.sprite != null;
-            NormalizeSpriteHeight(bodyRenderer, hostile ? 0.92f : 1.02f);
-            NormalizeSpriteHeight(shadowRenderer, 0.24f);
-            NormalizeSpriteHeight(weaponRenderer, hostile ? 0.45f : 0.62f);
+            bodyRenderer.transform.localScale = Vector3.one;
+            shadowRenderer.transform.localScale = new Vector3(0.95f, 0.42f, 1f);
+            weaponRenderer.transform.localScale = Vector3.one;
 
             bodyRoot.localPosition = new Vector3(0f, 0.16f, 0f);
             shadowRenderer.transform.localPosition = new Vector3(0f, -0.27f, 0f);

@@ -14,6 +14,18 @@ TextureImporter:
   - first:
       213: -6904698934080724795
     second: shotgun_idle_3
+  - first:
+      213: -941618760987970262
+    second: shotgun_idle_0_0
+  - first:
+      213: 5205009440307422743
+    second: shotgun_idle_0_1
+  - first:
+      213: 5636299151600086626
+    second: shotgun_idle_0_2
+  - first:
+      213: 9152221385705708710
+    second: shotgun_idle_0_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +58,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -60,7 +72,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -84,7 +96,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -109,89 +121,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: shotgun_idle_0
+      name: shotgun_idle_0_0
       rect:
         serializedVersion: 2
-        x: 56
-        y: 178
-        width: 185
-        height: 480
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 64b64c1e25313df90800000000000000
-      internalID: -6930174154897069242
+      spriteID: a25f77dc9b2bee2f0800000000000000
+      internalID: -941618760987970262
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shotgun_idle_1
+      name: shotgun_idle_0_1
       rect:
         serializedVersion: 2
-        x: 313
-        y: 171
-        width: 241
-        height: 511
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 316
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ce93223d4ea3f7080800000000000000
-      internalID: -9187559960343332372
+      spriteID: 71624163288eb3840800000000000000
+      internalID: 5205009440307422743
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shotgun_idle_2
+      name: shotgun_idle_0_2
       rect:
         serializedVersion: 2
-        x: 629
-        y: 171
-        width: 246
-        height: 526
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 632
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9b71326104f8bb710800000000000000
-      internalID: 1710117988929312697
+      spriteID: 26e65fa4738283e40800000000000000
+      internalID: 5636299151600086626
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: shotgun_idle_3
+      name: shotgun_idle_0_3
       rect:
         serializedVersion: 2
-        x: 947
-        y: 171
-        width: 317
-        height: 534
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 948
+        y: 0
+        width: 316
+        height: 848
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5c0a911f6e49d20a0800000000000000
-      internalID: -6904698934080724795
+      spriteID: 6acd8b81cd8330f70800000000000000
+      internalID: 9152221385705708710
       vertices: []
       indices: 
       edges: []
@@ -211,6 +223,10 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       shotgun_idle_0: -6930174154897069242
+      shotgun_idle_0_0: -941618760987970262
+      shotgun_idle_0_1: 5205009440307422743
+      shotgun_idle_0_2: 5636299151600086626
+      shotgun_idle_0_3: 9152221385705708710
       shotgun_idle_1: -9187559960343332372
       shotgun_idle_2: 1710117988929312697
       shotgun_idle_3: -6904698934080724795

@@ -20,6 +20,30 @@ TextureImporter:
   - first:
       213: -8120677194831047398
     second: nomad_stealth_crouch_5
+  - first:
+      213: 334622431005159710
+    second: nomad_stealth_crouch_0_0
+  - first:
+      213: -7289184286350363974
+    second: nomad_stealth_crouch_0_1
+  - first:
+      213: -1779551302152733110
+    second: nomad_stealth_crouch_0_2
+  - first:
+      213: -6841558502137545016
+    second: nomad_stealth_crouch_0_3
+  - first:
+      213: 5556821458607463205
+    second: nomad_stealth_crouch_1_0
+  - first:
+      213: 3622641593214480930
+    second: nomad_stealth_crouch_1_1
+  - first:
+      213: 5127957123507949756
+    second: nomad_stealth_crouch_1_2
+  - first:
+      213: 8680401542396986250
+    second: nomad_stealth_crouch_1_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -52,7 +76,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -66,7 +90,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -90,7 +114,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -115,133 +139,177 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: nomad_stealth_crouch_0
+      name: nomad_stealth_crouch_0_0
       rect:
         serializedVersion: 2
-        x: 65
-        y: 299
-        width: 145
-        height: 170
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 384
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3bb349e2083416dc0800000000000000
-      internalID: -3647560005377049677
+      spriteID: e11b0fdf351d4a400800000000000000
+      internalID: 334622431005159710
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nomad_stealth_crouch_1
+      name: nomad_stealth_crouch_0_1
       rect:
         serializedVersion: 2
-        x: 275
-        y: 299
-        width: 167
-        height: 176
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 344
+        y: 384
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ac8836f9e8e362940800000000000000
-      internalID: 5270969196164122826
+      spriteID: ab23ab5e28d97da90800000000000000
+      internalID: -7289184286350363974
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nomad_stealth_crouch_2
+      name: nomad_stealth_crouch_0_2
       rect:
         serializedVersion: 2
-        x: 492
-        y: 299
-        width: 172
-        height: 152
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 688
+        y: 384
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 12232158a41f0b370800000000000000
-      internalID: 8336428212625224225
+      spriteID: a4e3a97e483cd47e0800000000000000
+      internalID: -1779551302152733110
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nomad_stealth_crouch_3
+      name: nomad_stealth_crouch_0_3
       rect:
         serializedVersion: 2
-        x: 723
-        y: 299
-        width: 146
-        height: 159
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 1032
+        y: 384
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 881b9511acf731c60800000000000000
-      internalID: 7787708686504931720
+      spriteID: 8ceb90a5ac6ed01a0800000000000000
+      internalID: -6841558502137545016
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nomad_stealth_crouch_4
+      name: nomad_stealth_crouch_1_0
       rect:
         serializedVersion: 2
-        x: 946
-        y: 300
-        width: 145
-        height: 169
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 0
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0a4309bbda5635950800000000000000
-      internalID: 6436600089293108384
+      spriteID: 52bd090ecabcd1d40800000000000000
+      internalID: 5556821458607463205
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: nomad_stealth_crouch_5
+      name: nomad_stealth_crouch_1_1
       rect:
         serializedVersion: 2
-        x: 1165
-        y: 299
-        width: 157
-        height: 170
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 344
+        y: 0
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a15da72dd1f8d4f80800000000000000
-      internalID: -8120677194831047398
+      spriteID: 222ba10e555364230800000000000000
+      internalID: 3622641593214480930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nomad_stealth_crouch_1_2
+      rect:
+        serializedVersion: 2
+        x: 688
+        y: 0
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb01022b5d92a2740800000000000000
+      internalID: 5127957123507949756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nomad_stealth_crouch_1_3
+      rect:
+        serializedVersion: 2
+        x: 1032
+        y: 0
+        width: 344
+        height: 384
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a83435a463bf67870800000000000000
+      internalID: 8680401542396986250
       vertices: []
       indices: 
       edges: []
@@ -261,7 +329,15 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       nomad_stealth_crouch_0: -3647560005377049677
+      nomad_stealth_crouch_0_0: 334622431005159710
+      nomad_stealth_crouch_0_1: -7289184286350363974
+      nomad_stealth_crouch_0_2: -1779551302152733110
+      nomad_stealth_crouch_0_3: -6841558502137545016
       nomad_stealth_crouch_1: 5270969196164122826
+      nomad_stealth_crouch_1_0: 5556821458607463205
+      nomad_stealth_crouch_1_1: 3622641593214480930
+      nomad_stealth_crouch_1_2: 5127957123507949756
+      nomad_stealth_crouch_1_3: 8680401542396986250
       nomad_stealth_crouch_2: 8336428212625224225
       nomad_stealth_crouch_3: 7787708686504931720
       nomad_stealth_crouch_4: 6436600089293108384

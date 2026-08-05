@@ -410,22 +410,6 @@ public static class GameplayLabBuilder
             vaseObj.AddComponent<PrototypeDestructibleVase>();
         }
 
-        // Ancient Obelisks
-        GameObject obelisksRoot = new("Ancient Obelisks");
-        obelisksRoot.transform.SetParent(interactiveRoot.transform, false);
-        GameObject ob1 = new("Rune Obelisk West");
-        ob1.transform.SetParent(obelisksRoot.transform, false);
-        ob1.transform.position = new Vector3(-9.5f, 5.2f, 0f);
-        // PrototypeAncientRuneObelisk requires a SpriteRenderer.
-        ob1.AddComponent<SpriteRenderer>();
-        ob1.AddComponent<PrototypeAncientRuneObelisk>();
-
-        GameObject ob2 = new("Rune Obelisk East");
-        ob2.transform.SetParent(obelisksRoot.transform, false);
-        ob2.transform.position = new Vector3(9.5f, 5.2f, 0f);
-        ob2.AddComponent<SpriteRenderer>();
-        ob2.AddComponent<PrototypeAncientRuneObelisk>();
-
         // Ruin Doors
         GameObject doorsRoot = new("Ruin Doors");
         doorsRoot.transform.SetParent(interactiveRoot.transform, false);
@@ -441,25 +425,6 @@ public static class GameplayLabBuilder
         golemRoot.AddComponent<PrototypeHealth>();
         golemRoot.AddComponent<Rigidbody2D>();
         golemRoot.AddComponent<SandstormGolemAI>();
-
-        // Crystal Turtle mob — spawns near the southern edge.
-        if (art.CrystalTurtle != null)
-        {
-            GameObject turtleRoot = new("Crystal Turtle");
-            turtleRoot.transform.SetParent(interactiveRoot.transform, false);
-            turtleRoot.transform.position = new Vector3(3.5f, -7.5f, 0f);
-            SpriteRenderer turtleSr = turtleRoot.AddComponent<SpriteRenderer>();
-            turtleSr.sprite = art.CrystalTurtle;
-            turtleSr.sortingOrder = 4;
-            Rigidbody2D turtleBody = turtleRoot.AddComponent<Rigidbody2D>();
-            turtleBody.bodyType = RigidbodyType2D.Kinematic;
-            turtleBody.gravityScale = 0f;
-            CircleCollider2D turtleCol = turtleRoot.AddComponent<CircleCollider2D>();
-            turtleCol.radius = 0.5f;
-            turtleCol.isTrigger = true;
-            turtleRoot.AddComponent<PrototypeHealth>();
-            turtleRoot.AddComponent<SandstormTurtleAI>();
-        }
     }
 
     private static void CreateRuinWall(

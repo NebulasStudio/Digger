@@ -1,7 +1,19 @@
 fileFormatVersion: 2
 guid: 8838368897ac453bbba48744bd82f1fb
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 5461489529902619158
+    second: nomad_walk_0_0
+  - first:
+      213: 7719803666733658055
+    second: nomad_walk_0_1
+  - first:
+      213: 5893622419180085627
+    second: nomad_walk_0_2
+  - first:
+      213: 962338377485906061
+    second: nomad_walk_0_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -95,7 +107,91 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: nomad_walk_0_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 256
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: 93eb5aa0bd2b23d75bb9e2fe7f7a8e06
+      internalID: 5461489529902619158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nomad_walk_0_1
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 256
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: 732e4d72c3e51cb9341f8fc8e17691e1
+      internalID: 7719803666733658055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nomad_walk_0_2
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 256
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: e6df0fa2fc372170cd368e2ab1c7431d
+      internalID: 5893622419180085627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nomad_walk_0_3
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 256
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: c4d8c6e3f6efa97ba22d4ad8a0b67ce8
+      internalID: 962338377485906061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -108,7 +204,11 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+    nomad_walk_0_0: 5461489529902619158
+    nomad_walk_0_1: 7719803666733658055
+    nomad_walk_0_2: 5893622419180085627
+    nomad_walk_0_3: 962338377485906061
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

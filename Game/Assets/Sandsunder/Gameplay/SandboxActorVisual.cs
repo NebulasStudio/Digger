@@ -396,22 +396,6 @@ namespace Sandsunder.Gameplay
                         : visualRoot.Find("Weapon");
             }
 
-            if (visualRoot != null
-                && bodyRoot != null
-                && weaponRoot != null
-                && bodyRenderer != null
-                && shadowRenderer != null
-                && weaponRenderer != null)
-            {
-                return;
-            }
-
-            SpriteRenderer rootRenderer = GetComponent<SpriteRenderer>();
-            if (rootRenderer != null)
-            {
-                rootRenderer.enabled = false;
-            }
-
             visualRoot = GetOrCreateChild(transform, "VisualRoot");
             Transform shadowRoot = GetOrCreateChild(visualRoot, "Shadow");
             bodyRoot = GetOrCreateChild(visualRoot, "Body");
@@ -431,10 +415,13 @@ namespace Sandsunder.Gameplay
                 }
             }
 
-            animator = bodyRoot.GetComponent<Animator>();
             if (animator == null)
             {
-                animator = bodyRoot.gameObject.AddComponent<Animator>();
+                animator = bodyRoot.GetComponent<Animator>();
+                if (animator == null)
+                {
+                    animator = bodyRoot.gameObject.AddComponent<Animator>();
+                }
             }
 
             // NomadAnimator drives the AnimatorController (Idle/Walk/Run/Roll/Dig/StealthCrouch)
@@ -453,10 +440,7 @@ namespace Sandsunder.Gameplay
                 animator.runtimeAnimatorController = runtimeAnimatorController;
             }
 
-            if (!initialized)
-            {
-                Configure(null, null, null, controller, combat, hostile, runtimeAnimatorController);
-            }
+            initialized = true;
         }
 
         private static Transform GetOrCreateChild(Transform parent, string childName)

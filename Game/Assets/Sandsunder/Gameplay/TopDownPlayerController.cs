@@ -86,20 +86,10 @@ public sealed class TopDownPlayerController : MonoBehaviour
 
     private void UpdateSubterraneanVisuals()
     {
-        if (cachedRenderer == null) cachedRenderer = GetComponentInChildren<SpriteRenderer>();
-        if (cachedRenderer == null) return;
-
-        if (currentDepth >= 1)
+        var stealth = GetComponent<SubterraneanStealth>();
+        if (stealth != null)
         {
-            // Subterranean: translucent cyan silhouette (#00F0E6) @65%, rendered behind the sand
-            // (sortingOrder -10) to convey the floating/sliding underground state.
-            cachedRenderer.color = new Color(0f, 0.94f, 0.90f, 0.65f);
-            cachedRenderer.sortingOrder = -10;
-        }
-        else
-        {
-            // Surface: normal rendering.
-            cachedRenderer.color = Color.white;
+            stealth.SetDepthDirect(currentDepth);
         }
     }
 

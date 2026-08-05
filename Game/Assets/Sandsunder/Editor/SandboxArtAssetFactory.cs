@@ -25,6 +25,10 @@ namespace Sandsunder.Editor
         public Sprite SandTuft { get; set; }
         public Sprite Bone { get; set; }
         public Sprite CyanRune { get; set; }
+        public Sprite PalmTree { get; set; }
+        public Sprite RuinPillar { get; set; }
+        public Sprite Cactus { get; set; }
+        public Sprite RunedChest { get; set; }
         public RuntimeAnimatorController PlayerAnimator { get; set; }
     }
 
@@ -81,6 +85,10 @@ namespace Sandsunder.Editor
                 SandTuft = CreateProceduralSprite("SandTuft", 20, 20, 32f, DrawSandTuft),
                 Bone = CreateProceduralSprite("DesertBone", 24, 16, 32f, DrawBone),
                 CyanRune = CreateProceduralSprite("CyanRune", 32, 32, 32f, DrawCyanRune),
+                PalmTree = ImportSpriteOptional($"{RuntimeRoot}/Processed/env_palm_tree_32.png", 32f, new Vector2(0.5f, 0.5f)),
+                RuinPillar = ImportSpriteOptional($"{RuntimeRoot}/Processed/env_ruin_pillar_32.png", 32f, new Vector2(0.5f, 0.5f)),
+                Cactus = ImportSpriteOptional($"{RuntimeRoot}/Processed/env_cactus_32.png", 32f, new Vector2(0.5f, 0.5f)),
+                RunedChest = ImportSpriteOptional($"{RuntimeRoot}/Processed/env_chest_runed_32.png", 32f, new Vector2(0.5f, 0.5f)),
             };
         }
 

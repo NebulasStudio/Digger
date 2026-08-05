@@ -126,7 +126,7 @@ namespace Sandsunder.Gameplay
             weaponRenderer.enabled = weaponRenderer.sprite != null;
             NormalizeSpriteHeight(bodyRenderer, hostile ? 0.92f : 1.02f);
             NormalizeSpriteHeight(shadowRenderer, 0.24f);
-            NormalizeSpriteHeight(weaponRenderer, hostile ? 0.14f : 0.16f);
+            NormalizeSpriteHeight(weaponRenderer, hostile ? 0.45f : 0.62f);
 
             bodyRoot.localPosition = new Vector3(0f, 0.16f, 0f);
             shadowRenderer.transform.localPosition = new Vector3(0f, -0.27f, 0f);

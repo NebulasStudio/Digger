@@ -20,7 +20,6 @@ MonoBehaviour:
     pixelsPerUnit: 64
     fps: 12
     loop: true
-
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/shovel_swing.png
     clipName: Shovel_Swing
     columns: 4
@@ -28,7 +27,6 @@ MonoBehaviour:
     pixelsPerUnit: 64
     fps: 12
     loop: false
-
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/rifle_idle.png
     clipName: Rifle_Idle
     columns: 4
@@ -36,7 +34,6 @@ MonoBehaviour:
     pixelsPerUnit: 64
     fps: 12
     loop: true
-
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/rifle_fire.png
     clipName: Rifle_Fire
     columns: 4
@@ -44,7 +41,6 @@ MonoBehaviour:
     pixelsPerUnit: 64
     fps: 12
     loop: false
-
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/rifle_reload.png
     clipName: Rifle_Reload
     columns: 3
@@ -52,7 +48,6 @@ MonoBehaviour:
     pixelsPerUnit: 64
     fps: 12
     loop: false
-
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/shotgun_idle.png
     clipName: Shotgun_Idle
     columns: 4
@@ -60,7 +55,6 @@ MonoBehaviour:
     pixelsPerUnit: 64
     fps: 12
     loop: true
-
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/blaster_idle.png
     clipName: Blaster_Idle
     columns: 4
@@ -68,7 +62,6 @@ MonoBehaviour:
     pixelsPerUnit: 64
     fps: 12
     loop: true
-
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/blaster_fire.png
     clipName: Blaster_Fire
     columns: 4
@@ -76,7 +69,6 @@ MonoBehaviour:
     pixelsPerUnit: 64
     fps: 12
     loop: false
-
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/scimitar_swing.png
     clipName: Scimitar_Swing
     columns: 4
@@ -84,7 +76,6 @@ MonoBehaviour:
     pixelsPerUnit: 64
     fps: 12
     loop: false
-
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/nomad_stealth_crouch.png
     clipName: Nomad_StealthCrouch
     columns: 4
@@ -92,7 +83,6 @@ MonoBehaviour:
     pixelsPerUnit: 64
     fps: 12
     loop: true
-
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/spitter_idle.png
     clipName: Spitter_Idle
     columns: 4
@@ -100,7 +90,6 @@ MonoBehaviour:
     pixelsPerUnit: 64
     fps: 12
     loop: true
-
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/spitter_death_burst.png
     clipName: Spitter_DeathBurst
     columns: 4
@@ -108,7 +97,6 @@ MonoBehaviour:
     pixelsPerUnit: 64
     fps: 12
     loop: false
-
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/golem_idle_charge.png
     clipName: Golem_Charge
     columns: 4
@@ -116,4 +104,59 @@ MonoBehaviour:
     pixelsPerUnit: 64
     fps: 12
     loop: false
-
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/nomad_run.png
+    clipName: Nomad_RunNew
+    columns: 4
+    rows: 2
+    pixelsPerUnit: 64
+    fps: 12
+    loop: true
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/nomad_walk.png
+    clipName: Nomad_WalkNew
+    columns: 4
+    rows: 1
+    pixelsPerUnit: 64
+    fps: 12
+    loop: true
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/nomad_roll.png
+    clipName: Nomad_RollNew
+    columns: 4
+    rows: 2
+    pixelsPerUnit: 64
+    fps: 12
+    loop: false
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/nomad_dig.png
+    clipName: Nomad_DigNew
+    columns: 4
+    rows: 2
+    pixelsPerUnit: 64
+    fps: 12
+    loop: false
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/chest_open.png
+    clipName: Chest_Open
+    columns: 4
+    rows: 1
+    pixelsPerUnit: 64
+    fps: 12
+    loop: false
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/vase_break.png
+    clipName: Vase_Break
+    columns: 4
+    rows: 1
+    pixelsPerUnit: 64
+    fps: 12
+    loop: false
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/pickup_bob.png
+    clipName: Pickup_Bob
+    columns: 4
+    rows: 1
+    pixelsPerUnit: 64
+    fps: 12
+    loop: true
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/rifle_reload_v2.png
+    clipName: Rifle_Reload_V2
+    columns: 4
+    rows: 1
+    pixelsPerUnit: 64
+    fps: 12
+    loop: false

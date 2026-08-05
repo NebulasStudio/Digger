@@ -307,6 +307,57 @@ public static class GameplayLabBuilder
             bone.transform.position = bones[index];
             bone.transform.rotation = Quaternion.Euler(0f, 0f, index * 37f);
         }
+
+        // Desert palms (generated art) — tall, scattered along the arena edges.
+        if (art.PalmTree != null)
+        {
+            Vector2[] palms = { new(-10.5f, 6.5f), new(10.5f, 6.5f), new(-11.0f, -2.0f), new(11.0f, -2.0f), new(-6.5f, 8.5f), new(6.5f, 8.5f) };
+            for (int i = 0; i < palms.Length; i++)
+            {
+                GameObject palm = CreateSpriteObject(
+                    $"Desert Palm {i + 1}",
+                    art.PalmTree,
+                    Color.white,
+                    dressing.transform,
+                    sortingOrder: -760);
+                palm.transform.position = palms[i];
+                palm.transform.localScale = Vector3.one * (1.1f + ((i % 3) * 0.15f));
+            }
+        }
+
+        // Weathered ruin pillars (generated art).
+        if (art.RuinPillar != null)
+        {
+            Vector2[] pillars = { new(-9.0f, 1.5f), new(9.2f, 1.8f), new(-8.8f, -4.5f), new(9.0f, -4.2f) };
+            for (int i = 0; i < pillars.Length; i++)
+            {
+                GameObject pillar = CreateSpriteObject(
+                    $"Ruin Pillar {i + 1}",
+                    art.RuinPillar,
+                    Color.white,
+                    dressing.transform,
+                    sortingOrder: -745);
+                pillar.transform.position = pillars[i];
+                pillar.transform.rotation = Quaternion.Euler(0f, 0f, (i % 2) * 15f);
+            }
+        }
+
+        // Dune cacti (generated art).
+        if (art.Cactus != null)
+        {
+            Vector2[] cacti = { new(-3.6f, 6.2f), new(3.8f, -6.2f), new(-5.8f, -6.5f), new(5.9f, 5.9f) };
+            for (int i = 0; i < cacti.Length; i++)
+            {
+                GameObject cactus = CreateSpriteObject(
+                    $"Dune Cactus {i + 1}",
+                    art.Cactus,
+                    Color.white,
+                    dressing.transform,
+                    sortingOrder: -750);
+                cactus.transform.position = cacti[i];
+                cactus.transform.localScale = Vector3.one * (0.9f + ((i % 2) * 0.2f));
+            }
+        }
     }
 
     private static void CreateInteractiveObjects(SandboxArtSet art)

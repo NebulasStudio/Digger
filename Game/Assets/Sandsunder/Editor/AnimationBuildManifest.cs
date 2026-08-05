@@ -15,7 +15,7 @@ namespace Sandsunder.Editor
         [Serializable]
         public sealed class SheetEntry
         {
-            [Tooltip("Path relative to Assets/ (e.g. Assets/Sandsunder/Art/Runtime/Processed/Anims/rifle_idle.png)")]
+            [Tooltip("Path relative to Assets/ (e.g. Assets/Sandsunder/Art/Runtime/Animations/rifle_idle.png)")]
             public string sourcePath;
 
             [Tooltip("Clip name (no extension). The build writes Assets/Sandsunder/Art/Generated/<clipName>.anim")]

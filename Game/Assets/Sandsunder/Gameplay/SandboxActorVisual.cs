@@ -112,10 +112,10 @@ namespace Sandsunder.Gameplay
             if (body == null && !hostile)
             {
 #if UNITY_EDITOR
-                body = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/Processed/nomad_32.png");
+                body = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/Characters/nomad_32.png");
                 if (body == null)
                 {
-                    var subSprites = UnityEditor.AssetDatabase.LoadAllAssetsAtPath("Assets/Sandsunder/Art/Runtime/Processed/nomad_32.png").OfType<Sprite>().ToArray();
+                    var subSprites = UnityEditor.AssetDatabase.LoadAllAssetsAtPath("Assets/Sandsunder/Art/Runtime/Characters/nomad_32.png").OfType<Sprite>().ToArray();
                     if (subSprites.Length > 0) body = subSprites[0];
                 }
 #endif

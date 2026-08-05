@@ -211,7 +211,7 @@ namespace Sandsunder.Gameplay
         private float telegraphRemaining;
         private float pulsePhase;
         private Color projectileColor;
-        private readonly Vector3 baseScale = new(1.20f, 0.80f, 1f);
+        private Vector3 baseScale = new(0.85f, 0.85f, 1f);
 
         public SpriteRenderer CoreRenderer => coreRenderer;
         public TrailRenderer Trail => trail;
@@ -227,7 +227,7 @@ namespace Sandsunder.Gameplay
             {
                 // Use the generated cyan rune projectile when available (editor-only load, no
                 // runtime dependency on the Editor assembly).
-                sprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/Processed/proj_sentinel_cyan_rune_32.png");
+                sprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/Projectiles/proj_sentinel_cyan_rune_32.png");
             }
 #endif
             sprite = sprite != null

@@ -52,7 +52,7 @@ namespace Sandsunder.Gameplay
 
             Image border = frameObj.AddComponent<Image>();
 #if UNITY_EDITOR
-            Sprite glassSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/Processed/ui_glass_panel.png");
+            Sprite glassSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/UI/ui_glass_panel.png");
             if (glassSprite != null)
             {
                 border.sprite = glassSprite;

@@ -31,7 +31,7 @@ namespace Sandsunder.Gameplay.UI
             if (image == null) return;
 
 #if UNITY_EDITOR
-            Sprite glassSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/Processed/ui_glass_panel.png");
+            Sprite glassSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/UI/ui_glass_panel.png");
             if (glassSprite != null)
             {
                 image.sprite = glassSprite;

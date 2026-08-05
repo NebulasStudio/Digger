@@ -44,19 +44,20 @@ namespace Sandsunder.Editor
 
         public static SandboxArtSet LoadOrCreate()
         {
+            AssetDatabase.Refresh();
             EnsureAssetFolder(GeneratedRoot);
 
-            Sprite sand = ImportTile($"{RuntimeRoot}/Processed/sand_basecolor.png", pixelsPerUnit: 256f);
-            Sprite sandFeather = ImportTileOptional($"{RuntimeRoot}/Processed/sand_feather_basecolor.png", 256f) ?? sand;
-            Sprite sandFinal = ImportTileOptional($"{RuntimeRoot}/Processed/sand_final_basecolor.png", 256f) ?? sand;
-            Sprite sandRolled = ImportTileOptional($"{RuntimeRoot}/Processed/sand_rolled.png", 256f) ?? sand;
-            Sprite ruin = ImportTile($"{RuntimeRoot}/Processed/ruin_basecolor.png", pixelsPerUnit: 256f);
+            Sprite sand = ImportTile($"{RuntimeRoot}/Terrain/sand_basecolor.png", pixelsPerUnit: 256f);
+            Sprite sandFeather = ImportTileOptional($"{RuntimeRoot}/Terrain/sand_feather_basecolor.png", 256f) ?? sand;
+            Sprite sandFinal = ImportTileOptional($"{RuntimeRoot}/Terrain/sand_final_basecolor.png", 256f) ?? sand;
+            Sprite sandRolled = ImportTileOptional($"{RuntimeRoot}/Terrain/sand_rolled.png", 256f) ?? sand;
+            Sprite ruin = ImportTile($"{RuntimeRoot}/Terrain/ruin_basecolor.png", pixelsPerUnit: 256f);
             Sprite nomad = ImportSprite(
-                $"{RuntimeRoot}/Processed/nomad_32.png",
+                $"{RuntimeRoot}/Characters/nomad_32.png",
                 pixelsPerUnit: 32f,
                 pivot: new Vector2(0.5f, 0.08f));
             Sprite spitter = ImportSprite(
-                $"{RuntimeRoot}/Processed/spitter_32.png",
+                $"{RuntimeRoot}/Mobs/mob_dune_spitter_32.png",
                 pixelsPerUnit: 32f,
                 pivot: new Vector2(0.5f, 0.08f));
 
@@ -73,19 +74,19 @@ namespace Sandsunder.Editor
                 Spitter = spitter,
                 PlayerAnimator = animator,
                 Shadow = CreateProceduralSprite("BlobShadow", 32, 16, 32f, DrawShadow),
-                Pistol = ImportSpriteOptional($"{RuntimeRoot}/Processed/rifle_brass_32.png", 32f, new Vector2(0.5f, 0.5f))
+                Pistol = ImportSpriteOptional($"{RuntimeRoot}/Weapons/rifle_brass_32.png", 32f, new Vector2(0.5f, 0.5f))
                     ?? CreateProceduralSprite("BrassPistol", 20, 10, 32f, DrawPistol),
-                Shovel = ImportSpriteOptional($"{RuntimeRoot}/Processed/shovel_default_32.png", 32f, new Vector2(0.5f, 0.5f))
+                Shovel = ImportSpriteOptional($"{RuntimeRoot}/Weapons/shovel_default_32.png", 32f, new Vector2(0.5f, 0.5f))
                     ?? CreateProceduralSprite("StarterShovel", 24, 12, 32f, DrawShovel),
-                Scimitar = ImportSpriteOptional($"{RuntimeRoot}/Processed/sword_scimitar_32.png", 32f, new Vector2(0.5f, 0.5f))
+                Scimitar = ImportSpriteOptional($"{RuntimeRoot}/Weapons/sword_scimitar_32.png", 32f, new Vector2(0.5f, 0.5f))
                     ?? CreateProceduralSprite("DesertScimitar", 28, 14, 32f, DrawScimitar),
-                Shotgun = ImportSpriteOptional($"{RuntimeRoot}/Processed/shotgun_heavy_32.png", 32f, new Vector2(0.5f, 0.5f))
+                Shotgun = ImportSpriteOptional($"{RuntimeRoot}/Weapons/shotgun_heavy_32.png", 32f, new Vector2(0.5f, 0.5f))
                     ?? CreateProceduralSprite("HeavyShotgun", 30, 12, 32f, DrawShotgun),
-                Blaster = ImportSpriteOptional($"{RuntimeRoot}/Processed/blaster_rune_32.png", 32f, new Vector2(0.5f, 0.5f))
+                Blaster = ImportSpriteOptional($"{RuntimeRoot}/Weapons/blaster_rune_32.png", 32f, new Vector2(0.5f, 0.5f))
                     ?? CreateProceduralSprite("RuneBlaster", 26, 12, 32f, DrawBlaster),
-                Mortar = ImportSpriteOptional($"{RuntimeRoot}/Processed/icon_mortar_sandstorm_32.png", 32f, new Vector2(0.5f, 0.5f))
+                Mortar = ImportSpriteOptional($"{RuntimeRoot}/Weapons/icon_mortar_sandstorm_32.png", 32f, new Vector2(0.5f, 0.5f))
                     ?? CreateProceduralSprite("SandstormMortar", 32, 14, 32f, DrawMortar),
-                Relic = ImportSpriteOptional($"{RuntimeRoot}/Processed/env_relic_chest_32.png", 32f, new Vector2(0.5f, 0.5f))
+                Relic = ImportSpriteOptional($"{RuntimeRoot}/Environment/env_relic_chest_32.png", 32f, new Vector2(0.5f, 0.5f))
                     ?? CreateProceduralSprite("CyanRelic", 24, 24, 32f, DrawRelic),
                 DigIntact = CreateProceduralSprite("DigIntact", 32, 24, 32f,
                     (pixels, width, height) => DrawDigNode(pixels, width, height, 0)),
@@ -96,11 +97,11 @@ namespace Sandsunder.Editor
                 SandTuft = CreateProceduralSprite("SandTuft", 20, 20, 32f, DrawSandTuft),
                 Bone = CreateProceduralSprite("DesertBone", 24, 16, 32f, DrawBone),
                 CyanRune = CreateProceduralSprite("CyanRune", 32, 32, 32f, DrawCyanRune),
-                PalmTree = ImportSpriteOptional($"{RuntimeRoot}/Processed/env_palm_tree_32.png", 32f, new Vector2(0.5f, 0.5f)),
-                RuinPillar = ImportSpriteOptional($"{RuntimeRoot}/Processed/env_ruin_pillar_32.png", 32f, new Vector2(0.5f, 0.5f)),
-                Cactus = ImportSpriteOptional($"{RuntimeRoot}/Processed/env_cactus_32.png", 32f, new Vector2(0.5f, 0.5f)),
-                RunedChest = ImportSpriteOptional($"{RuntimeRoot}/Processed/env_chest_runed_32.png", 32f, new Vector2(0.5f, 0.5f)),
-                CrystalTurtle = ImportSpriteOptional($"{RuntimeRoot}/Processed/mob_crystal_turtle_64.png", 64f, new Vector2(0.5f, 0.5f)),
+                PalmTree = ImportSpriteOptional($"{RuntimeRoot}/Environment/env_palm_tree_32.png", 32f, new Vector2(0.5f, 0.5f)),
+                RuinPillar = ImportSpriteOptional($"{RuntimeRoot}/Environment/env_ruin_pillar_32.png", 32f, new Vector2(0.5f, 0.5f)),
+                Cactus = ImportSpriteOptional($"{RuntimeRoot}/Environment/env_cactus_32.png", 32f, new Vector2(0.5f, 0.5f)),
+                RunedChest = ImportSpriteOptional($"{RuntimeRoot}/Environment/env_chest_runed_32.png", 32f, new Vector2(0.5f, 0.5f)),
+                CrystalTurtle = ImportSpriteOptional($"{RuntimeRoot}/Mobs/mob_dune_spitter_32.png", 32f, new Vector2(0.5f, 0.5f)),
             };
         }
 

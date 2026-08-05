@@ -218,12 +218,12 @@ namespace Sandsunder.Gameplay
 #if UNITY_EDITOR
             string hfPath = itemId switch
             {
-                "shovel.default" => "Assets/Sandsunder/Art/Runtime/Processed/shovel_default_32.png",
-                "rifle.brass" => "Assets/Sandsunder/Art/Runtime/Processed/rifle_brass_32.png",
-                "sword.scimitar" => "Assets/Sandsunder/Art/Runtime/Processed/sword_scimitar_32.png",
-                "shotgun.heavy" => "Assets/Sandsunder/Art/Runtime/Processed/shotgun_heavy_32.png",
-                "blaster.rune" => "Assets/Sandsunder/Art/Runtime/Processed/blaster_rune_32.png",
-                "key.subterranean" => "Assets/Sandsunder/Art/Runtime/Processed/env_relic_chest_32.png",
+                "shovel.default" => "Assets/Sandsunder/Art/Runtime/Weapons/shovel_default_32.png",
+                "rifle.brass" => "Assets/Sandsunder/Art/Runtime/Weapons/rifle_brass_32.png",
+                "sword.scimitar" => "Assets/Sandsunder/Art/Runtime/Weapons/sword_scimitar_32.png",
+                "shotgun.heavy" => "Assets/Sandsunder/Art/Runtime/Weapons/shotgun_heavy_32.png",
+                "blaster.rune" => "Assets/Sandsunder/Art/Runtime/Weapons/blaster_rune_32.png",
+                "key.subterranean" => "Assets/Sandsunder/Art/Runtime/Environment/env_relic_chest_32.png",
                 _ => null
             };
             if (!string.IsNullOrEmpty(hfPath))

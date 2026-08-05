@@ -1,0 +1,601 @@
+fileFormatVersion: 2
+guid: 78e8c263a0fb2024f91e191fdb17ffdf
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6314912195348798681
+    second: golem_idle_charge_0
+  - first:
+      213: -6135266848511940094
+    second: golem_idle_charge_0_0
+  - first:
+      213: -5389907979867966301
+    second: golem_idle_charge_0_1
+  - first:
+      213: 4675903732076390898
+    second: golem_idle_charge_0_2
+  - first:
+      213: 8643397315139582538
+    second: golem_idle_charge_0_3
+  - first:
+      213: -571211300260325244
+    second: golem_idle_charge_1_0
+  - first:
+      213: -5791219819504541261
+    second: golem_idle_charge_1_1
+  - first:
+      213: -8190912263152407978
+    second: golem_idle_charge_1_2
+  - first:
+      213: 5402868625899224026
+    second: golem_idle_charge_1_3
+  - first:
+      213: 6406740638342272099
+    second: golem_idle_charge_2_0
+  - first:
+      213: -6262708501090956516
+    second: golem_idle_charge_2_1
+  - first:
+      213: 6960143128089986151
+    second: golem_idle_charge_2_2
+  - first:
+      213: 7324275613815983162
+    second: golem_idle_charge_2_3
+  - first:
+      213: -7480956716980794877
+    second: golem_idle_charge_3_0
+  - first:
+      213: 4675861509891064407
+    second: golem_idle_charge_3_1
+  - first:
+      213: -5518029013724313107
+    second: golem_idle_charge_3_2
+  - first:
+      213: -3722354222322838324
+    second: golem_idle_charge_3_3
+  - first:
+      213: 1698252875972164460
+    second: spitter_charge_0_0
+  - first:
+      213: 3974502673537125247
+    second: spitter_charge_0_1
+  - first:
+      213: -3110711668331369004
+    second: spitter_charge_0_2
+  - first:
+      213: 882090235952342127
+    second: spitter_charge_0_3
+  - first:
+      213: -7290065094856935507
+    second: spitter_charge_1_0
+  - first:
+      213: -3396486304321931135
+    second: spitter_charge_1_1
+  - first:
+      213: -4411637760211442119
+    second: spitter_charge_1_2
+  - first:
+      213: 3102165380058358762
+    second: spitter_charge_1_3
+  - first:
+      213: 1978298004624199536
+    second: spitter_charge_2_0
+  - first:
+      213: 8530118483088471687
+    second: spitter_charge_2_1
+  - first:
+      213: 8161591700470443712
+    second: spitter_charge_2_2
+  - first:
+      213: 3020126523775894993
+    second: spitter_charge_2_3
+  - first:
+      213: -5501554485504758507
+    second: spitter_charge_3_0
+  - first:
+      213: 8411723066190964296
+    second: spitter_charge_3_1
+  - first:
+      213: -7179424989884345550
+    second: spitter_charge_3_2
+  - first:
+      213: 62433278097344051
+    second: spitter_charge_3_3
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 192
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: spitter_charge_0_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 576
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6b3b133ef7619710800000000000000
+      internalID: 1698252875972164460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_charge_0_1
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 576
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7b450faf15482730800000000000000
+      internalID: 3974502673537125247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_charge_0_2
+      rect:
+        serializedVersion: 2
+        x: 688
+        y: 576
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dd227a083884d4d0800000000000000
+      internalID: -3110711668331369004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_charge_0_3
+      rect:
+        serializedVersion: 2
+        x: 1032
+        y: 576
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f64a7c56560dd3c00800000000000000
+      internalID: 882090235952342127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_charge_1_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 384
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da7f39fab6c74da90800000000000000
+      internalID: -7290065094856935507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_charge_1_1
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 384
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 188796a93b14dd0d0800000000000000
+      internalID: -3396486304321931135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_charge_1_2
+      rect:
+        serializedVersion: 2
+        x: 688
+        y: 384
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 936a5e8b4d6b6c2c0800000000000000
+      internalID: -4411637760211442119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_charge_1_3
+      rect:
+        serializedVersion: 2
+        x: 1032
+        y: 384
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae3a4e82afa1d0b20800000000000000
+      internalID: 3102165380058358762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_charge_2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07f4d71cd83547b10800000000000000
+      internalID: 1978298004624199536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_charge_2_1
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 192
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7867b7cd091116670800000000000000
+      internalID: 8530118483088471687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_charge_2_2
+      rect:
+        serializedVersion: 2
+        x: 688
+        y: 192
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ce215cd86cc34170800000000000000
+      internalID: 8161591700470443712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_charge_2_3
+      rect:
+        serializedVersion: 2
+        x: 1032
+        y: 192
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d5c5627215a9e920800000000000000
+      internalID: 3020126523775894993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_charge_3_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51d280b085d86a3b0800000000000000
+      internalID: -5501554485504758507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_charge_3_1
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 0
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 846a54dbf817cb470800000000000000
+      internalID: 8411723066190964296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_charge_3_2
+      rect:
+        serializedVersion: 2
+        x: 688
+        y: 0
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 233916a820f8d5c90800000000000000
+      internalID: -7179424989884345550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spitter_charge_3_3
+      rect:
+        serializedVersion: 2
+        x: 1032
+        y: 0
+        width: 344
+        height: 192
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 336c7235cbecdd000800000000000000
+      internalID: 62433278097344051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      golem_idle_charge_0: -6314912195348798681
+      golem_idle_charge_0_0: -6135266848511940094
+      golem_idle_charge_0_1: -5389907979867966301
+      golem_idle_charge_0_2: 4675903732076390898
+      golem_idle_charge_0_3: 8643397315139582538
+      golem_idle_charge_1_0: -571211300260325244
+      golem_idle_charge_1_1: -5791219819504541261
+      golem_idle_charge_1_2: -8190912263152407978
+      golem_idle_charge_1_3: 5402868625899224026
+      golem_idle_charge_2_0: 6406740638342272099
+      golem_idle_charge_2_1: -6262708501090956516
+      golem_idle_charge_2_2: 6960143128089986151
+      golem_idle_charge_2_3: 7324275613815983162
+      golem_idle_charge_3_0: -7480956716980794877
+      golem_idle_charge_3_1: 4675861509891064407
+      golem_idle_charge_3_2: -5518029013724313107
+      golem_idle_charge_3_3: -3722354222322838324
+      spitter_charge_0_0: 1698252875972164460
+      spitter_charge_0_1: 3974502673537125247
+      spitter_charge_0_2: -3110711668331369004
+      spitter_charge_0_3: 882090235952342127
+      spitter_charge_1_0: -7290065094856935507
+      spitter_charge_1_1: -3396486304321931135
+      spitter_charge_1_2: -4411637760211442119
+      spitter_charge_1_3: 3102165380058358762
+      spitter_charge_2_0: 1978298004624199536
+      spitter_charge_2_1: 8530118483088471687
+      spitter_charge_2_2: 8161591700470443712
+      spitter_charge_2_3: 3020126523775894993
+      spitter_charge_3_0: -5501554485504758507
+      spitter_charge_3_1: 8411723066190964296
+      spitter_charge_3_2: -7179424989884345550
+      spitter_charge_3_3: 62433278097344051
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

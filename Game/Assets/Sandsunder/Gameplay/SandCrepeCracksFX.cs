@@ -66,25 +66,6 @@ namespace Sandsunder.Gameplay
         public void SpawnStarburst(Vector2 worldPoint, int depthDelta)
         {
             // Disabled: eliminate procedural crepe crack line strip decals from the game completely.
-            return;
-        }
-
-            int count = Mathf.Max(4, arms);
-            float baseAngle = Random.value * 360f;
-            for (int i = 0; i < count && i < MaxArms; i++)
-            {
-                if (_ages[i] < life) continue; // reuse the oldest-free slot
-
-                float angle = (baseAngle + (i * (360f / count))) * Mathf.Deg2Rad;
-                Vector2 dir = new(Mathf.Cos(angle), Mathf.Sin(angle));
-                float len = crackLength * Random.Range(0.7f, 1.3f);
-
-                _positions[0] = worldPoint;
-                _positions[1] = worldPoint + (dir * len);
-                _lines[i].SetPositions(_positions);
-                _lines[i].gameObject.SetActive(true);
-                _ages[i] = 0f;
-            }
         }
 
         private void Update()

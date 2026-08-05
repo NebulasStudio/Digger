@@ -286,7 +286,7 @@ public static class GameplayLabBuilder
             collider.isTrigger = true;
             collider.radius = 0.55f;
             PrototypeDigNode digNode = node.AddComponent<PrototypeDigNode>();
-            digNode.Configure(authority, index + 1);
+            digNode.Configure(authority, index % 3, index / 3);
             SandboxDigVisual digVisual = node.AddComponent<SandboxDigVisual>();
             digVisual.Configure(art.DigIntact, art.DigCracked, art.DigOpened);
         }

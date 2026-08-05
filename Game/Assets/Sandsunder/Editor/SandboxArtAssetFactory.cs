@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Sandsunder.Editor
 {
-    internal sealed class SandboxArtSet
+    public sealed class SandboxArtSet
     {
         public Sprite SandTile { get; set; }
         public Sprite SandFeather { get; set; }
@@ -37,7 +37,7 @@ namespace Sandsunder.Editor
         public RuntimeAnimatorController PlayerAnimator { get; set; }
     }
 
-    internal static class SandboxArtAssetFactory
+    public static class SandboxArtAssetFactory
     {
         private const string RuntimeRoot = "Assets/Sandsunder/Art/Runtime";
         private const string GeneratedRoot = "Assets/Sandsunder/Art/Generated";
@@ -594,7 +594,7 @@ namespace Sandsunder.Editor
             controller.AddParameter("IsDigging", AnimatorControllerParameterType.Bool);
             controller.AddParameter("Speed", AnimatorControllerParameterType.Float);
 
-            AnimationClip idleClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Shovel_Idle.anim") ?? CreateClip($"{GeneratedRoot}/Nomad_Idle.anim", "Nomad_Idle");
+            AnimationClip idleClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Idle.anim") ?? AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Shovel_Idle.anim");
             AnimationClip walkClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_WalkNew.anim") ?? CreateClip($"{GeneratedRoot}/Nomad_Walk.anim", "Nomad_Walk");
             AnimationClip runClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_RunNew.anim") ?? CreateClip($"{GeneratedRoot}/Nomad_Run.anim", "Nomad_Run");
             AnimationClip rollClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_RollNew.anim") ?? CreateClip($"{GeneratedRoot}/Nomad_Roll.anim", "Nomad_Roll");

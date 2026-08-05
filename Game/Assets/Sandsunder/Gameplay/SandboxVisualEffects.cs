@@ -211,7 +211,7 @@ namespace Sandsunder.Gameplay
         private float telegraphRemaining;
         private float pulsePhase;
         private Color projectileColor;
-        private readonly Vector3 baseScale = new(0.55f, 0.32f, 1f);
+        private readonly Vector3 baseScale = new(1.20f, 0.80f, 1f);
 
         public SpriteRenderer CoreRenderer => coreRenderer;
         public TrailRenderer Trail => trail;
@@ -236,12 +236,12 @@ namespace Sandsunder.Gameplay
             coreRenderer.sprite = sprite;
             coreRenderer.color = Color.white;
             glowRenderer.sprite = sprite;
-            glowRenderer.color = new Color(color.r, color.g, color.b, 0.32f);
-            glowRenderer.transform.localScale = new Vector3(1.8f, 2.2f, 1f);
+            glowRenderer.color = new Color(color.r, color.g, color.b, 0.55f);
+            glowRenderer.transform.localScale = new Vector3(2.2f, 2.8f, 1f);
             transform.right = direction.sqrMagnitude > 0.0001f ? direction.normalized : Vector2.right;
 
-            trail.time = hostile ? 0.14f : 0.10f;
-            trail.startWidth = hostile ? 0.16f : 0.12f;
+            trail.time = hostile ? 0.25f : 0.18f;
+            trail.startWidth = hostile ? 0.35f : 0.30f;
             trail.endWidth = 0f;
             trail.startColor = new Color(color.r, color.g, color.b, 0.68f);
             trail.endColor = new Color(color.r, color.g, color.b, 0f);

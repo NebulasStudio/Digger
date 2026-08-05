@@ -277,6 +277,10 @@ namespace Sandsunder.Gameplay
             bool faceLeft = explicitAim.x < -0.02f;
             bodyRenderer.flipX = faceLeft;
 
+            // Anchor weapon to hand pivot position based on facing direction
+            float handX = faceLeft ? -0.25f : 0.25f;
+            weaponRoot.localPosition = new Vector3(handX, 0.08f, 0f);
+
             float angle = Mathf.Atan2(explicitAim.y, explicitAim.x) * Mathf.Rad2Deg;
             weaponRoot.localRotation = Quaternion.Euler(0f, 0f, angle);
             weaponRenderer.flipY = faceLeft;

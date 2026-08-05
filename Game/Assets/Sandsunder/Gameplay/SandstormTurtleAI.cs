@@ -120,7 +120,12 @@ namespace Sandsunder.Gameplay
             if (offset.sqrMagnitude > contactRange * contactRange)
             {
                 moveDir = offset.normalized;
-                body.linearVelocity = moveDir * patrolSpeed;
+                Vector2 targetPos = body.position + (moveDir * patrolSpeed * Time.deltaTime);
+                Collider2D hit = Physics2D.OverlapCircle(targetPos, 0.45f);
+                if (hit == null || hit.isTrigger || hit.transform.IsChildOf(transform))
+                {
+                    body.MovePosition(targetPos);
+                }
             }
             else
             {

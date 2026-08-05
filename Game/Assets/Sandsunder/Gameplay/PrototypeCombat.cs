@@ -904,8 +904,12 @@ namespace Sandsunder.Gameplay
                 Vector2 moveDirection = distance > rules.SpitterPreferredRangeMillimetres / 1000f
                     ? toward
                     : new Vector2(-toward.y, toward.x) * ((health.EntityId & 1) == 0 ? 1f : -1f);
-                body.MovePosition(body.position
-                    + (moveDirection * (rules.SpitterMoveSpeedMillimetresPerSecond / 1000f) * Time.fixedDeltaTime));
+                Vector2 targetPos = body.position + (moveDirection * (rules.SpitterMoveSpeedMillimetresPerSecond / 1000f) * Time.fixedDeltaTime);
+                Collider2D hit = Physics2D.OverlapCircle(targetPos, 0.42f);
+                if (hit == null || hit.isTrigger || hit.transform.IsChildOf(transform))
+                {
+                    body.MovePosition(targetPos);
+                }
 
                 spitterFootstepTimer += Time.fixedDeltaTime;
                 if (spitterFootstepTimer >= 0.55f)

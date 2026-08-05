@@ -273,28 +273,20 @@ public static class GameplayLabBuilder
             new(-4.55f, -4.2f),
             new(-2.15f, 2.65f),
             new(2.25f, -3.25f),
-            new(4.35f, 2.65f),
-            new(7.25f, -4.55f),
+            new(5.85f, 1.45f),
+            new(7.15f, -5.15f)
         };
 
         for (int index = 0; index < positions.Length; index++)
         {
-            GameObject node = CreateGreyboxSprite(
-                $"Dig Node {index + 1}",
-                squareSprite,
-                new Color(0.85f, 0.64f, 0.25f),
-                digRoot.transform);
+            GameObject node = new($"DigNode_{index + 1}");
+            node.transform.SetParent(digRoot.transform, false);
             node.transform.position = positions[index];
-            SetWorldSize(node, new Vector2(0.9f, 0.9f));
-            node.GetComponent<SpriteRenderer>().color = Color.clear;
-            BoxCollider2D collider = node.AddComponent<BoxCollider2D>();
-            collider.size = new Vector2(0.9f, 0.9f);
+            CircleCollider2D collider = node.AddComponent<CircleCollider2D>();
+            collider.isTrigger = true;
+            collider.radius = 0.55f;
             PrototypeDigNode digNode = node.AddComponent<PrototypeDigNode>();
-            digNode.Configure(authority, index % 3, index / 3);
-            SpriteRenderer nodeRenderer = node.GetComponent<SpriteRenderer>();
-            nodeRenderer.sprite = art.DigIntact;
-            nodeRenderer.color = Color.white;
-            nodeRenderer.sortingOrder = 5;
+            digNode.Configure(authority, index + 1);
             SandboxDigVisual digVisual = node.AddComponent<SandboxDigVisual>();
             digVisual.Configure(art.DigIntact, art.DigCracked, art.DigOpened);
         }

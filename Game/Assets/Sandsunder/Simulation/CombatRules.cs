@@ -26,7 +26,7 @@ namespace Sandsunder.Simulation
             shovelArcCosinePermille: 500,
             digStrikesRequired: 3,
             rollDurationTicks: 18,
-            rollDistanceMillimetres: 2400,
+            rollDistanceMillimetres: 1200,
             rollInvulnerabilityTicks: 12,
             rollCooldownTicks: 75,
             spitterMaximumHealth: 55,

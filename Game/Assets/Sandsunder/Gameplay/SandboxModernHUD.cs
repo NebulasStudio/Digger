@@ -65,14 +65,10 @@ namespace Sandsunder.Gameplay
             rootRect.anchoredPosition = Vector2.zero;
             rootRect.sizeDelta = new Vector2(840, 520);
 
-            // Glass panel (background + gold border using ui_glass_panel.png).
+            // Glass panel (background using ui_glass_panel.png).
             Image panelImg = root.AddComponent<Image>();
             panelImg.color = Color.white;
             GlassPanel glass = root.AddComponent<GlassPanel>();
-
-            // Left column: HP + Stamina bars (glass-styled).
-            BuildStatBar(root.transform, "StaminaBar", new Vector2(80, 0), new Vector2(360, 22), new Color(0.84f, 0.70f, 0.21f));
-            BuildStatBar(root.transform, "HealthBar", new Vector2(80, 34), new Vector2(360, 22), new Color(0.00f, 1.00f, 0.48f));
 
             // Stealth indicator (top-right cyan dot).
             GameObject stealthObj = new("StealthIndicator", typeof(RectTransform), typeof(Image));
@@ -85,18 +81,18 @@ namespace Sandsunder.Gameplay
             stealthRect.sizeDelta = new Vector2(18, 18);
             stealthObj.AddComponent<StealthIndicator>();
 
-            // Weapon stat card (right side).
+            // Weapon stat card (positioned neatly in the right glass container).
             GameObject cardObj = new("WeaponStatCard", typeof(RectTransform));
             cardObj.transform.SetParent(root.transform, false);
             RectTransform cardRect = cardObj.GetComponent<RectTransform>();
-            cardRect.anchorMin = new Vector2(1f, 0.5f);
-            cardRect.anchorMax = new Vector2(1f, 0.5f);
-            cardRect.pivot = new Vector2(1f, 0.5f);
-            cardRect.anchoredPosition = new Vector2(-120, 0);
-            cardRect.sizeDelta = new Vector2(300, 240);
+            cardRect.anchorMin = new Vector2(1f, 0f);
+            cardRect.anchorMax = new Vector2(1f, 0f);
+            cardRect.pivot = new Vector2(1f, 0f);
+            cardRect.anchoredPosition = new Vector2(-30, 25);
+            cardRect.sizeDelta = new Vector2(260, 110);
             WeaponStatCard statCard = BuildWeaponStatCard(cardObj);
 
-            // TAB controller wires the whole modal.
+            // TAB controller wires the modal cleanly.
             TabInventoryController tabController = gameObject.AddComponent<TabInventoryController>();
             tabController.Setup(root, statCard);
 

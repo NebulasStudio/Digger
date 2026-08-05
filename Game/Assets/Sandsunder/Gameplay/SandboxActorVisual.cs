@@ -56,6 +56,7 @@ namespace Sandsunder.Gameplay
         private float afterimageCountdown;
         private float dustSpawnTimer;
         private bool initialized;
+        private Sprite stealthSprite;
 
         public Transform VisualRoot => visualRoot;
         public SpriteRenderer BodyRenderer => bodyRenderer;
@@ -146,7 +147,7 @@ namespace Sandsunder.Gameplay
             bodyRoot.localPosition = new Vector3(0f, 0.16f, 0f);
             shadowRenderer.transform.localPosition = new Vector3(0f, -0.27f, 0f);
             shadowRenderer.transform.localScale = new Vector3(0.95f, 0.42f, 1f);
-            weaponRoot.localPosition = new Vector3(0.28f, 0.05f, 0f);
+            weaponRoot.localPosition = new Vector3(0.06f, 0.02f, 0f);
             previousWorldPosition = transform.position;
             initialized = true;
             ApplySorting();
@@ -238,22 +239,30 @@ namespace Sandsunder.Gameplay
             meleeRemaining = Mathf.Max(0f, meleeRemaining - Time.deltaTime);
             hitRemaining = Mathf.Max(0f, hitRemaining - Time.deltaTime);
 
+            bool stealthed = DigDepthSystem.Instance != null && DigDepthSystem.Instance.IsSubterranean;
             if (nomadAnimator != null)
             {
-                // Speed is a 0..1 intensity mapped onto the Animator's Speed parameter (Idle/Walk/Run).
                 nomadAnimator.SetMoving(walking && !hostile ? 1f : 0f);
                 nomadAnimator.SetRolling(rollRemaining > 0f);
-                bool stealthed = DigDepthSystem.Instance != null && DigDepthSystem.Instance.IsSubterranean;
                 nomadAnimator.SetStealthed(stealthed && !hostile);
             }
 
-            if (animator == null || animator.runtimeAnimatorController == null)
+            if (bodyRenderer != null && bodySprite != null && !hostile)
             {
-                bodyRoot.localPosition = new Vector3(0f, -0.05f, 0f);
-            }
-            if (bodySprite != null && !hostile)
-            {
-                bodyRenderer.sprite = bodySprite;
+                if (stealthed)
+                {
+                    if (stealthSprite == null)
+                    {
+                        stealthSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/Animations/nomad_stealth_crouch.png");
+                    }
+                    bodyRenderer.sprite = stealthSprite != null ? stealthSprite : bodySprite;
+                    bodyRenderer.color = new Color(0.2f, 0.9f, 1.0f, 0.75f);
+                }
+                else
+                {
+                    bodyRenderer.sprite = bodySprite;
+                    bodyRenderer.color = Color.white;
+                }
             }
 
             UpdateHeldItemSprite();

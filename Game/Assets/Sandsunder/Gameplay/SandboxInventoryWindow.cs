@@ -31,11 +31,7 @@ namespace Sandsunder.Gameplay
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                ToggleWindow();
-            }
-
+            // Disabled Tab listener in SandboxInventoryWindow (handled exclusively by SandboxModernHUD / TabInventoryController)
             if (isOpen)
             {
                 UpdateSelectedWeaponDetails();

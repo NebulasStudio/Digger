@@ -379,11 +379,10 @@ namespace Sandsunder.Gameplay
             if (intactSprite != null)
             {
                 spriteRenderer.sprite = intactSprite;
-                PrototypePixelArt proxy = GetComponent<PrototypePixelArt>();
-                if (proxy != null)
-                {
-                    proxy.enabled = false;
-                }
+            }
+            else
+            {
+                spriteRenderer.enabled = false;
             }
 
             restingScale = visualRoot.localScale;

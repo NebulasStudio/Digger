@@ -338,12 +338,6 @@ namespace Sandsunder.Gameplay
                 }
             }
 
-            if (processedNodes.Count == 0 && PrototypeDigGridAuthority.Instance != null)
-            {
-                Vector2 targetDigPos = (Vector2)transform.position + (facing * 0.75f);
-                PrototypeDigGridAuthority.Instance.TryDigAtWorldPosition(targetDigPos);
-            }
-
             PrototypeArcFlash.Spawn(transform.position, facing, rules.ShovelReachMillimetres / 1000f);
             GetComponent<SandboxActorVisual>()?.PlayMelee(facing);
             SandboxVisualEffects.SpawnDust(

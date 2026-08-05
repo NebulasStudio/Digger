@@ -31,9 +31,19 @@ namespace Sandsunder.Gameplay
             Instance = this;
         }
 
-        private void OnDestroy()
+        private void Update()
         {
-            if (Instance == this) Instance = null;
+            if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift) || Input.GetKeyDown(KeyCode.Space))
+            {
+                if (IsSubterranean)
+                {
+                    ReturnToSurface();
+                }
+                else
+                {
+                    RaiseDepth(2);
+                }
+            }
         }
 
         /// <summary>Called by the dig channel completion (server-authorized depth gain).</summary>

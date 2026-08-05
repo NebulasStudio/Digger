@@ -106,6 +106,18 @@ namespace Sandsunder.Gameplay
 
             EnsureHierarchy();
 
+            if (body == null && !hostile)
+            {
+#if UNITY_EDITOR
+                body = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/Processed/nomad_32.png");
+                if (body == null)
+                {
+                    var subSprites = UnityEditor.AssetDatabase.LoadAllAssetsAtPath("Assets/Sandsunder/Art/Runtime/Processed/nomad_32.png").OfType<Sprite>().ToArray();
+                    if (subSprites.Length > 0) body = subSprites[0];
+                }
+#endif
+            }
+
             bodyRenderer.sprite = body != null
                 ? body
                 : PrototypePixelArt.GetCachedSprite(

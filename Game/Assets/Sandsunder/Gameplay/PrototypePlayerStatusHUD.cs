@@ -19,14 +19,10 @@ namespace Sandsunder.Gameplay
         private TopDownPlayerController playerMovement;
         private RectTransform frameRect;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        // Disabled auto-spawn per user request to clean up gameplay HUD.
+        // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void AutoInitialize()
         {
-            if (Instance == null && FindFirstObjectByType<PrototypePlayerStatusHUD>() == null)
-            {
-                GameObject hudObj = new("PrototypePlayerStatusHUD_Auto");
-                hudObj.AddComponent<PrototypePlayerStatusHUD>();
-            }
         }
 
         private void Awake()

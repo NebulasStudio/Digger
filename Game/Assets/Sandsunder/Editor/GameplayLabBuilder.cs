@@ -218,7 +218,8 @@ public static class GameplayLabBuilder
             art.Pistol,
             player.GetComponent<TopDownPlayerController>(),
             combat,
-            isHostile: false);
+            isHostile: false,
+            animatorController: art.PlayerAnimator);
 
         // Feature 2 — the player's subterranean stealth (translucent cyan silhouette + overflight
         // immunity) reads the depth from DigDepthSystem.

@@ -91,17 +91,7 @@ namespace Sandsunder.Gameplay
 
         private void SpawnExpandedElements()
         {
-            // 1. Ancient Rune Obelisks in Sanctuary
-            if (FindFirstObjectByType<PrototypeAncientRuneObelisk>() == null)
-            {
-                GameObject obelisk1 = new("RuneObelisk_West");
-                obelisk1.transform.position = new Vector3(-8.5f, 4.2f, 0f);
-                obelisk1.AddComponent<PrototypeAncientRuneObelisk>();
-
-                GameObject obelisk2 = new("RuneObelisk_East");
-                obelisk2.transform.position = new Vector3(8.5f, 4.2f, 0f);
-                obelisk2.AddComponent<PrototypeAncientRuneObelisk>();
-            }
+            // Ancient Rune Obelisks removed per user directive.
 
             // 2. Destructible Clay Vases in Ruin Courtyard
             if (FindFirstObjectByType<PrototypeDestructibleVase>() == null)

@@ -205,12 +205,8 @@ namespace Sandsunder.Editor
             importer.SetTextureSettings(importerSettings);
             importer.SaveAndReimport();
 
-            Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(assetPath);
-            if (sprite == null)
-            {
-                var subSprites = AssetDatabase.LoadAllAssetsAtPath(assetPath).OfType<Sprite>().ToArray();
-                if (subSprites.Length > 0) sprite = subSprites[0];
-            }
+            var subSprites = AssetDatabase.LoadAllAssetsAtPath(assetPath).OfType<Sprite>().ToArray();
+            Sprite sprite = subSprites.Length > 0 ? subSprites[0] : AssetDatabase.LoadAssetAtPath<Sprite>(assetPath);
             if (sprite == null)
             {
                 throw new InvalidOperationException($"Unable to import runtime sprite at {assetPath}.");

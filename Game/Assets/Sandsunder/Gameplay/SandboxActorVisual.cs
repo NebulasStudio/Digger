@@ -126,7 +126,7 @@ namespace Sandsunder.Gameplay
             weaponRenderer.enabled = weaponRenderer.sprite != null;
             bodyRenderer.transform.localScale = Vector3.one;
             shadowRenderer.transform.localScale = new Vector3(0.95f, 0.42f, 1f);
-            weaponRenderer.transform.localScale = Vector3.one;
+            weaponRenderer.transform.localScale = new Vector3(0.65f, 0.65f, 1f);
 
             bodyRoot.localPosition = new Vector3(0f, 0.16f, 0f);
             shadowRenderer.transform.localPosition = new Vector3(0f, -0.27f, 0f);

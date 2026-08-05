@@ -98,10 +98,10 @@ MonoBehaviour:
     fps: 12
     loop: false
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/golem_idle_charge.png
-    clipName: Golem_Charge
+    clipName: Spitter_Charge
     columns: 4
     rows: 4
-    pixelsPerUnit: 64
+    pixelsPerUnit: 192
     fps: 12
     loop: false
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/nomad_run.png

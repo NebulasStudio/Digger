@@ -55,18 +55,19 @@ namespace Sandsunder.Gameplay
             scaler.matchWidthOrHeight = 0.5f;
             canvasObj.AddComponent<GraphicRaycaster>();
 
-            // Root panel (hidden by default; toggled with Tab).
+            // Root panel: centered modal dialog with ui_glass_panel.png background
             GameObject root = new("InventoryRoot", typeof(RectTransform));
             root.transform.SetParent(canvasObj.transform, false);
             RectTransform rootRect = root.GetComponent<RectTransform>();
-            rootRect.anchorMin = Vector2.zero;
-            rootRect.anchorMax = Vector2.one;
-            rootRect.offsetMin = Vector2.zero;
-            rootRect.offsetMax = Vector2.zero;
+            rootRect.anchorMin = new Vector2(0.5f, 0.5f);
+            rootRect.anchorMax = new Vector2(0.5f, 0.5f);
+            rootRect.pivot = new Vector2(0.5f, 0.5f);
+            rootRect.anchoredPosition = Vector2.zero;
+            rootRect.sizeDelta = new Vector2(840, 520);
 
-            // Glass panel (background + gold border).
+            // Glass panel (background + gold border using ui_glass_panel.png).
             Image panelImg = root.AddComponent<Image>();
-            panelImg.color = new Color(0.10f, 0.08f, 0.06f, 0.90f);
+            panelImg.color = Color.white;
             GlassPanel glass = root.AddComponent<GlassPanel>();
 
             // Left column: HP + Stamina bars (glass-styled).

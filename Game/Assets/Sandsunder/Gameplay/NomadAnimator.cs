@@ -21,27 +21,44 @@ namespace Sandsunder.Gameplay
 
         public void SetMoving(float speed)
         {
+            if (!IsControllerReady) return;
             animator.SetFloat("Speed", speed);
             animator.SetBool("IsMoving", speed > 0.01f);
         }
 
         public void SetRolling(bool active)
         {
+            if (!IsControllerReady) return;
             animator.SetBool("IsRolling", active);
         }
 
         public void SetDigging(bool active)
         {
+            if (!IsControllerReady) return;
             animator.SetBool("IsDigging", active);
         }
 
         public void SetStealthed(bool active)
         {
-            if (animator.parameters.Length == 0) return;
+            if (!IsControllerReady) return;
             // "IsStealthed" gates the StealthCrouch state (added in the SpriteSheetImporter pass).
             if (HasParameter("IsStealthed"))
             {
                 animator.SetBool("IsStealthed", active);
+            }
+        }
+
+        /// <summary>
+        /// True when the Animator drives a real controller. Avoids the "Animator is not playing an
+        /// AnimatorController" warning that fires when SetFloat/SetBool/parameters are called on an
+        /// Animator with no controller assigned (e.g. hostile actors that skip the Nomad controller).
+        /// </summary>
+        private bool IsControllerReady
+        {
+            get
+            {
+                if (animator == null) animator = GetComponent<Animator>();
+                return animator != null && animator.runtimeAnimatorController != null;
             }
         }
 

@@ -596,10 +596,10 @@ namespace Sandsunder.Editor
             controller.AddParameter("Speed", AnimatorControllerParameterType.Float);
 
             AnimationClip idleClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Idle.anim") ?? AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Shovel_Idle.anim");
-            AnimationClip walkClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_WalkNew.anim") ?? CreateClip($"{GeneratedRoot}/Nomad_Walk.anim", "Nomad_Walk");
-            AnimationClip runClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_RunNew.anim") ?? CreateClip($"{GeneratedRoot}/Nomad_Run.anim", "Nomad_Run");
-            AnimationClip rollClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_RollNew.anim") ?? CreateClip($"{GeneratedRoot}/Nomad_Roll.anim", "Nomad_Roll");
-            AnimationClip digClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_DigNew.anim") ?? CreateClip($"{GeneratedRoot}/Nomad_Dig.anim", "Nomad_Dig");
+            AnimationClip walkClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Wanderer_Walk.anim") ?? CreateClip($"{GeneratedRoot}/Wanderer_Walk.anim", "Wanderer_Walk");
+            AnimationClip runClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Scout_Run.anim") ?? CreateClip($"{GeneratedRoot}/Scout_Run.anim", "Scout_Run");
+            AnimationClip rollClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Rogue_Roll.anim") ?? CreateClip($"{GeneratedRoot}/Rogue_Roll.anim", "Rogue_Roll");
+            AnimationClip digClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Explorer_Dig.anim") ?? CreateClip($"{GeneratedRoot}/Explorer_Dig.anim", "Explorer_Dig");
 
             var rootStateMach = controller.layers[0].stateMachine;
             var idleState = rootStateMach.AddState("Idle");

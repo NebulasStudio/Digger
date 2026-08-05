@@ -104,29 +104,29 @@ MonoBehaviour:
     pixelsPerUnit: 192
     fps: 12
     loop: false
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/nomad_run.png
-    clipName: Nomad_RunNew
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/scout_run.png
+    clipName: Scout_Run
     columns: 4
     rows: 2
     pixelsPerUnit: 512
     fps: 12
     loop: true
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/nomad_walk.png
-    clipName: Nomad_WalkNew
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/wanderer_walk.png
+    clipName: Wanderer_Walk
     columns: 4
     rows: 1
     pixelsPerUnit: 1024
     fps: 12
     loop: true
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/nomad_roll.png
-    clipName: Nomad_RollNew
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/rogue_roll.png
+    clipName: Rogue_Roll
     columns: 4
     rows: 2
     pixelsPerUnit: 512
     fps: 12
     loop: false
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/nomad_dig.png
-    clipName: Nomad_DigNew
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/explorer_dig.png
+    clipName: Explorer_Dig
     columns: 4
     rows: 2
     pixelsPerUnit: 512

@@ -119,6 +119,9 @@ namespace Sandsunder.Gameplay
                 {
                     GameObject vaseObj = new($"DestructibleVase_{i + 1}");
                     vaseObj.transform.position = vasePositions[i];
+                    // PrototypeDestructibleVase requires a Collider2D + SpriteRenderer.
+                    vaseObj.AddComponent<SpriteRenderer>();
+                    vaseObj.AddComponent<BoxCollider2D>();
                     vaseObj.AddComponent<PrototypeDestructibleVase>();
                 }
             }

@@ -747,11 +747,12 @@ namespace Sandsunder.Editor
             return clip;
         }
 
-        private static void DrawMortar(Color[] pixels, int width, int height)
+        private static void DrawMortar(Color32[] pixels, int width, int height)
         {
-            Color darkBrass = new(0.42f, 0.32f, 0.18f, 1f);
-            Color cyanRune = new(0.20f, 0.95f, 0.90f, 1f);
-            Color woodGrip = new(0.48f, 0.30f, 0.16f, 1f);
+            Color32 darkBrass = new(107, 81, 46, 255);
+            Color32 cyanRune = new(51, 242, 230, 255);
+            Color32 woodGrip = new(122, 76, 41, 255);
+            Color32 clear = new(0, 0, 0, 0);
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -763,15 +764,16 @@ namespace Sandsunder.Editor
                     else if (y >= 3 && y <= 10 && x >= 24 && x <= 30)
                         pixels[y * width + x] = woodGrip;
                     else
-                        pixels[y * width + x] = Color.clear;
+                        pixels[y * width + x] = clear;
                 }
             }
         }
 
-        private static void DrawRelic(Color[] pixels, int width, int height)
+        private static void DrawRelic(Color32[] pixels, int width, int height)
         {
-            Color goldRing = new(0.95f, 0.80f, 0.25f, 1f);
-            Color cyanOrb = new(0.20f, 0.95f, 0.90f, 1f);
+            Color32 goldRing = new(242, 204, 64, 255);
+            Color32 cyanOrb = new(51, 242, 230, 255);
+            Color32 clear = new(0, 0, 0, 0);
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -782,7 +784,7 @@ namespace Sandsunder.Editor
                     else if (dist <= 10f && (x == y || x + y == width - 1))
                         pixels[y * width + x] = goldRing;
                     else
-                        pixels[y * width + x] = Color.clear;
+                        pixels[y * width + x] = clear;
                 }
             }
         }

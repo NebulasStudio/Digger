@@ -326,6 +326,9 @@ public static class GameplayLabBuilder
             GameObject vaseObj = new($"DestructibleVase {i + 1}");
             vaseObj.transform.SetParent(vasesRoot.transform, false);
             vaseObj.transform.position = vasePositions[i];
+            // PrototypeDestructibleVase requires a Collider2D + SpriteRenderer.
+            vaseObj.AddComponent<SpriteRenderer>();
+            vaseObj.AddComponent<BoxCollider2D>();
             vaseObj.AddComponent<PrototypeDestructibleVase>();
         }
 
@@ -335,11 +338,14 @@ public static class GameplayLabBuilder
         GameObject ob1 = new("Rune Obelisk West");
         ob1.transform.SetParent(obelisksRoot.transform, false);
         ob1.transform.position = new Vector3(-9.5f, 5.2f, 0f);
+        // PrototypeAncientRuneObelisk requires a SpriteRenderer.
+        ob1.AddComponent<SpriteRenderer>();
         ob1.AddComponent<PrototypeAncientRuneObelisk>();
 
         GameObject ob2 = new("Rune Obelisk East");
         ob2.transform.SetParent(obelisksRoot.transform, false);
         ob2.transform.position = new Vector3(9.5f, 5.2f, 0f);
+        ob2.AddComponent<SpriteRenderer>();
         ob2.AddComponent<PrototypeAncientRuneObelisk>();
 
         // Ruin Doors
@@ -349,6 +355,14 @@ public static class GameplayLabBuilder
         door1.transform.SetParent(doorsRoot.transform, false);
         door1.transform.position = new Vector3(0f, 3.5f, 0f);
         door1.AddComponent<PrototypeDesertRuinDoor>();
+
+        // Sandstorm Golem Boss (Feature 3) — spawned north of the arena, away from the start zone.
+        GameObject golemRoot = new("Sandstorm Golem Boss");
+        golemRoot.transform.SetParent(interactiveRoot.transform, false);
+        golemRoot.transform.position = new Vector3(0f, 9f, 0f);
+        golemRoot.AddComponent<PrototypeHealth>();
+        golemRoot.AddComponent<Rigidbody2D>();
+        golemRoot.AddComponent<SandstormGolemAI>();
     }
 
     private static void CreateRuinWall(

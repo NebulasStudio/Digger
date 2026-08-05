@@ -54,11 +54,10 @@ namespace Sandsunder.Editor
                 AnimationClip clip = SpriteSheetImporter.BuildClip(frames, entry.clipName, entry.fps);
                 if (!entry.loop)
                 {
-                    AnimationUtility.SetAnimationClipSettings(clip, new AnimationClipSettings
-                    {
-                        loopTime = false,
-                        wrapMode = WrapMode.Once
-                    });
+                    clip.wrapMode = WrapMode.Once;
+                    var settings = AnimationUtility.GetAnimationClipSettings(clip);
+                    settings.loopTime = false;
+                    AnimationUtility.SetAnimationClipSettings(clip, settings);
                 }
 
                 Debug.Log($"[AnimationClipBuilder] Built {entry.clipName} ({frames.Length} frames) from {entry.sourcePath}");

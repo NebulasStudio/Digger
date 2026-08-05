@@ -89,11 +89,9 @@ namespace Sandsunder.Editor
 
             EditorCurveBinding binding = EditorCurveBinding.PPtrCurve("", typeof(SpriteRenderer), "m_Sprite");
             AnimationUtility.SetObjectReferenceCurve(clip, binding, keys);
-            AnimationUtility.SetAnimationClipSettings(clip, new AnimationClipSettings
-            {
-                loopTime = true,
-                wrapMode = WrapMode.Loop
-            });
+            var settings = AnimationUtility.GetAnimationClipSettings(clip);
+            settings.loopTime = true;
+            AnimationUtility.SetAnimationClipSettings(clip, settings);
 
             AssetDatabase.CreateAsset(clip, $"Assets/Sandsunder/Art/Generated/{clipName}.anim");
             return clip;

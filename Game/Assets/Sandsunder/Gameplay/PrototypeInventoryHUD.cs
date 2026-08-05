@@ -215,6 +215,25 @@ namespace Sandsunder.Gameplay
                 return existing;
             }
 
+#if UNITY_EDITOR
+            var art = Sandsunder.Editor.SandboxArtAssetFactory.LoadOrCreate();
+            Sprite hfSprite = itemId switch
+            {
+                "shovel.default" => art.Shovel,
+                "rifle.brass" => art.Pistol,
+                "sword.scimitar" => art.Scimitar,
+                "shotgun.heavy" => art.Shotgun,
+                "blaster.rune" => art.Blaster,
+                "key.subterranean" => art.Relic,
+                _ => null
+            };
+            if (hfSprite != null)
+            {
+                spriteCache[itemId] = hfSprite;
+                return hfSprite;
+            }
+#endif
+
             Sprite sprite = CreateItemPixelSprite(itemId);
             spriteCache[itemId] = sprite;
             return sprite;

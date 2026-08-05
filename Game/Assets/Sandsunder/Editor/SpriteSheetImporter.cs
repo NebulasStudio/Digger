@@ -58,7 +58,9 @@ namespace Sandsunder.Editor
                 }
             }
 
+#pragma warning disable CS0618
             importer.spritesheet = metas.ToArray();
+#pragma warning restore CS0618
             importer.SaveAndReimport();
 
             return AssetDatabase.LoadAllAssetsAtPath(assetPath)

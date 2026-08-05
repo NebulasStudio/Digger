@@ -300,23 +300,6 @@ namespace Sandsunder.Gameplay
                 new Color(0.95f, 0.85f, 0.40f));
             SandboxReloadBar.Instance?.StartReload(1.2f);
             return true;
-
-            GetComponent<SandboxActorVisual>()?.PlayFire(aim);
-            SandboxVisualEffects.SpawnMuzzle(transform.position, aim, new Color(0.95f, 0.85f, 0.40f));
-            SandboxVisualEffects.SpawnShellCasing(transform.position, aim, new Color(0.95f, 0.75f, 0.30f)); // Golden Brass Casing
-            SandboxVisualEffects.SpawnDust(transform.position, 2, new Color(0.85f, 0.65f, 0.25f));
-            PrototypeProjectile.Spawn(
-                (Vector2)transform.position + (aim * 0.42f),
-                aim,
-                nextProjectileId++,
-                health.EntityId,
-                health.Team,
-                rules.PistolDamage,
-                rules.PistolProjectileSpeedMillimetresPerSecond / 1000f,
-                rules.PistolRangeMillimetres / 1000f,
-                telegraphSeconds: 0f,
-                new Color(0.95f, 0.85f, 0.40f));
-            return true;
         }
 
         public bool TryShovelForTesting()

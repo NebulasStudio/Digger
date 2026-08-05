@@ -143,13 +143,13 @@ public static class GameplayLabBuilder
                 if (inRuinSanctuary)
                 {
                     sr.sprite = art.RuinTile;
-                    sr.color = new Color(0.72f, 0.55f, 0.40f);
+                    sr.color = Color.white;
                 }
                 else
                 {
                     int variantIndex = Mathf.Abs((x * 37 + y * 17) % sandVariants.Length);
                     sr.sprite = sandVariants[variantIndex] != null ? sandVariants[variantIndex] : art.SandTile;
-                    sr.color = new Color(0.94f, 0.84f, 0.68f);
+                    sr.color = Color.white;
                 }
 
                 // 2. Subterranean Cell Tile (Tunnels Layer -1)

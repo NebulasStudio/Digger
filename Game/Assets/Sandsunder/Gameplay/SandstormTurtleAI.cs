@@ -88,7 +88,7 @@ namespace Sandsunder.Gameplay
                     break;
                 case TurtleState.Retract:
                     // Shelled: invulnerable, no movement. When timer ends, emerge and lunge.
-                    body.velocity = Vector2.zero;
+                    body.linearVelocity = Vector2.zero;
                     if (stateTimer <= 0f)
                     {
                         state = TurtleState.Lunge;
@@ -96,11 +96,11 @@ namespace Sandsunder.Gameplay
                     }
                     break;
                 case TurtleState.Lunge:
-                    body.velocity = moveDir * lungeSpeed;
+                    body.linearVelocity = moveDir * lungeSpeed;
                     SandboxVisualEffects.SpawnDust(body.position, 1, shellGlow);
                     if (stateTimer <= 0f)
                     {
-                        body.velocity = Vector2.zero;
+                        body.linearVelocity = Vector2.zero;
                         state = TurtleState.Cooldown;
                         stateTimer = cooldownTime;
                     }
@@ -114,17 +114,17 @@ namespace Sandsunder.Gameplay
         private void SlowPatrol()
         {
             PrototypePlayerCombat player = FindFirstObjectByType<PrototypePlayerCombat>();
-            if (player == null) { body.velocity = Vector2.zero; return; }
+            if (player == null) { body.linearVelocity = Vector2.zero; return; }
 
             Vector2 offset = (Vector2)player.transform.position - body.position;
             if (offset.sqrMagnitude > contactRange * contactRange)
             {
                 moveDir = offset.normalized;
-                body.velocity = moveDir * patrolSpeed;
+                body.linearVelocity = moveDir * patrolSpeed;
             }
             else
             {
-                body.velocity = Vector2.zero;
+                body.linearVelocity = Vector2.zero;
             }
         }
 
@@ -136,7 +136,7 @@ namespace Sandsunder.Gameplay
             // Retract into the shell: brief invulnerability period.
             state = TurtleState.Retract;
             stateTimer = retractTime;
-            body.velocity = Vector2.zero;
+            body.linearVelocity = Vector2.zero;
             if (shellRenderer != null) shellRenderer.color = shellGlow;
             SandboxVisualEffects.SpawnDust(transform.position, 6, shellGlow);
         }

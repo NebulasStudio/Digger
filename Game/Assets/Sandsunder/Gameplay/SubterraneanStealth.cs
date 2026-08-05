@@ -48,6 +48,17 @@ namespace Sandsunder.Gameplay
             ApplyDepth(depth);
         }
 
+        private void Start()
+        {
+            // Ensure Nomad starts with 100% full real colors on surface
+            CacheRenderers();
+            for (int i = 0; i < cachedRenderers.Length; i++)
+            {
+                if (cachedRenderers[i] != null) cachedRenderers[i].color = Color.white;
+            }
+            ApplyDepth(0);
+        }
+
         private void OnDepthChanged(int depth)
         {
             ApplyDepth(depth);
@@ -55,7 +66,7 @@ namespace Sandsunder.Gameplay
 
         private void ApplyDepth(int depth)
         {
-            bool stealth = depth >= 1;
+            bool stealth = depth >= 2;
             if (stealth == isStealthed) return;
             isStealthed = stealth;
 

@@ -216,21 +216,25 @@ namespace Sandsunder.Gameplay
             }
 
 #if UNITY_EDITOR
-            var art = Sandsunder.Editor.SandboxArtAssetFactory.LoadOrCreate();
-            Sprite hfSprite = itemId switch
+            string hfPath = itemId switch
             {
-                "shovel.default" => art.Shovel,
-                "rifle.brass" => art.Pistol,
-                "sword.scimitar" => art.Scimitar,
-                "shotgun.heavy" => art.Shotgun,
-                "blaster.rune" => art.Blaster,
-                "key.subterranean" => art.Relic,
+                "shovel.default" => "Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_11.png",
+                "rifle.brass" => "Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_8.png",
+                "sword.scimitar" => "Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_12.png",
+                "shotgun.heavy" => "Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_7.png",
+                "blaster.rune" => "Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_5.png",
+                "key.subterranean" => "Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_6.png",
                 _ => null
             };
-            if (hfSprite != null)
+
+            if (!string.IsNullOrEmpty(hfPath))
             {
-                spriteCache[itemId] = hfSprite;
-                return hfSprite;
+                Sprite hfSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(hfPath);
+                if (hfSprite != null)
+                {
+                    spriteCache[itemId] = hfSprite;
+                    return hfSprite;
+                }
             }
 #endif
 

@@ -23,8 +23,34 @@ namespace Sandsunder.Gameplay
 
         private void Awake()
         {
+            EnsureRuntimeSystems();
             ApplyVisualUpgrades();
             SpawnExpandedElements();
+        }
+
+        /// <summary>
+        /// Instantiates the singletons for the Feature 1/2 runtime systems (dig terrain overlay,
+        /// crepe-crack FX, continuous sand dust, and the excavation depth owner). These are pure
+        /// presentation/relay systems: they never mutate the authoritative simulation.
+        /// </summary>
+        private void EnsureRuntimeSystems()
+        {
+            if (DigDepthSystem.Instance == null && FindFirstObjectByType<DigDepthSystem>() == null)
+            {
+                new GameObject("DigDepthSystem").AddComponent<DigDepthSystem>();
+            }
+            if (DigTerrainView.Instance == null && FindFirstObjectByType<DigTerrainView>() == null)
+            {
+                new GameObject("DigTerrainView").AddComponent<DigTerrainView>();
+            }
+            if (SandCrepeCracksFX.Instance == null && FindFirstObjectByType<SandCrepeCracksFX>() == null)
+            {
+                new GameObject("SandCrepeCracksFX").AddComponent<SandCrepeCracksFX>();
+            }
+            if (SandDustEmitter.Instance == null && FindFirstObjectByType<SandDustEmitter>() == null)
+            {
+                new GameObject("SandDustEmitter").AddComponent<SandDustEmitter>();
+            }
         }
 
         private void ApplyVisualUpgrades()
@@ -103,6 +129,17 @@ namespace Sandsunder.Gameplay
                 GameObject doorObj = new("DesertRuin_LockedDoor");
                 doorObj.transform.position = new Vector3(0f, 2.5f, 0f);
                 doorObj.AddComponent<PrototypeDesertRuinDoor>();
+            }
+
+            // 4. Sandstorm Golem Boss (Feature 3) — spawned north of the arena, away from the
+            // starting zone. PrototypeHealth + Rigidbody2D are auto-added by RequireComponent.
+            if (FindFirstObjectByType<SandstormGolemAI>() == null)
+            {
+                GameObject golemObj = new("SandstormGolem_Boss");
+                golemObj.transform.position = new Vector3(0f, 9f, 0f);
+                golemObj.AddComponent<PrototypeHealth>();
+                golemObj.AddComponent<Rigidbody2D>();
+                golemObj.AddComponent<SandstormGolemAI>();
             }
         }
 

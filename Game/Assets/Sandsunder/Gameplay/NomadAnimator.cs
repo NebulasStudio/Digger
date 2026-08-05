@@ -1,0 +1,57 @@
+using UnityEngine;
+
+namespace Sandsunder.Gameplay
+{
+    /// <summary>
+    /// Drives the Nomad AnimatorController from gameplay state. The controller already exposes
+    /// Idle/Walk/Run/Roll/Dig (see Art/Generated/NomadAnimatorController.controller). This component
+    /// maps movement, rolling, digging and subterranean stealth onto its parameters, and can be
+    /// extended to the StealthCrouch / DigChannel / DeathBurst states.
+    /// </summary>
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(Animator))]
+    public sealed class NomadAnimator : MonoBehaviour
+    {
+        private Animator animator;
+
+        private void Awake()
+        {
+            animator = GetComponent<Animator>();
+        }
+
+        public void SetMoving(float speed)
+        {
+            animator.SetFloat("Speed", speed);
+            animator.SetBool("IsMoving", speed > 0.01f);
+        }
+
+        public void SetRolling(bool active)
+        {
+            animator.SetBool("IsRolling", active);
+        }
+
+        public void SetDigging(bool active)
+        {
+            animator.SetBool("IsDigging", active);
+        }
+
+        public void SetStealthed(bool active)
+        {
+            if (animator.parameters.Length == 0) return;
+            // "IsStealthed" gates the StealthCrouch state (added in the SpriteSheetImporter pass).
+            if (HasParameter("IsStealthed"))
+            {
+                animator.SetBool("IsStealthed", active);
+            }
+        }
+
+        private bool HasParameter(string name)
+        {
+            foreach (AnimatorControllerParameter parameter in animator.parameters)
+            {
+                if (parameter.name == name) return true;
+            }
+            return false;
+        }
+    }
+}

@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d862f1188d204f4aacec0edbc46ba27f, type: 3}
+  m_Name: AnimationBuildManifest
+  m_EditorClassIdentifier: 
+  sheets:
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/shovel_idle.png
+    clipName: Shovel_Idle
+    columns: 4
+    rows: 1
+    pixelsPerUnit: 64
+    fps: 12
+    loop: true
+
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/shovel_swing.png
+    clipName: Shovel_Swing
+    columns: 4
+    rows: 1
+    pixelsPerUnit: 64
+    fps: 12
+    loop: false
+
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/rifle_idle.png
+    clipName: Rifle_Idle
+    columns: 4
+    rows: 1
+    pixelsPerUnit: 64
+    fps: 12
+    loop: true
+
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/rifle_fire.png
+    clipName: Rifle_Fire
+    columns: 4
+    rows: 1
+    pixelsPerUnit: 64
+    fps: 12
+    loop: false
+
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/rifle_reload.png
+    clipName: Rifle_Reload
+    columns: 3
+    rows: 3
+    pixelsPerUnit: 64
+    fps: 12
+    loop: false
+
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/shotgun_idle.png
+    clipName: Shotgun_Idle
+    columns: 4
+    rows: 1
+    pixelsPerUnit: 64
+    fps: 12
+    loop: true
+
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/blaster_idle.png
+    clipName: Blaster_Idle
+    columns: 4
+    rows: 1
+    pixelsPerUnit: 64
+    fps: 12
+    loop: true
+
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/blaster_fire.png
+    clipName: Blaster_Fire
+    columns: 4
+    rows: 1
+    pixelsPerUnit: 64
+    fps: 12
+    loop: false
+
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/scimitar_swing.png
+    clipName: Scimitar_Swing
+    columns: 4
+    rows: 1
+    pixelsPerUnit: 64
+    fps: 12
+    loop: false
+
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/nomad_stealth_crouch.png
+    clipName: Nomad_StealthCrouch
+    columns: 4
+    rows: 2
+    pixelsPerUnit: 64
+    fps: 12
+    loop: true
+
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/spitter_idle.png
+    clipName: Spitter_Idle
+    columns: 4
+    rows: 2
+    pixelsPerUnit: 64
+    fps: 12
+    loop: true
+
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/spitter_death_burst.png
+    clipName: Spitter_DeathBurst
+    columns: 4
+    rows: 2
+    pixelsPerUnit: 64
+    fps: 12
+    loop: false
+
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/golem_idle_charge.png
+    clipName: Golem_Charge
+    columns: 4
+    rows: 4
+    pixelsPerUnit: 64
+    fps: 12
+    loop: false
+

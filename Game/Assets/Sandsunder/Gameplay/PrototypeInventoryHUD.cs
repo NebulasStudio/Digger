@@ -218,15 +218,14 @@ namespace Sandsunder.Gameplay
 #if UNITY_EDITOR
             string hfPath = itemId switch
             {
-                "shovel.default" => "Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_11.png",
-                "rifle.brass" => "Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_8.png",
-                "sword.scimitar" => "Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_12.png",
-                "shotgun.heavy" => "Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_7.png",
-                "blaster.rune" => "Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_5.png",
-                "key.subterranean" => "Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_6.png",
+                "shovel.default" => "Assets/Sandsunder/Art/Runtime/Processed/shovel_default_32.png",
+                "rifle.brass" => "Assets/Sandsunder/Art/Runtime/Processed/rifle_brass_32.png",
+                "sword.scimitar" => "Assets/Sandsunder/Art/Runtime/Processed/sword_scimitar_32.png",
+                "shotgun.heavy" => "Assets/Sandsunder/Art/Runtime/Processed/shotgun_heavy_32.png",
+                "blaster.rune" => "Assets/Sandsunder/Art/Runtime/Processed/blaster_rune_32.png",
+                "key.subterranean" => "Assets/Sandsunder/Art/Runtime/Processed/env_relic_chest_32.png",
                 _ => null
             };
-
             if (!string.IsNullOrEmpty(hfPath))
             {
                 Sprite hfSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(hfPath);

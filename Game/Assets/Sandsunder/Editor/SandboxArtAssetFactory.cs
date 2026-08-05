@@ -58,13 +58,20 @@ namespace Sandsunder.Editor
                 Spitter = spitter,
                 PlayerAnimator = animator,
                 Shadow = CreateProceduralSprite("BlobShadow", 32, 16, 32f, DrawShadow),
-                Pistol = ImportTile("Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_8.png", 32f) ?? ImportTile("Assets/Sandsunder/Art/Source/Higgsfield/brass_rifle_sprite.jpg", 32f) ?? CreateProceduralSprite("BrassPistol", 20, 10, 32f, DrawPistol),
-                Shovel = ImportTile("Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_11.png", 32f) ?? ImportTile("Assets/Sandsunder/Art/Source/Higgsfield/starter_shovel_sprite.jpg", 32f) ?? CreateProceduralSprite("StarterShovel", 24, 12, 32f, DrawShovel),
-                Scimitar = ImportTile("Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_12.png", 32f) ?? CreateProceduralSprite("DesertScimitar", 28, 14, 32f, DrawScimitar),
-                Shotgun = ImportTile("Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_7.png", 32f) ?? CreateProceduralSprite("HeavyShotgun", 30, 12, 32f, DrawShotgun),
-                Blaster = ImportTile("Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_5.png", 32f) ?? CreateProceduralSprite("RuneBlaster", 26, 12, 32f, DrawBlaster),
-                Mortar = ImportTile("Assets/Sandsunder/Art/Source/Higgsfield/sandstorm_mortar.png", 32f) ?? CreateProceduralSprite("SandstormMortar", 32, 14, 32f, DrawMortar),
-                Relic = ImportTile("Assets/Sandsunder/Art/Source/Higgsfield/hf_asset_6.png", 32f) ?? ImportTile("Assets/Sandsunder/Art/Source/Higgsfield/cyan_relic.png", 32f) ?? CreateProceduralSprite("CyanRelic", 24, 24, 32f, DrawRelic),
+                Pistol = ImportSpriteOptional($"{RuntimeRoot}/Processed/rifle_brass_32.png", 32f, new Vector2(0.5f, 0.5f))
+                    ?? CreateProceduralSprite("BrassPistol", 20, 10, 32f, DrawPistol),
+                Shovel = ImportSpriteOptional($"{RuntimeRoot}/Processed/shovel_default_32.png", 32f, new Vector2(0.5f, 0.5f))
+                    ?? CreateProceduralSprite("StarterShovel", 24, 12, 32f, DrawShovel),
+                Scimitar = ImportSpriteOptional($"{RuntimeRoot}/Processed/sword_scimitar_32.png", 32f, new Vector2(0.5f, 0.5f))
+                    ?? CreateProceduralSprite("DesertScimitar", 28, 14, 32f, DrawScimitar),
+                Shotgun = ImportSpriteOptional($"{RuntimeRoot}/Processed/shotgun_heavy_32.png", 32f, new Vector2(0.5f, 0.5f))
+                    ?? CreateProceduralSprite("HeavyShotgun", 30, 12, 32f, DrawShotgun),
+                Blaster = ImportSpriteOptional($"{RuntimeRoot}/Processed/blaster_rune_32.png", 32f, new Vector2(0.5f, 0.5f))
+                    ?? CreateProceduralSprite("RuneBlaster", 26, 12, 32f, DrawBlaster),
+                Mortar = ImportSpriteOptional($"{RuntimeRoot}/Processed/icon_mortar_sandstorm_32.png", 32f, new Vector2(0.5f, 0.5f))
+                    ?? CreateProceduralSprite("SandstormMortar", 32, 14, 32f, DrawMortar),
+                Relic = ImportSpriteOptional($"{RuntimeRoot}/Processed/env_relic_chest_32.png", 32f, new Vector2(0.5f, 0.5f))
+                    ?? CreateProceduralSprite("CyanRelic", 24, 24, 32f, DrawRelic),
                 DigIntact = CreateProceduralSprite("DigIntact", 32, 24, 32f,
                     (pixels, width, height) => DrawDigNode(pixels, width, height, 0)),
                 DigCracked = CreateProceduralSprite("DigCracked", 32, 24, 32f,
@@ -111,10 +118,25 @@ namespace Sandsunder.Editor
 
         private static Sprite ImportSprite(string assetPath, float pixelsPerUnit, Vector2 pivot)
         {
+            Sprite sprite = ImportSpriteOptional(assetPath, pixelsPerUnit, pivot);
+            if (sprite == null)
+            {
+                throw new FileNotFoundException($"Missing sandbox runtime sprite: {assetPath}");
+            }
+            return sprite;
+        }
+
+        /// <summary>
+        /// Like <see cref="ImportSprite"/> but returns null (instead of throwing) when the source
+        /// asset is missing, so callers can fall back to a procedural sprite. Used for the generated
+        /// 32x32 weapon / relic / mortar sprites that are imported from Runtime/Processed.
+        /// </summary>
+        private static Sprite ImportSpriteOptional(string assetPath, float pixelsPerUnit, Vector2 pivot)
+        {
             TextureImporter importer = AssetImporter.GetAtPath(assetPath) as TextureImporter;
             if (importer == null)
             {
-                throw new FileNotFoundException($"Missing sandbox runtime sprite: {assetPath}");
+                return null;
             }
 
             importer.textureType = TextureImporterType.Sprite;

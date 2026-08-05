@@ -26,6 +26,12 @@ namespace Sandsunder.Gameplay
         private SpriteRenderer weaponRenderer;
 
         [SerializeField]
+        private WeaponAnimator weaponAnimator;
+
+        [SerializeField]
+        private NomadAnimator nomadAnimator;
+
+        [SerializeField]
         private TopDownPlayerController controller;
 
         [SerializeField]
@@ -143,12 +149,14 @@ namespace Sandsunder.Gameplay
         {
             SetAimDirection(direction);
             recoilRemaining = 0.10f;
+            if (weaponAnimator != null) weaponAnimator.PlayFire();
         }
 
         public void PlayMelee(Vector2 direction)
         {
             SetAimDirection(direction);
             meleeRemaining = 0.18f;
+            if (weaponAnimator != null) weaponAnimator.PlaySwing();
         }
 
         public void PlayRoll(Vector2 direction)
@@ -214,6 +222,15 @@ namespace Sandsunder.Gameplay
             recoilRemaining = Mathf.Max(0f, recoilRemaining - Time.deltaTime);
             meleeRemaining = Mathf.Max(0f, meleeRemaining - Time.deltaTime);
             hitRemaining = Mathf.Max(0f, hitRemaining - Time.deltaTime);
+
+            if (nomadAnimator != null)
+            {
+                // Speed is a 0..1 intensity mapped onto the Animator's Speed parameter (Idle/Walk/Run).
+                nomadAnimator.SetMoving(walking && !hostile ? 1f : 0f);
+                nomadAnimator.SetRolling(rollRemaining > 0f);
+                bool stealthed = DigDepthSystem.Instance != null && DigDepthSystem.Instance.IsSubterranean;
+                nomadAnimator.SetStealthed(stealthed && !hostile);
+            }
 
             if (animator == null || animator.runtimeAnimatorController == null)
             {
@@ -399,10 +416,32 @@ namespace Sandsunder.Gameplay
             bodyRenderer = GetOrAddRenderer(bodyRoot);
             weaponRenderer = GetOrAddRenderer(weaponRoot);
 
+            // Frame-player for weapon action animations (idle/fire/reload/swing). It is driven by
+            // PlayFire/PlayMelee/PlayRoll and is a no-op until animation frames are assigned.
+            if (weaponAnimator == null)
+            {
+                weaponAnimator = weaponRoot.GetComponent<WeaponAnimator>();
+                if (weaponAnimator == null)
+                {
+                    weaponAnimator = weaponRoot.gameObject.AddComponent<WeaponAnimator>();
+                }
+            }
+
             animator = bodyRoot.GetComponent<Animator>();
             if (animator == null)
             {
                 animator = bodyRoot.gameObject.AddComponent<Animator>();
+            }
+
+            // NomadAnimator drives the AnimatorController (Idle/Walk/Run/Roll/Dig/StealthCrouch)
+            // from combat/movement state. Attached next to the Animator on the body root.
+            if (nomadAnimator == null)
+            {
+                nomadAnimator = bodyRoot.GetComponent<NomadAnimator>();
+                if (nomadAnimator == null)
+                {
+                    nomadAnimator = bodyRoot.gameObject.AddComponent<NomadAnimator>();
+                }
             }
 
             if (animator.runtimeAnimatorController == null && runtimeAnimatorController != null)

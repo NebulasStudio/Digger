@@ -55,6 +55,11 @@ namespace Sandsunder.Gameplay
                 Vector2 cellCenter = new Vector2(Mathf.Floor(worldPos.x) + 0.5f, Mathf.Floor(worldPos.y) + 0.5f);
                 SandboxPitDecal.SpawnAt(cellCenter, result.NewDepth);
 
+                // Feature 1 — Dynamic Sand Excavation & Crepe Cracks:
+                // per-cell 3-stage overlay (Intact -> Cracked -> Opened/Pit) + live starburst cracks.
+                DigTerrainView.Instance?.SetCellDepth(cellCenter, result.NewDepth);
+                SandCrepeCracksFX.Instance?.SpawnStarburst(cellCenter, result.NewDepth);
+
                 if (!string.IsNullOrEmpty(result.RevealedLootId))
                 {
                     PrototypePickup.Spawn(worldPos, nextPickupId++, result.RevealedLootId);
@@ -198,6 +203,13 @@ namespace Sandsunder.Gameplay
         public bool TryCollect(PrototypePlayerCombat player)
         {
             if (player == null || state == null)
+            {
+                return false;
+            }
+
+            // Feature 2 — Interaction rule: surface chests/objects cannot be collected while the
+            // Nomad is in the subterranean layer (-1). Return to Level 0 first.
+            if (DigDepthSystem.Instance != null && DigDepthSystem.Instance.IsSubterranean)
             {
                 return false;
             }

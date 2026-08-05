@@ -512,6 +512,8 @@ namespace Sandsunder.Gameplay
                     : Vector2.right;
 
                 Vector2 digCenter = (Vector2)transform.position + (facing * 0.75f);
+                // Continuous excavation dust while channeling (Feature 1).
+                SandDustEmitter.Instance?.SetChanneling(true, digCenter);
                 // Dynamically spawn spiral sand waves converging to the center!
                 SandboxVisualEffects.SpawnSandSpiral(digCenter);
 
@@ -530,6 +532,7 @@ namespace Sandsunder.Gameplay
                     isDiggingChannel = false;
                     digChannelTimer = 0f;
                     movement.IsDiggingChanneling = false;
+                    SandDustEmitter.Instance?.SetChanneling(false, Vector2.zero);
                 }
             }
             else if (isDiggingChannel)
@@ -537,6 +540,7 @@ namespace Sandsunder.Gameplay
                 isDiggingChannel = false;
                 digChannelTimer = 0f;
                 movement.IsDiggingChanneling = false;
+                SandDustEmitter.Instance?.SetChanneling(false, Vector2.zero);
             }
         }
 
@@ -568,7 +572,12 @@ namespace Sandsunder.Gameplay
                 PrototypeDigGridAuthority.Instance.TryDigAtWorldPosition(targetDigPos);
             }
 
-            PrototypeTunnelSystem.Instance?.ToggleNextLayer();
+            PrototypeTunnelSystem.Instance?.TransitionToLayer(DigDepthSystem.Instance?.IsSubterranean == true
+                ? MatrixLayerDepth.Subterranean_L1
+                : MatrixLayerDepth.Surface_L0);
+
+            // Feature 2 — Subterranean Depth: reaching depth >= 2 drops the Nomad to Level -1.
+            DigDepthSystem.Instance?.RaiseDepth(2);
             SandboxVisualEffects.SpawnDust(targetDigPos, 12, new Color(0.60f, 0.42f, 0.22f));
         }
 
@@ -827,9 +836,9 @@ namespace Sandsunder.Gameplay
                     return;
                 }
 
-                if (target.GetComponent<TopDownPlayerController>()?.CurrentDepth >= 2)
+                if (target.GetComponent<SubterraneanStealth>()?.IsStealthed == true)
                 {
-                    return; // Subterranean stealth: surface projectiles pass over subterranean players!
+                    return; // Subterranean stealth: surface projectiles overfly underground players!
                 }
 
                 CombatDamageResult result = target.ResolveProjectile(state);
@@ -896,9 +905,9 @@ namespace Sandsunder.Gameplay
                 return;
             }
 
-            if (target.GetComponent<TopDownPlayerController>()?.CurrentDepth >= 2)
+            if (target.GetComponent<SubterraneanStealth>()?.IsStealthed == true)
             {
-                // Subterranean stealth: spitter cannot see or attack subterranean player!
+                // Subterranean stealth: spitter cannot see or attack the underground player!
                 return;
             }
 

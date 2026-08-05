@@ -89,19 +89,16 @@ public sealed class TopDownPlayerController : MonoBehaviour
         if (cachedRenderer == null) cachedRenderer = GetComponentInChildren<SpriteRenderer>();
         if (cachedRenderer == null) return;
 
-        if (currentDepth == 2)
+        if (currentDepth >= 1)
         {
-            // Level -2: Subterranean tunnel silhouette (semi-transparent cyan shadow)
-            cachedRenderer.color = new Color(0.15f, 0.55f, 0.65f, 0.60f);
-        }
-        else if (currentDepth == 1)
-        {
-            // Level -1: Slightly darkened
-            cachedRenderer.color = new Color(0.80f, 0.75f, 0.70f, 0.90f);
+            // Subterranean: translucent cyan silhouette (#00F0E6) @65%, rendered behind the sand
+            // (sortingOrder -10) to convey the floating/sliding underground state.
+            cachedRenderer.color = new Color(0f, 0.94f, 0.90f, 0.65f);
+            cachedRenderer.sortingOrder = -10;
         }
         else
         {
-            // Level 0: Surface normal
+            // Surface: normal rendering.
             cachedRenderer.color = Color.white;
         }
     }

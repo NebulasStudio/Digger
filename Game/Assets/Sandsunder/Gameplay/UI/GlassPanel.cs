@@ -29,24 +29,16 @@ namespace Sandsunder.Gameplay.UI
         public void Apply()
         {
             if (image == null) return;
-            image.color = glassColor;
-            image.raycastTarget = false;
 
-            // Border: a sibling Image stretched to the panel rect, drawn behind the fill.
-            if (transform.Find("GlassBorder") == null)
+#if UNITY_EDITOR
+            Sprite glassSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/Processed/ui_glass_panel.png");
+            if (glassSprite != null)
             {
-                GameObject border = new("GlassBorder", typeof(RectTransform), typeof(Image));
-                border.transform.SetParent(transform, false);
-                RectTransform bRect = border.GetComponent<RectTransform>();
-                bRect.anchorMin = Vector2.zero;
-                bRect.anchorMax = Vector2.one;
-                bRect.offsetMin = -Vector2.one * borderWidth;
-                bRect.offsetMax = Vector2.one * borderWidth;
-                Image bImg = border.GetComponent<Image>();
-                bImg.color = goldBorder;
-                bImg.raycastTarget = false;
-                border.transform.SetAsFirstSibling();
+                image.sprite = glassSprite;
             }
+#endif
+            image.color = new Color(0.06f, 0.05f, 0.04f, 0.88f);
+            image.raycastTarget = false;
         }
     }
 }

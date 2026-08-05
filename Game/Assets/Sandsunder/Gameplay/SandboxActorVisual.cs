@@ -141,7 +141,7 @@ namespace Sandsunder.Gameplay
             weaponRenderer.enabled = weaponRenderer.sprite != null;
             bodyRenderer.transform.localScale = Vector3.one;
             shadowRenderer.transform.localScale = new Vector3(0.95f, 0.42f, 1f);
-            weaponRenderer.transform.localScale = new Vector3(0.65f, 0.65f, 1f);
+            weaponRenderer.transform.localScale = new Vector3(0.42f, 0.42f, 1f);
 
             bodyRoot.localPosition = new Vector3(0f, 0.16f, 0f);
             shadowRenderer.transform.localPosition = new Vector3(0f, -0.27f, 0f);
@@ -372,6 +372,16 @@ namespace Sandsunder.Gameplay
             visualRoot.localScale = Vector3.one; // Always 100% full scale! NO shrinking!
             float recoil = recoilRemaining > 0f ? recoilRemaining / 0.10f : 0f;
             float melee = meleeRemaining > 0f ? Mathf.Sin((1f - meleeRemaining / 0.18f) * Mathf.PI) : 0f;
+
+            if (hostile)
+            {
+                // Dune Spitter jump-hop animation on spit attack and movement
+                float spitterJumpY = recoil > 0f
+                    ? Mathf.Sin(recoil * Mathf.PI) * 0.32f
+                    : (isMoving ? Mathf.Abs(Mathf.Sin(walkPhase * 1.5f)) * 0.14f : 0f);
+                bodyRoot.localPosition = new Vector3(0f, 0.16f + spitterJumpY, 0f);
+            }
+
             weaponRoot.localPosition = new Vector3(0.22f - (recoil * 0.10f), 0.03f, 0f);
             weaponRoot.localRotation *= Quaternion.Euler(0f, 0f, melee * (explicitAim.x >= 0f ? -42f : 42f));
 

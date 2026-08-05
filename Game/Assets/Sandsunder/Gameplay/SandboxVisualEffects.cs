@@ -235,13 +235,13 @@ namespace Sandsunder.Gameplay
                 : PrototypePixelArt.GetCachedSprite(PrototypePixelKind.Projectile, color);
             coreRenderer.sprite = sprite;
             coreRenderer.color = Color.white;
-            glowRenderer.sprite = sprite;
-            glowRenderer.color = new Color(color.r, color.g, color.b, 0.55f);
-            glowRenderer.transform.localScale = new Vector3(2.2f, 2.8f, 1f);
+            baseScale = new Vector3(0.35f, 0.35f, 1f);
+            coreRenderer.transform.localScale = Vector3.one;
+            glowRenderer.transform.localScale = new Vector3(0.8f, 0.9f, 1f);
             transform.right = direction.sqrMagnitude > 0.0001f ? direction.normalized : Vector2.right;
 
-            trail.time = hostile ? 0.25f : 0.18f;
-            trail.startWidth = hostile ? 0.35f : 0.30f;
+            trail.time = hostile ? 0.20f : 0.14f;
+            trail.startWidth = hostile ? 0.14f : 0.10f;
             trail.endWidth = 0f;
             trail.startColor = new Color(color.r, color.g, color.b, 0.68f);
             trail.endColor = new Color(color.r, color.g, color.b, 0f);
@@ -393,11 +393,6 @@ namespace Sandsunder.Gameplay
         {
             EnsureRenderer();
             strikeRemaining = 0.16f;
-            if (!revealed && crackedSprite != null && strikesRemaining > 0)
-            {
-                spriteRenderer.sprite = crackedSprite;
-            }
-
             SandboxVisualEffects.SpawnDust(transform.position, 4, new Color(0.83f, 0.62f, 0.31f));
         }
 

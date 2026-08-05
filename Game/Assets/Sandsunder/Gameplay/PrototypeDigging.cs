@@ -180,11 +180,24 @@ namespace Sandsunder.Gameplay
             pickupObject.transform.localScale = Vector3.one * 0.48f;
             SpriteRenderer renderer = pickupObject.AddComponent<SpriteRenderer>();
             renderer.sortingOrder = 15;
-            PrototypePixelArt art = pickupObject.AddComponent<PrototypePixelArt>();
+            Sprite pickupSprite = null;
+#if UNITY_EDITOR
+            pickupSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/Processed/env_relic_chest_32.png");
+#endif
             Color color = lootId == PrototypeDigGridAuthority.HealLootId
                 ? new Color(0.47f, 0.78f, 0.43f)
                 : new Color(0.39f, 0.96f, 0.9f);
-            art.Configure(PrototypePixelKind.Pickup, color);
+
+            if (pickupSprite != null)
+            {
+                renderer.sprite = pickupSprite;
+                renderer.color = Color.white;
+            }
+            else
+            {
+                PrototypePixelArt art = pickupObject.AddComponent<PrototypePixelArt>();
+                art.Configure(PrototypePixelKind.Chest, color);
+            }
             CircleCollider2D collider = pickupObject.AddComponent<CircleCollider2D>();
             collider.isTrigger = true;
             collider.radius = 0.65f;

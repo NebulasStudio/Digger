@@ -18,14 +18,9 @@ namespace Sandsunder.Gameplay
 
         public bool IsOpen => isOpen;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        // Disabled AutoInitialize to prevent duplicate TAB inventory window overlays
         private static void AutoInitialize()
         {
-            if (Instance == null && FindFirstObjectByType<SandboxInventoryWindow>() == null)
-            {
-                GameObject obj = new("SandboxInventoryWindow_Auto");
-                obj.AddComponent<SandboxInventoryWindow>();
-            }
         }
 
         private void Awake()

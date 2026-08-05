@@ -246,7 +246,7 @@ public static class GameplayLabBuilder
                 new Color(0.94f, 0.36f, 0.25f),
                 enemies.transform);
             spitter.transform.position = positions[index];
-            SetWorldSize(spitter, new Vector2(0.85f, 0.72f));
+            SetWorldSize(spitter, new Vector2(0.55f, 0.55f));
             spitter.GetComponent<SpriteRenderer>().color = Color.clear;
             Rigidbody2D body = spitter.AddComponent<Rigidbody2D>();
             body.bodyType = RigidbodyType2D.Kinematic;

@@ -65,7 +65,9 @@ namespace Sandsunder.Gameplay
         /// <summary>Emit a starburst crack fan at a world point. Called once per dig strike.</summary>
         public void SpawnStarburst(Vector2 worldPoint, int depthDelta)
         {
-            if (depthDelta <= 0) return;
+            // Disabled: eliminate procedural crepe crack line strip decals from the game completely.
+            return;
+        }
 
             int count = Mathf.Max(4, arms);
             float baseAngle = Random.value * 360f;

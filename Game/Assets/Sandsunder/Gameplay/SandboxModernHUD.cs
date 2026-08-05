@@ -70,8 +70,8 @@ namespace Sandsunder.Gameplay
             GlassPanel glass = root.AddComponent<GlassPanel>();
 
             // Left column: HP + Stamina bars (glass-styled).
-            BuildStatBar(root, "StaminaBar", new Vector2(80, 0), new Vector2(360, 22), new Color(0.84f, 0.70f, 0.21f));
-            BuildStatBar(root, "HealthBar", new Vector2(80, 34), new Vector2(360, 22), new Color(0.00f, 1.00f, 0.48f));
+            BuildStatBar(root.transform, "StaminaBar", new Vector2(80, 0), new Vector2(360, 22), new Color(0.84f, 0.70f, 0.21f));
+            BuildStatBar(root.transform, "HealthBar", new Vector2(80, 34), new Vector2(360, 22), new Color(0.00f, 1.00f, 0.48f));
 
             // Stealth indicator (top-right cyan dot).
             GameObject stealthObj = new("StealthIndicator", typeof(RectTransform), typeof(Image));

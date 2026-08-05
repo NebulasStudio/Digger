@@ -84,7 +84,6 @@ namespace Sandsunder.Gameplay
             go.transform.SetParent(transform, false);
             SpriteRenderer renderer = go.AddComponent<SpriteRenderer>();
             renderer.sortingOrder = OverlaySortingOrder;
-            renderer.filterMode = FilterMode.Point;
             go.SetActive(false);
             return renderer;
         }

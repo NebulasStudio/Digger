@@ -1,4 +1,5 @@
 using UnityEngine;
+using Sandsunder.Simulation;
 
 namespace Sandsunder.Gameplay
 {
@@ -86,9 +87,9 @@ namespace Sandsunder.Gameplay
                     if (stateTimer <= 0f) { state = GolemState.Charge; stateTimer = chargeTime; }
                     break;
                 case GolemState.Charge:
-                    body.velocity = chargeDirection * chargeSpeed;
+                    body.linearVelocity = chargeDirection * chargeSpeed;
                     SandboxVisualEffects.SpawnDust(body.position, 1, new Color(0.86f, 0.70f, 0.43f));
-                    if (stateTimer <= 0f) { body.velocity = Vector2.zero; state = GolemState.Cooldown; stateTimer = cooldownTime; }
+                    if (stateTimer <= 0f) { body.linearVelocity = Vector2.zero; state = GolemState.Cooldown; stateTimer = cooldownTime; }
                     break;
                 case GolemState.Cooldown:
                     if (stateTimer <= 0f) { state = GolemState.Idle; stateTimer = 0.6f; }

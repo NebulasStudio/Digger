@@ -232,22 +232,17 @@ public static class GameplayLabBuilder
     {
         Vector2[] positions =
         {
-            new(-5.9f, 3.75f),
-            new(5.9f, 3.55f),
-            new(0f, -4.45f),
+            new(-1.8f, 1.2f),
+            new(2.2f, 1.0f),
+            new(0f, -3.5f),
         };
 
         GameObject enemies = new("Dune Spitters");
         for (int index = 0; index < positions.Length; index++)
         {
-            GameObject spitter = CreateGreyboxSprite(
-                $"Dune Spitter {index + 1}",
-                squareSprite,
-                new Color(0.94f, 0.36f, 0.25f),
-                enemies.transform);
+            GameObject spitter = new($"Dune Spitter {index + 1}");
+            spitter.transform.SetParent(enemies.transform, false);
             spitter.transform.position = positions[index];
-            SetWorldSize(spitter, new Vector2(0.55f, 0.55f));
-            spitter.GetComponent<SpriteRenderer>().color = Color.clear;
             Rigidbody2D body = spitter.AddComponent<Rigidbody2D>();
             body.bodyType = RigidbodyType2D.Kinematic;
             body.gravityScale = 0f;
@@ -258,8 +253,14 @@ public static class GameplayLabBuilder
             PrototypeDuneSpitter behaviour = spitter.AddComponent<PrototypeDuneSpitter>();
             behaviour.Configure(target, 100 + index);
 
-            SandboxActorVisual actorVisual = spitter.AddComponent<SandboxActorVisual>();
-            actorVisual.Configure(art.Spitter, art.Shadow, null, null, null, isHostile: true);
+            SandboxActorVisual visual = spitter.AddComponent<SandboxActorVisual>();
+            visual.Configure(
+                art.Spitter,
+                art.Shadow,
+                null,
+                null,
+                null,
+                isHostile: true);
         }
     }
 
@@ -408,6 +409,16 @@ public static class GameplayLabBuilder
         door1.transform.SetParent(doorsRoot.transform, false);
         door1.transform.position = new Vector3(0f, 3.5f, 0f);
         door1.AddComponent<PrototypeDesertRuinDoor>();
+
+        // Interactive Weapon Pickups placed right in front of player spawn
+        GameObject weaponsRoot = new("Ground Pickups");
+        weaponsRoot.transform.SetParent(interactiveRoot.transform, false);
+
+        PrototypePickup.Spawn(new Vector2(-1.5f, 0.6f), 101, "weapon.scimitar");
+        PrototypePickup.Spawn(new Vector2(-0.5f, 0.6f), 102, "weapon.rifle");
+        PrototypePickup.Spawn(new Vector2(0.5f, 0.6f), 103, "weapon.shotgun");
+        PrototypePickup.Spawn(new Vector2(1.5f, 0.6f), 104, "weapon.blaster");
+        PrototypePickup.Spawn(new Vector2(2.5f, 0.6f), 105, "relic.cyan");
 
         // Sandstorm Golem Boss (Feature 3) — spawned north of the arena, away from the start zone.
         GameObject golemRoot = new("Sandstorm Golem Boss");

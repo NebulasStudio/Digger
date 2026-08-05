@@ -18,7 +18,7 @@ namespace Sandsunder.Gameplay
 
         public static DigDepthSystem Instance { get; private set; }
 
-        public int CurrentDepth { get; private set; }
+        public int CurrentDepth { get; private set; } = 0;
 
         /// <summary>True when the Nomad is subsurface (depth >= 1), i.e. fully underground.</summary>
         public bool IsSubterranean => CurrentDepth >= 1;

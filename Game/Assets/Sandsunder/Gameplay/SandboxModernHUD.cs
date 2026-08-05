@@ -151,7 +151,11 @@ namespace Sandsunder.Gameplay
                 slider.value = 0.5f;
                 slider.interactable = false;
 
-                // Fill (foreground) so the bar is visible.
+                // Dark background frame for slider bar
+                Image bgImg = rowObj.AddComponent<Image>();
+                bgImg.color = new Color(0.12f, 0.09f, 0.06f, 0.65f);
+
+                // Fill (foreground) in warm gold glass tone
                 GameObject fillObj = new("Fill", typeof(RectTransform), typeof(Image));
                 fillObj.transform.SetParent(rowObj.transform, false);
                 RectTransform fillRect = fillObj.GetComponent<RectTransform>();
@@ -160,7 +164,7 @@ namespace Sandsunder.Gameplay
                 fillRect.offsetMin = Vector2.zero;
                 fillRect.offsetMax = Vector2.zero;
                 Image fillImg = fillObj.GetComponent<Image>();
-                fillImg.color = new Color(0.00f, 0.94f, 0.90f, 0.9f);
+                fillImg.color = new Color(0.84f, 0.70f, 0.21f, 0.85f);
                 slider.fillRect = fillRect;
 
                 sliders[i] = slider;

@@ -182,7 +182,16 @@ namespace Sandsunder.Gameplay
             renderer.sortingOrder = 15;
             Sprite pickupSprite = null;
 #if UNITY_EDITOR
-            pickupSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/Environment/env_relic_chest_32.png");
+            string path = lootId switch
+            {
+                "weapon.scimitar" => "Assets/Sandsunder/Art/Runtime/Weapons/sword_scimitar_32.png",
+                "weapon.rifle" => "Assets/Sandsunder/Art/Runtime/Weapons/rifle_brass_32.png",
+                "weapon.shotgun" => "Assets/Sandsunder/Art/Runtime/Weapons/shotgun_heavy_32.png",
+                "weapon.blaster" => "Assets/Sandsunder/Art/Runtime/Weapons/blaster_rune_32.png",
+                "weapon.shovel" => "Assets/Sandsunder/Art/Runtime/Weapons/shovel_default_32.png",
+                _ => "Assets/Sandsunder/Art/Runtime/Environment/env_relic_chest_32.png"
+            };
+            pickupSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(path);
 #endif
             Color color = lootId == PrototypeDigGridAuthority.HealLootId
                 ? new Color(0.47f, 0.78f, 0.43f)

@@ -827,6 +827,11 @@ namespace Sandsunder.Gameplay
                     return;
                 }
 
+                if (target.GetComponent<TopDownPlayerController>()?.CurrentDepth >= 2)
+                {
+                    return; // Subterranean stealth: surface projectiles pass over subterranean players!
+                }
+
                 CombatDamageResult result = target.ResolveProjectile(state);
                 if (result == CombatDamageResult.Applied || result == CombatDamageResult.RejectedInvulnerable)
                 {
@@ -888,6 +893,12 @@ namespace Sandsunder.Gameplay
 
             if (target == null)
             {
+                return;
+            }
+
+            if (target.GetComponent<TopDownPlayerController>()?.CurrentDepth >= 2)
+            {
+                // Subterranean stealth: spitter cannot see or attack subterranean player!
                 return;
             }
 

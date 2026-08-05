@@ -61,6 +61,17 @@ namespace Sandsunder.Gameplay
                     {
                         float t = distFromCenter / 9f;
                         Color inner = Color.Lerp(new Color(0.25f, 0.16f, 0.08f, 0.90f), trenchDepth, t);
+                        
+                        // Progressive Sand Cracks & Crepe Overlay (Safe Cracking Aesthetic)
+                        bool isCrackPixel = (x == y && distFromCenter < 12f) ||
+                                            (x + y == 31 && distFromCenter < 12f) ||
+                                            (x == 15 && y > 4 && y < 27) ||
+                                            (y == 15 && x > 4 && x < 27);
+                        if (isCrackPixel)
+                        {
+                            inner = new Color(0.15f, 0.08f, 0.04f, 0.95f);
+                        }
+                        
                         tex.SetPixel(x, y, inner);
                     }
                 }

@@ -99,13 +99,48 @@ namespace Sandsunder.Gameplay
             titleText.text = "INVENTARIO ARSENALE & SCHEDA STATISTICHE [TAB]";
             titleText.alignment = TextAnchor.MiddleCenter;
 
-            // Left Side: Weapon Stats Card Panel
+            // Left Side: Minecraft-Style Avatar & Player Status Card
+            GameObject avatarPanel = new("AvatarStatusPanel");
+            avatarPanel.transform.SetParent(windowRoot.transform, false);
+            RectTransform avatarRect = avatarPanel.AddComponent<RectTransform>();
+            avatarRect.anchorMin = new Vector2(0f, 0f);
+            avatarRect.anchorMax = new Vector2(0.35f, 1f);
+            avatarRect.offsetMin = new Vector2(16, 16);
+            avatarRect.offsetMax = new Vector2(-8, -50);
+
+            Image avatarBg = avatarPanel.AddComponent<Image>();
+            avatarBg.color = new Color(0.12f, 0.10f, 0.08f, 0.92f);
+
+            GameObject avatarTextObj = new("AvatarStatusText");
+            avatarTextObj.transform.SetParent(avatarPanel.transform, false);
+            RectTransform avatarTextRect = avatarTextObj.AddComponent<RectTransform>();
+            avatarTextRect.anchorMin = Vector2.zero;
+            avatarTextRect.anchorMax = Vector2.one;
+            avatarTextRect.offsetMin = new Vector2(10, 10);
+            avatarTextRect.offsetMax = new Vector2(-10, -10);
+
+            Text avatarText = avatarTextObj.AddComponent<Text>();
+            avatarText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            avatarText.fontSize = 12;
+            avatarText.color = new Color(0.95f, 0.90f, 0.70f);
+            avatarText.text = "<b>PERSONAGGIO NOMAD</b>\n\n" +
+                "<color=#20F090>• HP: 100 / 100</color>\n" +
+                "<color=#F0D030>• STAMINA: 100 / 100</color>\n" +
+                "<color=#20F0E6>• STATO: Superficie / Furtivo</color>\n\n" +
+                "<b>EQUIPAGGIAMENTO:</b>\n" +
+                "[1] Pala da Scavo\n" +
+                "[2] Fucile in Ottone\n" +
+                "[3] Scimitarra Deserto\n" +
+                "[4] Shotgun Pesante\n" +
+                "[5] Rune Blaster";
+
+            // Center-Right Side: Weapon Stats Card Panel
             GameObject statsPanel = new("StatsCardPanel");
             statsPanel.transform.SetParent(windowRoot.transform, false);
             RectTransform statsRect = statsPanel.AddComponent<RectTransform>();
-            statsRect.anchorMin = new Vector2(0f, 0f);
-            statsRect.anchorMax = new Vector2(0.5f, 1f);
-            statsRect.offsetMin = new Vector2(16, 16);
+            statsRect.anchorMin = new Vector2(0.35f, 0f);
+            statsRect.anchorMax = new Vector2(0.68f, 1f);
+            statsRect.offsetMin = new Vector2(8, 16);
             statsRect.offsetMax = new Vector2(-8, -50);
 
             Image statsBg = statsPanel.AddComponent<Image>();
@@ -116,12 +151,12 @@ namespace Sandsunder.Gameplay
             RectTransform statsTextRect = statsTextObj.AddComponent<RectTransform>();
             statsTextRect.anchorMin = Vector2.zero;
             statsTextRect.anchorMax = Vector2.one;
-            statsTextRect.offsetMin = new Vector2(12, 12);
-            statsTextRect.offsetMax = new Vector2(-12, -12);
+            statsTextRect.offsetMin = new Vector2(10, 10);
+            statsTextRect.offsetMax = new Vector2(-10, -10);
 
             statsText = statsTextObj.AddComponent<Text>();
             statsText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            statsText.fontSize = 13;
+            statsText.fontSize = 12;
             statsText.color = Color.white;
             statsText.text = "Seleziona un'arma dall'HUD per visualizzare le statistiche...";
 
@@ -129,7 +164,7 @@ namespace Sandsunder.Gameplay
             GameObject descPanel = new("DescCardPanel");
             descPanel.transform.SetParent(windowRoot.transform, false);
             RectTransform descRect = descPanel.AddComponent<RectTransform>();
-            descRect.anchorMin = new Vector2(0.5f, 0f);
+            descRect.anchorMin = new Vector2(0.68f, 0f);
             descRect.anchorMax = new Vector2(1f, 1f);
             descRect.offsetMin = new Vector2(8, 16);
             descRect.offsetMax = new Vector2(-16, -50);
@@ -142,14 +177,14 @@ namespace Sandsunder.Gameplay
             RectTransform descTextRect = descTextObj.AddComponent<RectTransform>();
             descTextRect.anchorMin = Vector2.zero;
             descTextRect.anchorMax = Vector2.one;
-            descTextRect.offsetMin = new Vector2(12, 12);
-            descTextRect.offsetMax = new Vector2(-12, -12);
+            descTextRect.offsetMin = new Vector2(10, 10);
+            descTextRect.offsetMax = new Vector2(-10, -10);
 
             descriptionText = descTextObj.AddComponent<Text>();
             descriptionText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            descriptionText.fontSize = 12;
+            descriptionText.fontSize = 11;
             descriptionText.color = new Color(0.85f, 0.82f, 0.75f);
-            descriptionText.text = "Premi i tasti [1-6] per cambiare arma equipaggiata.";
+            descriptionText.text = "Premi i tasti [1-5] per cambiare arma equipaggiata.";
 
             windowRoot.SetActive(false);
         }

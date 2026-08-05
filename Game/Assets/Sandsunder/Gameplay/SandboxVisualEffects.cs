@@ -89,28 +89,27 @@ namespace Sandsunder.Gameplay
 
         internal static void SpawnSandSpiral(Vector2 center)
         {
-            Color sandColor = new Color(0.85f, 0.72f, 0.45f, 0.85f);
-            int count = 4;
+            // Gentle converging dust burst while digging — smaller, faster, subtler than the
+            // original fast-rotating spiral so it reads as excavation dust, not a swirl.
+            Color sandColor = new Color(0.85f, 0.72f, 0.45f, 0.80f);
+            int count = 5;
             for (int i = 0; i < count; i++)
             {
-                float angle = (i * (360f / count)) + (Time.time * 90f);
-                float rad = angle * Mathf.Deg2Rad;
-                float radius = 1.1f;
-                Vector2 spawnOffset = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)) * radius;
+                float angle = (i * (360f / count)) * Mathf.Deg2Rad;
+                float radius = 0.55f;
+                Vector2 spawnOffset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
                 Vector2 spawnPos = center + spawnOffset;
-                
-                // Spiral velocity: tangent + negative radial (inwards)
+
                 Vector2 radialDir = -spawnOffset.normalized;
-                Vector2 tangentDir = new Vector2(-radialDir.y, radialDir.x);
-                Vector2 velocity = (radialDir * 1.6f + tangentDir * 1.0f); // inward and swirling
-                
+                Vector2 velocity = radialDir * 0.9f;
+
                 SpawnTransient(
-                    "Sand Spiral",
+                    "Sand Dust",
                     spawnPos,
                     PrototypePixelArt.GetCachedSprite(PrototypePixelKind.Projectile, sandColor),
                     sandColor,
-                    Vector3.one * 0.12f,
-                    0.50f, // fast lifetime so they reach the center
+                    Vector3.one * 0.08f,
+                    0.35f,
                     velocity,
                     SortingFor(center, 2),
                     radialDir);
@@ -212,7 +211,7 @@ namespace Sandsunder.Gameplay
         private float telegraphRemaining;
         private float pulsePhase;
         private Color projectileColor;
-        private readonly Vector3 baseScale = new(0.38f, 0.22f, 1f);
+        private readonly Vector3 baseScale = new(0.55f, 0.32f, 1f);
 
         public SpriteRenderer CoreRenderer => coreRenderer;
         public TrailRenderer Trail => trail;
@@ -222,8 +221,17 @@ namespace Sandsunder.Gameplay
             EnsureHierarchy();
             projectileColor = color;
             telegraphRemaining = Mathf.Max(0f, telegraphSeconds);
-            Sprite sprite = projectileSprite != null
-                ? projectileSprite
+            Sprite sprite = projectileSprite;
+#if UNITY_EDITOR
+            if (sprite == null)
+            {
+                // Use the generated cyan rune projectile when available (editor-only load, no
+                // runtime dependency on the Editor assembly).
+                sprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/Processed/proj_sentinel_cyan_rune_32.png");
+            }
+#endif
+            sprite = sprite != null
+                ? sprite
                 : PrototypePixelArt.GetCachedSprite(PrototypePixelKind.Projectile, color);
             coreRenderer.sprite = sprite;
             coreRenderer.color = Color.white;

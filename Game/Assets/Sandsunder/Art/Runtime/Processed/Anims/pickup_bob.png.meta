@@ -1,7 +1,19 @@
 fileFormatVersion: 2
 guid: ab6b00e6d594442faf0a856e21d4fcb7
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -3597656191039999996
+    second: pickup_bob_0_0
+  - first:
+      213: 1589026219161515656
+    second: pickup_bob_0_1
+  - first:
+      213: -3051409716032930777
+    second: pickup_bob_0_2
+  - first:
+      213: 5841701452185681273
+    second: pickup_bob_0_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -95,7 +107,91 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: pickup_bob_0_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 256
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: 5cb5139ed67a0bea7a1566d10ab2f3c9
+      internalID: -3597656191039999996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pickup_bob_0_1
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 256
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: b442d63d6f036271e9075c6eebd0e8ad
+      internalID: 1589026219161515656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pickup_bob_0_2
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 256
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: 1cccf3dabc4311381d7bcd20f9c5dc29
+      internalID: -3051409716032930777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pickup_bob_0_3
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 256
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: 4a51d8754b60e284f4e8150f37c7c909
+      internalID: 5841701452185681273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -108,7 +204,11 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+    pickup_bob_0_0: -3597656191039999996
+    pickup_bob_0_1: 1589026219161515656
+    pickup_bob_0_2: -3051409716032930777
+    pickup_bob_0_3: 5841701452185681273
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

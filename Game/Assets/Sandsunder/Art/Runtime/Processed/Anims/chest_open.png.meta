@@ -1,7 +1,19 @@
 fileFormatVersion: 2
 guid: a9090e99a1694216b189d0381586c411
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 5922401326310942305
+    second: chest_open_0_0
+  - first:
+      213: -2019807934799820657
+    second: chest_open_0_1
+  - first:
+      213: 3490878787023079510
+    second: chest_open_0_2
+  - first:
+      213: 9212694673050613738
+    second: chest_open_0_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -95,7 +107,91 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: chest_open_0_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 256
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: 1842e9263a439f34dd5c7667047b4720
+      internalID: 5922401326310942305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chest_open_0_1
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 256
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: 420d32d6383d8bdda3b605eff1407970
+      internalID: -2019807934799820657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chest_open_0_2
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 256
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: dbe2642c97470044333209aa3428db2d
+      internalID: 3490878787023079510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: chest_open_0_3
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 256
+        height: 1024
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: 141d2602480e474a5d127ce1b112ca1f
+      internalID: 9212694673050613738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -108,7 +204,11 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+    chest_open_0_0: 5922401326310942305
+    chest_open_0_1: -2019807934799820657
+    chest_open_0_2: 3490878787023079510
+    chest_open_0_3: 9212694673050613738
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

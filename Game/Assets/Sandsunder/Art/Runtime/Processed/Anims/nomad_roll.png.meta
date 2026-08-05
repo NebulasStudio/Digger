@@ -1,7 +1,31 @@
 fileFormatVersion: 2
 guid: b9e09373ca2c459cb99d3683b50ccd4a
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -8525594758441785782
+    second: nomad_roll_0_0
+  - first:
+      213: 6624214118750723439
+    second: nomad_roll_0_1
+  - first:
+      213: -5726791307256238439
+    second: nomad_roll_0_2
+  - first:
+      213: 121502701175476648
+    second: nomad_roll_0_3
+  - first:
+      213: 3371072176790289103
+    second: nomad_roll_1_0
+  - first:
+      213: -7262169630432878210
+    second: nomad_roll_1_1
+  - first:
+      213: -5105952192731442975
+    second: nomad_roll_1_2
+  - first:
+      213: 3827128798577620015
+    second: nomad_roll_1_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -95,7 +119,175 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: nomad_roll_0_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 512
+        width: 256
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: b1724a86b2fac0a1afe0566c2f036705
+      internalID: -8525594758441785782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nomad_roll_0_1
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 512
+        width: 256
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: f0b43de7a65995a27a3f4b131cdd5e2d
+      internalID: 6624214118750723439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nomad_roll_0_2
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 512
+        width: 256
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: 411e1e977e0d879b756e02d9188d1ee5
+      internalID: -5726791307256238439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nomad_roll_0_3
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 512
+        width: 256
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: aa00cae00bb65af30e61d84cdcd9a185
+      internalID: 121502701175476648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nomad_roll_1_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 256
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: 2a004fb6d4bbc76a53c1c2ac1ababa38
+      internalID: 3371072176790289103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nomad_roll_1_1
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 256
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: 110dee0d669cb05c3f215ef3149d8fe5
+      internalID: -7262169630432878210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nomad_roll_1_2
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 256
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: 17ee4600f7ba794f5922cca6803d99b9
+      internalID: -5105952192731442975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nomad_roll_1_3
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 256
+        height: 512
+      alignment: 9
+      pivot: {x: 0.5, y: 0.08}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      hasPhysicsShape: 0
+      spriteID: 33db3e70d6c6f253fa3cdb2e35be3b3a
+      internalID: 3827128798577620015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -108,7 +300,15 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+    nomad_roll_0_0: -8525594758441785782
+    nomad_roll_0_1: 6624214118750723439
+    nomad_roll_0_2: -5726791307256238439
+    nomad_roll_0_3: 121502701175476648
+    nomad_roll_1_0: 3371072176790289103
+    nomad_roll_1_1: -7262169630432878210
+    nomad_roll_1_2: -5105952192731442975
+    nomad_roll_1_3: 3827128798577620015
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

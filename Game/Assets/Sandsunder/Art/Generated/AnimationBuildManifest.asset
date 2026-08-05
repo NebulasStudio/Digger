@@ -108,28 +108,28 @@ MonoBehaviour:
     clipName: Nomad_RunNew
     columns: 4
     rows: 2
-    pixelsPerUnit: 64
+    pixelsPerUnit: 512
     fps: 12
     loop: true
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/nomad_walk.png
     clipName: Nomad_WalkNew
     columns: 4
     rows: 1
-    pixelsPerUnit: 64
+    pixelsPerUnit: 1024
     fps: 12
     loop: true
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/nomad_roll.png
     clipName: Nomad_RollNew
     columns: 4
     rows: 2
-    pixelsPerUnit: 64
+    pixelsPerUnit: 512
     fps: 12
     loop: false
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/nomad_dig.png
     clipName: Nomad_DigNew
     columns: 4
     rows: 2
-    pixelsPerUnit: 64
+    pixelsPerUnit: 512
     fps: 12
     loop: false
   - sourcePath: Assets/Sandsunder/Art/Runtime/Processed/Anims/chest_open.png

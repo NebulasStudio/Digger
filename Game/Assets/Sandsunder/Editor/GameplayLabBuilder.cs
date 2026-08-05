@@ -198,10 +198,8 @@ public static class GameplayLabBuilder
 
     private static GameObject CreatePlayer(Sprite squareSprite, SandboxArtSet art)
     {
-        GameObject player = CreateGreyboxSprite("Player", squareSprite, new Color(0.82f, 0.68f, 0.34f), null);
+        GameObject player = new("Player");
         player.transform.position = Vector3.zero;
-        SetWorldSize(player, new Vector2(0.72f, 0.72f));
-        player.GetComponent<SpriteRenderer>().color = Color.clear;
 
         player.AddComponent<Rigidbody2D>();
         player.AddComponent<CircleCollider2D>();

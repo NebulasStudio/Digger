@@ -897,6 +897,14 @@ namespace Sandsunder.Gameplay
             CombatRules rules = CombatRules.PrototypeOne;
             Vector2 offset = target.transform.position - transform.position;
             float distance = offset.magnitude;
+
+            // Passive / Neutral AI: Dune Spitters do not aggro or attack unless damaged or player approaches within 2.5m.
+            bool isDamaged = health.CurrentHealth < health.MaximumHealth;
+            bool isThreatened = distance <= 2.5f;
+            if (!isDamaged && !isThreatened)
+            {
+                return;
+            }
             if (distance > 0.001f)
             {
                 Vector2 toward = offset / distance;

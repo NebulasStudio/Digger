@@ -253,7 +253,9 @@ namespace Sandsunder.Gameplay
                 {
                     if (stealthSprite == null)
                     {
+#if UNITY_EDITOR
                         stealthSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/Animations/nomad_stealth_crouch.png");
+#endif
                     }
                     bodyRenderer.sprite = stealthSprite != null ? stealthSprite : bodySprite;
                     bodyRenderer.color = new Color(0.2f, 0.9f, 1.0f, 0.75f);

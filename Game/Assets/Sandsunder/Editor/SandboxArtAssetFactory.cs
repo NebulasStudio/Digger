@@ -59,7 +59,7 @@ namespace Sandsunder.Editor
                 PlayerAnimator = animator,
                 Shadow = CreateProceduralSprite("BlobShadow", 32, 16, 32f, DrawShadow),
                 Pistol = ImportTile("Assets/Sandsunder/Art/Source/Higgsfield/brass_rifle_sprite.jpg", 32f) ?? CreateProceduralSprite("BrassPistol", 20, 10, 32f, DrawPistol),
-                Shovel = CreateProceduralSprite("StarterShovel", 24, 12, 32f, DrawShovel),
+                Shovel = ImportTile("Assets/Sandsunder/Art/Source/Higgsfield/starter_shovel_sprite.jpg", 32f) ?? CreateProceduralSprite("StarterShovel", 24, 12, 32f, DrawShovel),
                 Scimitar = CreateProceduralSprite("DesertScimitar", 28, 14, 32f, DrawScimitar),
                 Shotgun = CreateProceduralSprite("HeavyShotgun", 30, 12, 32f, DrawShotgun),
                 Blaster = CreateProceduralSprite("RuneBlaster", 26, 12, 32f, DrawBlaster),

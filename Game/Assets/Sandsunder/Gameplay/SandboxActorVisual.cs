@@ -111,7 +111,8 @@ namespace Sandsunder.Gameplay
             if (animator != null)
             {
                 animator.runtimeAnimatorController = runtimeAnimatorController;
-                animator.enabled = runtimeAnimatorController != null;
+                // Enable Animator ONLY for hostile mobs (Spitter) so player bodySprite nomad_32.png stays 100% intact
+                animator.enabled = hostile && runtimeAnimatorController != null;
             }
 
             bodySprite = body;
@@ -258,18 +259,12 @@ namespace Sandsunder.Gameplay
             {
                 if (stealthed && !hostile)
                 {
-                    if (stealthSprite == null)
-                    {
-#if UNITY_EDITOR
-                        stealthSprite = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sandsunder/Art/Runtime/Animations/nomad_stealth_crouch.png");
-#endif
-                    }
-                    bodyRenderer.sprite = stealthSprite != null ? stealthSprite : bodySprite;
+                    bodyRenderer.sprite = bodySprite;
                     bodyRenderer.color = new Color(0.2f, 0.9f, 1.0f, 0.75f);
                 }
-                else if (!walking && !hostile && rollRemaining <= 0f && meleeRemaining <= 0f && recoilRemaining <= 0f && hitRemaining <= 0f)
+                else if (!hostile)
                 {
-                    // Force clean official nomad_32.png sprite when idle
+                    // Strict Nomad Invariance: Always render official nomad_32.png without sprite sheet slicing artifacts
                     bodyRenderer.sprite = bodySprite;
                     bodyRenderer.color = Color.white;
                 }

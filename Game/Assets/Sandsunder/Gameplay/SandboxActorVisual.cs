@@ -246,9 +246,9 @@ namespace Sandsunder.Gameplay
                 nomadAnimator.SetStealthed(stealthed && !hostile);
             }
 
-            if (bodyRenderer != null && bodySprite != null && !hostile)
+            if (bodyRenderer != null && bodySprite != null)
             {
-                if (stealthed)
+                if (stealthed && !hostile)
                 {
                     if (stealthSprite == null)
                     {
@@ -305,13 +305,19 @@ namespace Sandsunder.Gameplay
             bool faceLeft = explicitAim.x < -0.02f;
             bodyRenderer.flipX = faceLeft;
 
-            // Anchor weapon to hand pivot position based on facing direction
-            float handX = faceLeft ? -0.25f : 0.25f;
-            weaponRoot.localPosition = new Vector3(handX, 0.08f, 0f);
+            // Anchor weapon handle directly to Nomad's hands (X: ±0.08m, Y: 0.05m)
+            float handX = faceLeft ? -0.08f : 0.08f;
+            weaponRoot.localPosition = new Vector3(handX, 0.05f, 0f);
 
             float angle = Mathf.Atan2(explicitAim.y, explicitAim.x) * Mathf.Rad2Deg;
+            if (faceLeft)
+            {
+                // When facing left, flip angle naturally so weapon points towards cursor without upside-down inversion
+                angle = (angle > 0 ? 180f - angle : -180f - angle);
+            }
             weaponRoot.localRotation = Quaternion.Euler(0f, 0f, angle);
             weaponRenderer.flipY = faceLeft;
+            weaponRenderer.transform.localPosition = new Vector3(0.10f, 0f, 0f);
         }
 
         private void ApplyActionAnimation()

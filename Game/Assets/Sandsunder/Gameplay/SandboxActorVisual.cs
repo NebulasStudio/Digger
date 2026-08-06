@@ -265,9 +265,14 @@ namespace Sandsunder.Gameplay
                     bodyRenderer.sprite = stealthSprite != null ? stealthSprite : bodySprite;
                     bodyRenderer.color = new Color(0.2f, 0.9f, 1.0f, 0.75f);
                 }
+                else if (!walking && !hostile && rollRemaining <= 0f && meleeRemaining <= 0f && recoilRemaining <= 0f && hitRemaining <= 0f)
+                {
+                    // Force clean official nomad_32.png sprite when idle
+                    bodyRenderer.sprite = bodySprite;
+                    bodyRenderer.color = Color.white;
+                }
                 else
                 {
-                    bodyRenderer.sprite = bodySprite;
                     bodyRenderer.color = Color.white;
                 }
             }
@@ -318,12 +323,15 @@ namespace Sandsunder.Gameplay
             float angle = Mathf.Atan2(explicitAim.y, explicitAim.x) * Mathf.Rad2Deg;
             if (faceLeft)
             {
-                // When facing left, flip angle naturally so weapon points towards cursor without upside-down inversion
-                angle = (angle > 0 ? 180f - angle : -180f - angle);
+                weaponRenderer.flipY = true;
+                weaponRoot.localRotation = Quaternion.Euler(0f, 0f, angle + 180f);
             }
-            weaponRoot.localRotation = Quaternion.Euler(0f, 0f, angle);
-            weaponRenderer.flipY = faceLeft;
-            weaponRenderer.transform.localPosition = new Vector3(0.10f, 0f, 0f);
+            else
+            {
+                weaponRenderer.flipY = false;
+                weaponRoot.localRotation = Quaternion.Euler(0f, 0f, angle);
+            }
+            weaponRenderer.transform.localPosition = new Vector3(0.08f, 0f, 0f);
         }
 
         private void ApplyActionAnimation()

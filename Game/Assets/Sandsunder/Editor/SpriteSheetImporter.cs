@@ -37,6 +37,9 @@ namespace Sandsunder.Editor
             importer.alphaIsTransparency = true;
             importer.textureCompression = TextureImporterCompression.Uncompressed;
             importer.spritePixelsPerUnit = pixelsPerUnit;
+            importer.isReadable = true;
+            importer.maxTextureSize = 4096;
+            importer.SaveAndReimport();
 
             Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
             int cellW = texture.width / columns;

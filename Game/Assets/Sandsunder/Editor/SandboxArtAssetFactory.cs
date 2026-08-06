@@ -35,6 +35,7 @@ namespace Sandsunder.Editor
         public Sprite RunedChest { get; set; }
         public Sprite CrystalTurtle { get; set; }
         public Sprite Sorcerer { get; set; }
+        public Sprite Worm { get; set; }
         public RuntimeAnimatorController PlayerAnimator { get; set; }
     }
 
@@ -58,9 +59,13 @@ namespace Sandsunder.Editor
                 pixelsPerUnit: 32f,
                 pivot: new Vector2(0.5f, 0.08f));
             Sprite spitter = ImportSprite(
-                $"{RuntimeRoot}/Mobs/mob_dune_spitter_32.png",
+                $"{RuntimeRoot}/Mobs/spitter_32.png",
                 pixelsPerUnit: 32f,
                 pivot: new Vector2(0.5f, 0.08f));
+            Sprite worm = ImportSpriteOptional(
+                $"{RuntimeRoot}/Mobs/mob_worm_32.png",
+                pixelsPerUnit: 32f,
+                pivot: new Vector2(0.5f, 0.08f)) ?? spitter;
 
             RuntimeAnimatorController animator = LoadOrCreatePlayerAnimator();
 
@@ -73,6 +78,7 @@ namespace Sandsunder.Editor
                 RuinTile = ruin,
                 Nomad = nomad,
                 Spitter = spitter,
+                Worm = worm,
                 PlayerAnimator = animator,
                 Shadow = CreateProceduralSprite("BlobShadow", 32, 16, 32f, DrawShadow),
                 Pistol = ImportSpriteOptional($"{RuntimeRoot}/Weapons/rifle_brass_32.png", 32f, new Vector2(0.5f, 0.5f))

@@ -55,38 +55,7 @@ namespace Sandsunder.Gameplay
 
         private void ApplyVisualUpgrades()
         {
-            var digNodes = FindObjectsByType<PrototypeDigNode>(FindObjectsSortMode.None);
-            Sprite chestSprite = CreateChestSprite();
-
-            foreach (var node in digNodes)
-            {
-                var sr = node.GetComponent<SpriteRenderer>();
-                if (sr != null)
-                {
-                    sr.color = Color.white;
-                    sr.sprite = chestSprite;
-                    sr.sortingOrder = 5;
-                }
-
-                var visual = node.GetComponent<SandboxDigVisual>();
-                if (visual != null)
-                {
-                    visual.Configure(chestSprite, chestSprite, CreateOpenedChestSprite());
-                }
-            }
-
-            var walls = GameObject.FindGameObjectsWithTag("Untagged");
-            foreach (var wall in walls)
-            {
-                if (wall.name.Contains("Rampart") || wall.name.Contains("Wall") || wall.name.Contains("Pillar"))
-                {
-                    var sr = wall.GetComponent<SpriteRenderer>();
-                    if (sr != null && (sr.color.a < 0.99f || sr.color.r > 0.8f))
-                    {
-                        sr.color = new Color(0.78f, 0.62f, 0.44f, 1.0f);
-                    }
-                }
-            }
+            // Dig nodes use official sand pit excavation sprites from SandboxArtAssetFactory, no procedural chest overrides.
         }
 
         private void SpawnExpandedElements()

@@ -34,6 +34,7 @@ namespace Sandsunder.Editor
         public Sprite Cactus { get; set; }
         public Sprite RunedChest { get; set; }
         public Sprite CrystalTurtle { get; set; }
+        public Sprite Sorcerer { get; set; }
         public RuntimeAnimatorController PlayerAnimator { get; set; }
     }
 
@@ -102,6 +103,7 @@ namespace Sandsunder.Editor
                 Cactus = ImportSpriteOptional($"{RuntimeRoot}/Environment/env_cactus_32.png", 32f, new Vector2(0.5f, 0.5f)),
                 RunedChest = ImportSpriteOptional($"{RuntimeRoot}/Environment/env_chest_runed_32.png", 32f, new Vector2(0.5f, 0.5f)),
                 CrystalTurtle = ImportSpriteOptional($"{RuntimeRoot}/Mobs/mob_dune_spitter_32.png", 32f, new Vector2(0.5f, 0.5f)),
+                Sorcerer = ImportSpriteOptional($"{RuntimeRoot}/Characters/sorcerer_32.png", 32f, new Vector2(0.5f, 0.08f)),
             };
         }
 

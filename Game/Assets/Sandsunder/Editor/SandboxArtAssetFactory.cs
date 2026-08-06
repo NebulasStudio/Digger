@@ -595,13 +595,22 @@ namespace Sandsunder.Editor
             controller.AddParameter("IsMoving", AnimatorControllerParameterType.Bool);
             controller.AddParameter("IsRolling", AnimatorControllerParameterType.Bool);
             controller.AddParameter("IsDigging", AnimatorControllerParameterType.Bool);
+            controller.AddParameter("IsStealthed", AnimatorControllerParameterType.Bool);
             controller.AddParameter("Speed", AnimatorControllerParameterType.Float);
+            controller.AddParameter("Attack", AnimatorControllerParameterType.Trigger);
+            controller.AddParameter("Shoot", AnimatorControllerParameterType.Trigger);
+            controller.AddParameter("Hurt", AnimatorControllerParameterType.Trigger);
+            controller.AddParameter("Death", AnimatorControllerParameterType.Trigger);
 
-            AnimationClip idleClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Idle.anim") ?? AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Shovel_Idle.anim");
-            AnimationClip walkClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Wanderer_Walk.anim") ?? CreateClip($"{GeneratedRoot}/Wanderer_Walk.anim", "Wanderer_Walk");
-            AnimationClip runClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Scout_Run.anim") ?? CreateClip($"{GeneratedRoot}/Scout_Run.anim", "Scout_Run");
-            AnimationClip rollClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Rogue_Roll.anim") ?? CreateClip($"{GeneratedRoot}/Rogue_Roll.anim", "Rogue_Roll");
-            AnimationClip digClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Explorer_Dig.anim") ?? CreateClip($"{GeneratedRoot}/Explorer_Dig.anim", "Explorer_Dig");
+            AnimationClip idleClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Walk.anim") ?? AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Idle.anim");
+            AnimationClip walkClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Walk.anim");
+            AnimationClip runClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Run.anim") ?? walkClip;
+            AnimationClip digClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Dig.anim") ?? walkClip;
+            AnimationClip stealthClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_StealthCrouch.anim");
+            AnimationClip meleeClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Melee.anim");
+            AnimationClip shootClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_ShootRecoil.anim");
+            AnimationClip hurtClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Hurt.anim");
+            AnimationClip deathClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Death.anim");
 
             var rootStateMach = controller.layers[0].stateMachine;
             var idleState = rootStateMach.AddState("Idle");
@@ -613,21 +622,67 @@ namespace Sandsunder.Editor
             var runState = rootStateMach.AddState("Run");
             runState.motion = runClip;
 
-            var rollState = rootStateMach.AddState("Roll");
-            rollState.motion = rollClip;
-
             var digState = rootStateMach.AddState("Dig");
             digState.motion = digClip;
 
-            // Any State -> Roll (if IsRolling == true)
-            var rollTransition = rootStateMach.AddAnyStateTransition(rollState);
-            rollTransition.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "IsRolling");
-            rollTransition.duration = 0.05f;
+            var stealthState = rootStateMach.AddState("StealthCrouch");
+            stealthState.motion = stealthClip;
 
-            // Roll -> Idle (if IsRolling == false)
-            var rollToIdle = rollState.AddTransition(idleState);
-            rollToIdle.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "IsRolling");
-            rollToIdle.duration = 0.1f;
+            var meleeState = rootStateMach.AddState("Melee");
+            meleeState.motion = meleeClip;
+
+            var shootState = rootStateMach.AddState("ShootRecoil");
+            shootState.motion = shootClip;
+
+            var hurtState = rootStateMach.AddState("Hurt");
+            hurtState.motion = hurtClip;
+
+            var deathState = rootStateMach.AddState("Death");
+            deathState.motion = deathClip;
+
+            // Any State -> StealthCrouch (if IsStealthed == true)
+            var stealthTransition = rootStateMach.AddAnyStateTransition(stealthState);
+            stealthTransition.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "IsStealthed");
+            stealthTransition.duration = 0.05f;
+
+            var stealthToIdle = stealthState.AddTransition(idleState);
+            stealthToIdle.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "IsStealthed");
+            stealthToIdle.duration = 0.1f;
+
+            // Any State -> Melee (Trigger Attack)
+            var meleeTransition = rootStateMach.AddAnyStateTransition(meleeState);
+            meleeTransition.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "Attack");
+            meleeTransition.duration = 0.05f;
+
+            var meleeToIdle = meleeState.AddTransition(idleState);
+            meleeToIdle.hasExitTime = true;
+            meleeToIdle.exitTime = 0.9f;
+            meleeToIdle.duration = 0.1f;
+
+            // Any State -> ShootRecoil (Trigger Shoot)
+            var shootTransition = rootStateMach.AddAnyStateTransition(shootState);
+            shootTransition.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "Shoot");
+            shootTransition.duration = 0.05f;
+
+            var shootToIdle = shootState.AddTransition(idleState);
+            shootToIdle.hasExitTime = true;
+            shootToIdle.exitTime = 0.9f;
+            shootToIdle.duration = 0.1f;
+
+            // Any State -> Hurt (Trigger Hurt)
+            var hurtTransition = rootStateMach.AddAnyStateTransition(hurtState);
+            hurtTransition.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "Hurt");
+            hurtTransition.duration = 0.05f;
+
+            var hurtToIdle = hurtState.AddTransition(idleState);
+            hurtToIdle.hasExitTime = true;
+            hurtToIdle.exitTime = 0.9f;
+            hurtToIdle.duration = 0.1f;
+
+            // Any State -> Death (Trigger Death)
+            var deathTransition = rootStateMach.AddAnyStateTransition(deathState);
+            deathTransition.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "Death");
+            deathTransition.duration = 0.05f;
 
             // Idle -> Walk (if IsMoving == true && Speed <= 0.75)
             var idleToWalk = idleState.AddTransition(walkState);

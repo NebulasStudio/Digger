@@ -100,10 +100,16 @@ namespace Sandsunder.Gameplay
             hostile = isHostile;
             runtimeAnimatorController = animatorController;
 
-            // Preserve Nomad's official 32x32 sprite (nomad_32.png) without letting Animator clip overrides swap it to yellow wanderer
-            if (animator != null)
+#if UNITY_EDITOR
+            if (runtimeAnimatorController == null && !hostile)
             {
-                animator.enabled = false;
+                runtimeAnimatorController = UnityEditor.AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Sandsunder/Art/Generated/NomadAnimatorController.controller");
+            }
+#endif
+            if (animator != null && !hostile)
+            {
+                animator.runtimeAnimatorController = runtimeAnimatorController;
+                animator.enabled = runtimeAnimatorController != null;
             }
 
             bodySprite = body;

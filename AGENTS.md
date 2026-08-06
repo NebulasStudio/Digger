@@ -53,6 +53,37 @@ The initial commercial target is Windows/Steam. Do not let mobile constraints sh
 - Record model, prompt, date, job or seed reference, source references, transformations, reviewer, and status for every generative asset considered for shipping.
 - Do not imitate a living artist or an existing game/IP directly. Do not publish unreviewed output.
 
+## Official Art Pipeline & Asset Handling (`Game/Assets/Sandsunder/Art/`)
+
+Every agent operating on graphics or gameplay visuals MUST comply with the following structure and conventions:
+
+1. **Folder Hierarchy (`Game/Assets/Sandsunder/Art/Runtime/`)**:
+   - `Characters/`: Base character sprites 32x32 (e.g. `nomad_32.png`, `sorcerer_32.png`).
+   - `Mobs/`: Enemy and neutral creature sprites (e.g. `mob_dune_spitter_32.png`).
+   - `Weapons/`: Equippable 32x32 weapon icons (e.g. `rifle_brass_32.png`, `sword_scimitar_32.png`).
+   - `Projectiles/`: Spells, bullets, and attack FX (e.g. `proj_sentinel_cyan_rune_32.png`).
+   - `Environment/`: Interactive and static props (e.g. `env_palm_tree_32.png`, `env_relic_chest_32.png`).
+   - `Terrain/`: Tilemaps & seamless ground textures (e.g. `sand_basecolor.png`, 256 PPU).
+   - `Animations/`: Multi-frame animation sheets (e.g. `nomad_walk.png`, `nomad_run.png`, `nomad_dig.png`).
+   - `UI/`: HUD and glassmorphic modal frames (e.g. `ui_glass_panel.png`).
+
+2. **Nomad Character Invariance**:
+   - Nomad character MUST ALWAYS use `nomad_32.png` as its base body sprite.
+   - Nomad animations MUST use `nomad_*.png` clips ONLY (`Nomad_Walk`, `Nomad_Run`, `Nomad_Dig`, `Nomad_StealthCrouch`, `Nomad_Melee`, `Nomad_ShootRecoil`, `Nomad_Hurt`, `Nomad_Death`).
+   - NEVER bind `wanderer_walk`, `explorer_dig`, `scout_run`, or `rogue_roll` to the Nomad.
+
+3. **Weapon Separation**:
+   - Player body sprite sheets MUST NOT render weapons inside the body frames.
+   - Weapons are rendered on the separate `weaponRoot` transform via `WeaponAnimator` anchored at `X = ±0.08m`, `Y = 0.05m`.
+
+4. **Manifest Registration**:
+   - Every new animation sheet added to `Runtime/Animations/` MUST be registered in `Assets/Sandsunder/Art/Generated/AnimationBuildManifest.asset`.
+   - Run `AnimationClipBuilder.BuildAll()` (or `Sandsunder > Art > Build Animation Clips From Manifest`) to generate `.anim` files.
+
+5. **Importer Settings**:
+   - PPU: `32` for all character, mob, weapon, and environment sprites; `256` for seamless ground tiles.
+   - Texture Filter: `Point (no filter)`. Compression: `Uncompressed` / `RGBA32`. `alphaIsTransparency = true`.
+
 ## Quality gates
 
 - Deterministic simulation tests must compare state hashes from identical seeds and inputs.

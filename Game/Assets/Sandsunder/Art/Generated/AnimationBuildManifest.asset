@@ -83,6 +83,55 @@ MonoBehaviour:
     pixelsPerUnit: 64
     fps: 12
     loop: true
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/nomad_walk.png
+    clipName: Nomad_Walk
+    columns: 4
+    rows: 4
+    pixelsPerUnit: 32
+    fps: 12
+    loop: true
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/nomad_run.png
+    clipName: Nomad_Run
+    columns: 4
+    rows: 4
+    pixelsPerUnit: 32
+    fps: 12
+    loop: true
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/nomad_dig.png
+    clipName: Nomad_Dig
+    columns: 4
+    rows: 4
+    pixelsPerUnit: 32
+    fps: 12
+    loop: false
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/nomad_melee_scimitar.png
+    clipName: Nomad_Melee
+    columns: 4
+    rows: 1
+    pixelsPerUnit: 32
+    fps: 12
+    loop: false
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/nomad_shoot_recoil.png
+    clipName: Nomad_ShootRecoil
+    columns: 4
+    rows: 1
+    pixelsPerUnit: 32
+    fps: 12
+    loop: false
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/nomad_hurt.png
+    clipName: Nomad_Hurt
+    columns: 2
+    rows: 1
+    pixelsPerUnit: 32
+    fps: 12
+    loop: false
+  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/nomad_death.png
+    clipName: Nomad_Death
+    columns: 4
+    rows: 2
+    pixelsPerUnit: 32
+    fps: 12
+    loop: false
   - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/spitter_idle.png
     clipName: Spitter_Idle
     columns: 4

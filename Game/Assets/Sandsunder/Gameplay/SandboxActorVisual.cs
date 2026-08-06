@@ -101,12 +101,14 @@ namespace Sandsunder.Gameplay
             runtimeAnimatorController = animatorController;
 
 #if UNITY_EDITOR
-            if (runtimeAnimatorController == null && !hostile)
+            if (runtimeAnimatorController == null)
             {
-                runtimeAnimatorController = UnityEditor.AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/Sandsunder/Art/Generated/NomadAnimatorController.controller");
+                runtimeAnimatorController = UnityEditor.AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(
+                    hostile ? "Assets/Sandsunder/Art/Generated/SpitterAnimatorController.controller"
+                            : "Assets/Sandsunder/Art/Generated/NomadAnimatorController.controller");
             }
 #endif
-            if (animator != null && !hostile)
+            if (animator != null)
             {
                 animator.runtimeAnimatorController = runtimeAnimatorController;
                 animator.enabled = runtimeAnimatorController != null;

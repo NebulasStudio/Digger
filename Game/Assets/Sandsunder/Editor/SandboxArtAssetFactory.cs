@@ -737,6 +737,47 @@ namespace Sandsunder.Editor
             return controller;
         }
 
+        public static RuntimeAnimatorController LoadOrCreateSpitterAnimator()
+        {
+            string controllerPath = $"{GeneratedRoot}/SpitterAnimatorController.controller";
+            var existing = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(controllerPath);
+            if (existing != null) return existing;
+
+            var controller = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
+            controller.AddParameter("IsCharging", AnimatorControllerParameterType.Bool);
+            controller.AddParameter("Death", AnimatorControllerParameterType.Trigger);
+
+            AnimationClip idleClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Spitter_Idle.anim");
+            AnimationClip chargeClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Spitter_Charge.anim") ?? idleClip;
+            AnimationClip deathClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Spitter_DeathBurst.anim") ?? idleClip;
+
+            var root = controller.layers[0].stateMachine;
+            var idleState = root.AddState("Idle");
+            idleState.motion = idleClip;
+
+            var chargeState = root.AddState("Charge");
+            chargeState.motion = chargeClip;
+
+            var deathState = root.AddState("Death");
+            deathState.motion = deathClip;
+
+            var idleToCharge = idleState.AddTransition(chargeState);
+            idleToCharge.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "IsCharging");
+            idleToCharge.duration = 0.1f;
+
+            var chargeToIdle = chargeState.AddTransition(idleState);
+            chargeToIdle.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "IsCharging");
+            chargeToIdle.duration = 0.1f;
+
+            var deathTrans = root.AddAnyStateTransition(deathState);
+            deathTrans.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "Death");
+            deathTrans.duration = 0.05f;
+
+            root.defaultState = idleState;
+            AssetDatabase.SaveAssets();
+            return controller;
+        }
+
         private static AnimationClip CreateClip(string path, string name)
         {
             var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(path);

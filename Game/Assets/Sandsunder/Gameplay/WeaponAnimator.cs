@@ -28,6 +28,7 @@ namespace Sandsunder.Gameplay
         private int frameIndex;
 
         public WeaponState State => state;
+        public float FrameRate => frameRate;
 
         private void Awake()
         {
@@ -42,6 +43,21 @@ namespace Sandsunder.Gameplay
             fireFrames = fire;
             reloadFrames = reload;
             swingFrames = swing;
+            if (state == WeaponState.Idle)
+            {
+                current = idleFrames;
+                frameIndex = 0;
+                timer = 0f;
+                if (spriteRenderer != null && current != null && current.Length > 0)
+                {
+                    spriteRenderer.sprite = current[0];
+                }
+            }
+        }
+
+        public void SetFrameRate(float framesPerSecond)
+        {
+            frameRate = Mathf.Max(1f, framesPerSecond);
         }
 
         public void PlayIdle() => SetState(WeaponState.Idle, idleFrames, true);

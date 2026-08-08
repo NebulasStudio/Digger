@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "provenance_id": "prov_mob_spitter_actions_codex",
+  "asset_id": "mob_spitter_actions_codex",
+  "status": "in_review",
+  "source": {
+    "type": "generated_ai",
+    "provider": "OpenAI",
+    "model": "built-in image_gen",
+    "job_id": "exec-8803b342-eb49-4793-9a48-a84238a9428d",
+    "created_at": "2026-08-08",
+    "style_formula_ref": "SB-FORMULA-1",
+    "reference_inputs": [
+      { "uri": "Game/Assets/Sandsunder/Art/Runtime/Mobs/spitter_32.png", "sha256": "15a932523b7d25daa271bf23e1a5cae5c98c1c59f7d87a810713348e93d4592b" },
+      { "uri": "Game/Assets/Sandsunder/Art/Runtime/Animations/spitter_idle.png", "sha256": "ef1957fb744f4a5e2742bedc9c613937704fd1f506540e70c4ef945131d09286" }
+    ]
+  },
+  "processing": [],
+  "rights": { "commercial_use_reviewed": false, "third_party_ip_reviewed": false, "steam_ai_disclosure": "required" },
+  "review": { "style": "pending", "readability": "pending", "technical": "failed_alpha_check", "human_approver": null, "notes": "References were attached. Candidate must be normalized and human-approved before runtime use." },
+  "artifacts": [{ "kind": "original", "path_or_uri": "Game/Assets/Sandsunder/Art/Source/ImageGen/spitter_actions_codex_master.png", "sha256": "fb4e7810bc8f7283e29645b6204ea1a3a9a0d4080b41feb584eb1cfc769f7976", "content_type": "image/png", "published": false }]
+}

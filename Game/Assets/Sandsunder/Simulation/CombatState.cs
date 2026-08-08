@@ -7,7 +7,8 @@ namespace Sandsunder.Simulation
         Pistol = 0,
         Shovel = 1,
         Roll = 2,
-        SpitterShot = 3
+        SpitterShot = 3,
+        Scimitar = 4
     }
 
     public enum CombatDamageResult
@@ -48,6 +49,7 @@ namespace Sandsunder.Simulation
         private long tick;
         private long nextPistolTick;
         private long nextShovelTick;
+        private long nextScimitarTick;
         private long nextRollTick;
         private long nextSpitterShotTick;
         private long rollEndsTick;
@@ -77,6 +79,7 @@ namespace Sandsunder.Simulation
 
         public long PistolCooldownRemainingTicks => Remaining(nextPistolTick);
         public long ShovelCooldownRemainingTicks => Remaining(nextShovelTick);
+        public long ScimitarCooldownRemainingTicks => Remaining(nextScimitarTick);
         public long RollCooldownRemainingTicks => Remaining(nextRollTick);
         public long SpitterShotCooldownRemainingTicks => Remaining(nextSpitterShotTick);
 
@@ -111,6 +114,10 @@ namespace Sandsunder.Simulation
                     return TryConsume(ref nextPistolTick, rules.PistolCooldownTicks);
                 case CombatAction.Shovel:
                     return TryConsume(ref nextShovelTick, rules.ShovelCooldownTicks);
+                case CombatAction.Scimitar:
+                    return TryConsume(
+                        ref nextScimitarTick,
+                        SandboxGameplayCatalog.MilestoneOne.Scimitar.CooldownTicks);
                 case CombatAction.Roll:
                     if (!TryConsume(ref nextRollTick, rules.RollCooldownTicks))
                     {
@@ -148,11 +155,26 @@ namespace Sandsunder.Simulation
             return Health - previous;
         }
 
+        /// <summary>
+        /// Applies authoritative environmental damage such as suffocation. It intentionally ignores
+        /// combat invulnerability because a dodge cannot prevent oxygen loss.
+        /// </summary>
+        public int ApplyEnvironmentalDamage(int amount)
+        {
+            if (amount <= 0) throw new ArgumentOutOfRangeException(nameof(amount));
+            if (IsDead) return 0;
+
+            int previous = Health;
+            Health = Math.Max(0, Health - amount);
+            return previous - Health;
+        }
+
         public void Reset()
         {
             Health = MaximumHealth;
             nextPistolTick = tick;
             nextShovelTick = tick;
+            nextScimitarTick = tick;
             nextRollTick = tick;
             nextSpitterShotTick = tick;
             rollEndsTick = tick;
@@ -170,6 +192,7 @@ namespace Sandsunder.Simulation
             StableHash.Add(ref hash, unchecked((ulong)tick));
             StableHash.Add(ref hash, unchecked((ulong)nextPistolTick));
             StableHash.Add(ref hash, unchecked((ulong)nextShovelTick));
+            StableHash.Add(ref hash, unchecked((ulong)nextScimitarTick));
             StableHash.Add(ref hash, unchecked((ulong)nextRollTick));
             StableHash.Add(ref hash, unchecked((ulong)nextSpitterShotTick));
             StableHash.Add(ref hash, unchecked((ulong)rollEndsTick));

@@ -63,9 +63,15 @@ namespace Sandsunder.Tests.Gameplay
             typeof(SandboxActorVisual).GetField("bodyRoot", PrivateInstance)?.SetValue(visual, null);
             typeof(SandboxActorVisual).GetField("weaponRoot", PrivateInstance)?.SetValue(visual, null);
 
-            Assert.DoesNotThrow(() => actor.SendMessage("LateUpdate"));
+            Assert.DoesNotThrow(() => visual.Configure(
+                PrototypePixelArt.GetCachedSprite(PrototypePixelKind.Player, Color.cyan),
+                null,
+                null,
+                null,
+                null,
+                isHostile: false));
             Assert.That(visual.BodyRenderer.transform.parent.name, Is.EqualTo("VisualRoot"));
-            Assert.That(visual.WeaponRenderer.transform.parent.name, Is.EqualTo("VisualRoot"));
+            Assert.That(visual.WeaponRenderer.transform.parent.name, Is.EqualTo("Weapon"));
 
             Object.DestroyImmediate(actor);
         }
@@ -158,19 +164,26 @@ namespace Sandsunder.Tests.Gameplay
                 GameObject spitters = System.Array.Find(roots, root => root.name == "Dune Spitters");
                 GameObject digNodes = System.Array.Find(roots, root => root.name == "Dig Nodes");
                 GameObject cameraObject = System.Array.Find(roots, root => root.name == "Gameplay Camera");
+                GameObject depthSystem = System.Array.Find(roots, root => root.name == nameof(DigDepthSystem));
 
                 Assert.That(arena, Is.Not.Null);
-                SpriteRenderer floor = arena.transform.Find("Floor")?.GetComponent<SpriteRenderer>();
-                Assert.That(floor, Is.Not.Null);
-                Assert.That(floor.drawMode, Is.EqualTo(SpriteDrawMode.Tiled));
-                Assert.That(floor.sprite, Is.Not.Null);
-                Assert.That(floor.sprite.texture.filterMode, Is.EqualTo(FilterMode.Point));
+                Transform surfaceGrid = arena.transform.Find("SandCellGrid");
+                Transform subterraneanGrid = arena.transform.Find("SubterraneanCellGrid");
+                Assert.That(surfaceGrid, Is.Not.Null);
+                Assert.That(subterraneanGrid, Is.Not.Null);
+                Assert.That(surfaceGrid.childCount, Is.EqualTo(48 * 32));
+                Assert.That(subterraneanGrid.childCount, Is.EqualTo(48 * 32));
+                SpriteRenderer sample = surfaceGrid.GetChild(0).GetComponent<SpriteRenderer>();
+                Assert.That(sample.sprite, Is.Not.Null);
+                Assert.That(sample.sprite.texture.filterMode, Is.EqualTo(FilterMode.Point));
 
                 SandboxActorVisual playerVisual = player?.GetComponent<SandboxActorVisual>();
                 Assert.That(playerVisual, Is.Not.Null);
                 Assert.That(playerVisual.BodyRenderer.sprite, Is.Not.Null);
-                Assert.That(player.GetComponent<SpriteRenderer>().enabled, Is.False);
-                Assert.That(spitters.GetComponentsInChildren<SandboxActorVisual>(true), Has.Length.EqualTo(3));
+                Assert.That(player.GetComponent<SubterraneanOxygenController>(), Is.Not.Null);
+                Assert.That(depthSystem?.GetComponent<DigDepthSystem>(), Is.Not.Null);
+                Assert.That(spitters.GetComponentsInChildren<PrototypeDuneSpitter>(true), Has.Length.EqualTo(1));
+                Assert.That(Object.FindObjectsByType<SandstormGolemAI>(FindObjectsSortMode.None), Is.Empty);
                 Assert.That(digNodes.GetComponentsInChildren<SandboxDigVisual>(true), Has.Length.EqualTo(6));
 
                 Camera gameplayCamera = cameraObject?.GetComponent<Camera>();

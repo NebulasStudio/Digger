@@ -1,7 +1,7 @@
 {
   "name": "Sandsunder.Gameplay.EditModeTests",
   "rootNamespace": "Sandsunder.Tests.Gameplay",
-  "references": ["Sandsunder.Domain", "Sandsunder.Gameplay", "Sandsunder.Simulation"],
+  "references": ["Sandsunder.Domain", "Sandsunder.Gameplay", "Sandsunder.Simulation", "Unity.InputSystem"],
   "includePlatforms": ["Editor"],
   "excludePlatforms": [],
   "allowUnsafeCode": false,

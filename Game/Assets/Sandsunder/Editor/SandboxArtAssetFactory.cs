@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using Sandsunder.Gameplay.UI;
 using UnityEditor;
 using UnityEngine;
 
@@ -37,6 +38,7 @@ namespace Sandsunder.Editor
         public Sprite Sorcerer { get; set; }
         public Sprite Worm { get; set; }
         public RuntimeAnimatorController PlayerAnimator { get; set; }
+        public Sprite UiGlassPanel { get; set; }
     }
 
     public static class SandboxArtAssetFactory
@@ -67,9 +69,11 @@ namespace Sandsunder.Editor
                 pixelsPerUnit: 32f,
                 pivot: new Vector2(0.5f, 0.08f)) ?? spitter;
 
+            EnsureSafeProceduralClips(nomad, spitter);
             RuntimeAnimatorController animator = LoadOrCreatePlayerAnimator();
+            LoadOrCreateSpitterAnimator();
 
-            return new SandboxArtSet
+            SandboxArtSet art = new SandboxArtSet
             {
                 SandTile = sand,
                 SandFeather = sandFeather,
@@ -81,11 +85,11 @@ namespace Sandsunder.Editor
                 Worm = worm,
                 PlayerAnimator = animator,
                 Shadow = CreateProceduralSprite("BlobShadow", 32, 16, 32f, DrawShadow),
-                Pistol = ImportSpriteOptional($"{RuntimeRoot}/Weapons/rifle_brass_32.png", 32f, new Vector2(0.5f, 0.5f))
+                Pistol = ImportSpriteOptional($"{RuntimeRoot}/Weapons/rifle_brass_32.png", 32f, new Vector2(0.28f, 0.5f))
                     ?? CreateProceduralSprite("BrassPistol", 20, 10, 32f, DrawPistol),
-                Shovel = ImportSpriteOptional($"{RuntimeRoot}/Weapons/shovel_default_32.png", 32f, new Vector2(0.5f, 0.5f))
+                Shovel = ImportSpriteOptional($"{RuntimeRoot}/Weapons/shovel_default_32.png", 32f, new Vector2(0.18f, 0.18f))
                     ?? CreateProceduralSprite("StarterShovel", 24, 12, 32f, DrawShovel),
-                Scimitar = ImportSpriteOptional($"{RuntimeRoot}/Weapons/sword_scimitar_32.png", 32f, new Vector2(0.5f, 0.5f))
+                Scimitar = ImportSpriteOptional($"{RuntimeRoot}/Weapons/sword_scimitar_32.png", 32f, new Vector2(0.18f, 0.18f))
                     ?? CreateProceduralSprite("DesertScimitar", 28, 14, 32f, DrawScimitar),
                 Shotgun = ImportSpriteOptional($"{RuntimeRoot}/Weapons/shotgun_heavy_32.png", 32f, new Vector2(0.5f, 0.5f))
                     ?? CreateProceduralSprite("HeavyShotgun", 30, 12, 32f, DrawShotgun),
@@ -110,7 +114,32 @@ namespace Sandsunder.Editor
                 RunedChest = ImportSpriteOptional($"{RuntimeRoot}/Environment/env_chest_runed_32.png", 32f, new Vector2(0.5f, 0.5f)),
                 CrystalTurtle = ImportSpriteOptional($"{RuntimeRoot}/Mobs/mob_dune_spitter_32.png", 32f, new Vector2(0.5f, 0.5f)),
                 Sorcerer = ImportSpriteOptional($"{RuntimeRoot}/Characters/sorcerer_32.png", 32f, new Vector2(0.5f, 0.08f)),
+                UiGlassPanel = ImportSpriteOptional($"{RuntimeRoot}/UI/ui_glass_panel.png", 32f, new Vector2(0.5f, 0.5f)),
             };
+            EnsureHudArtRegistry(art);
+            return art;
+        }
+
+        private static void EnsureHudArtRegistry(SandboxArtSet art)
+        {
+            const string resourcesFolder = "Assets/Resources/Sandsunder/UI";
+            const string registryPath = resourcesFolder + "/SandboxHudArtRegistry.asset";
+            EnsureAssetFolder(resourcesFolder);
+
+            SandboxHudArtRegistry registry = AssetDatabase.LoadAssetAtPath<SandboxHudArtRegistry>(registryPath);
+            if (registry == null)
+            {
+                registry = ScriptableObject.CreateInstance<SandboxHudArtRegistry>();
+                AssetDatabase.CreateAsset(registry, registryPath);
+            }
+
+            registry.GlassPanel = art.UiGlassPanel;
+            registry.Nomad = art.Nomad;
+            registry.Shovel = art.Shovel;
+            registry.Rifle = art.Pistol;
+            registry.Scimitar = art.Scimitar;
+            EditorUtility.SetDirty(registry);
+            AssetDatabase.SaveAssets();
         }
 
         private static Sprite ImportTile(string assetPath, float pixelsPerUnit)
@@ -595,9 +624,21 @@ namespace Sandsunder.Editor
         public static RuntimeAnimatorController LoadOrCreatePlayerAnimator()
         {
             string controllerPath = $"{GeneratedRoot}/NomadAnimatorController.controller";
-            AssetDatabase.DeleteAsset(controllerPath); // Force regenerate to apply new transitions and states
+            var controller = AssetDatabase.LoadAssetAtPath<UnityEditor.Animations.AnimatorController>(controllerPath);
+            if (controller == null)
+            {
+                controller = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
+            }
 
-            var controller = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
+            SynchronizePlayerAnimator(controller);
+            return controller;
+        }
+
+        private static void SynchronizePlayerAnimator(UnityEditor.Animations.AnimatorController controller)
+        {
+            UnityEditor.Animations.AnimatorStateMachine rootStateMach = controller.layers[0].stateMachine;
+            ClearStateMachine(rootStateMach);
+            controller.parameters = Array.Empty<AnimatorControllerParameter>();
             controller.AddParameter("IsMoving", AnimatorControllerParameterType.Bool);
             controller.AddParameter("IsRolling", AnimatorControllerParameterType.Bool);
             controller.AddParameter("IsDigging", AnimatorControllerParameterType.Bool);
@@ -608,9 +649,13 @@ namespace Sandsunder.Editor
             controller.AddParameter("Hurt", AnimatorControllerParameterType.Trigger);
             controller.AddParameter("Death", AnimatorControllerParameterType.Trigger);
 
-            AnimationClip idleClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Walk.anim") ?? AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Idle.anim");
+            AnimationClip idleClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Idle.anim")
+                ?? AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Walk.anim");
             AnimationClip walkClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Walk.anim");
             AnimationClip runClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Run.anim") ?? walkClip;
+            // Roll uses the approved Nomad run frames while SandboxActorVisual owns the 360-degree
+            // body rotation and afterimages. Never bind rogue_roll to the Nomad.
+            AnimationClip rollClip = runClip ?? idleClip;
             AnimationClip digClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Dig.anim") ?? walkClip;
             AnimationClip stealthClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_StealthCrouch.anim");
             AnimationClip meleeClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Melee.anim");
@@ -618,7 +663,6 @@ namespace Sandsunder.Editor
             AnimationClip hurtClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Hurt.anim");
             AnimationClip deathClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Nomad_Death.anim");
 
-            var rootStateMach = controller.layers[0].stateMachine;
             var idleState = rootStateMach.AddState("Idle");
             idleState.motion = idleClip;
 
@@ -627,6 +671,9 @@ namespace Sandsunder.Editor
 
             var runState = rootStateMach.AddState("Run");
             runState.motion = runClip;
+
+            var rollState = rootStateMach.AddState("Roll");
+            rollState.motion = rollClip;
 
             var digState = rootStateMach.AddState("Dig");
             digState.motion = digClip;
@@ -690,6 +737,15 @@ namespace Sandsunder.Editor
             deathTransition.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "Death");
             deathTransition.duration = 0.05f;
 
+            // Any State -> Roll while the authoritative roll motion is active.
+            var rollTransition = rootStateMach.AddAnyStateTransition(rollState);
+            rollTransition.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "IsRolling");
+            rollTransition.duration = 0.02f;
+
+            var rollToIdle = rollState.AddTransition(idleState);
+            rollToIdle.AddCondition(UnityEditor.Animations.AnimatorConditionMode.IfNot, 0, "IsRolling");
+            rollToIdle.duration = 0.05f;
+
             // Idle -> Walk (if IsMoving == true && Speed <= 0.75)
             var idleToWalk = idleState.AddTransition(walkState);
             idleToWalk.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "IsMoving");
@@ -733,17 +789,22 @@ namespace Sandsunder.Editor
             digToIdle.duration = 0.1f;
 
             rootStateMach.defaultState = idleState;
+            EditorUtility.SetDirty(controller);
             AssetDatabase.SaveAssets();
-            return controller;
         }
 
         public static RuntimeAnimatorController LoadOrCreateSpitterAnimator()
         {
             string controllerPath = $"{GeneratedRoot}/SpitterAnimatorController.controller";
-            var existing = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(controllerPath);
-            if (existing != null) return existing;
+            var controller = AssetDatabase.LoadAssetAtPath<UnityEditor.Animations.AnimatorController>(controllerPath);
+            if (controller == null)
+            {
+                controller = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
+            }
 
-            var controller = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerAtPath(controllerPath);
+            UnityEditor.Animations.AnimatorStateMachine root = controller.layers[0].stateMachine;
+            ClearStateMachine(root);
+            controller.parameters = Array.Empty<AnimatorControllerParameter>();
             controller.AddParameter("IsCharging", AnimatorControllerParameterType.Bool);
             controller.AddParameter("Death", AnimatorControllerParameterType.Trigger);
 
@@ -751,7 +812,6 @@ namespace Sandsunder.Editor
             AnimationClip chargeClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Spitter_Charge.anim") ?? idleClip;
             AnimationClip deathClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{GeneratedRoot}/Spitter_DeathBurst.anim") ?? idleClip;
 
-            var root = controller.layers[0].stateMachine;
             var idleState = root.AddState("Idle");
             idleState.motion = idleClip;
 
@@ -774,8 +834,85 @@ namespace Sandsunder.Editor
             deathTrans.duration = 0.05f;
 
             root.defaultState = idleState;
+            EditorUtility.SetDirty(controller);
             AssetDatabase.SaveAssets();
             return controller;
+        }
+
+        private static void ClearStateMachine(UnityEditor.Animations.AnimatorStateMachine stateMachine)
+        {
+            foreach (UnityEditor.Animations.ChildAnimatorState child in stateMachine.states.ToArray())
+            {
+                stateMachine.RemoveState(child.state);
+            }
+
+            foreach (UnityEditor.Animations.ChildAnimatorStateMachine child in stateMachine.stateMachines.ToArray())
+            {
+                stateMachine.RemoveStateMachine(child.stateMachine);
+            }
+
+            foreach (UnityEditor.Animations.AnimatorStateTransition transition in stateMachine.anyStateTransitions.ToArray())
+            {
+                stateMachine.RemoveAnyStateTransition(transition);
+            }
+
+            foreach (UnityEditor.Animations.AnimatorTransition transition in stateMachine.entryTransitions.ToArray())
+            {
+                stateMachine.RemoveEntryTransition(transition);
+            }
+        }
+
+        private static void EnsureSafeProceduralClips(Sprite nomad, Sprite spitter)
+        {
+            CreateSafeSpriteClip($"{GeneratedRoot}/Nomad_Idle.anim", "Nomad_Idle", nomad, true,
+                new[] { 1f, 1.03f, 1f }, new[] { 0.16f, 0.175f, 0.16f });
+            CreateSafeSpriteClip($"{GeneratedRoot}/Nomad_StealthCrouch.anim", "Nomad_StealthCrouch", nomad, true,
+                new[] { 0.82f, 0.78f, 0.82f }, new[] { 0.10f, 0.08f, 0.10f });
+            CreateSafeSpriteClip($"{GeneratedRoot}/Spitter_Idle.anim", "Spitter_Idle", spitter, true,
+                new[] { 1f, 1.04f, 1f }, new[] { 0.16f, 0.19f, 0.16f });
+            CreateSafeSpriteClip($"{GeneratedRoot}/Spitter_Charge.anim", "Spitter_Charge", spitter, true,
+                new[] { 1f, 1.16f, 1f }, new[] { 0.16f, 0.22f, 0.16f });
+            CreateSafeSpriteClip($"{GeneratedRoot}/Spitter_DeathBurst.anim", "Spitter_DeathBurst", spitter, false,
+                new[] { 1f, 1.22f, 0.05f }, new[] { 0.16f, 0.20f, 0.05f });
+        }
+
+        private static void CreateSafeSpriteClip(
+            string path,
+            string clipName,
+            Sprite sprite,
+            bool loop,
+            float[] scaleY,
+            float[] positionY)
+        {
+            AnimationClip clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(path);
+            if (clip == null)
+            {
+                clip = new AnimationClip { name = clipName };
+                AssetDatabase.CreateAsset(clip, path);
+            }
+
+            clip.ClearCurves();
+            EditorCurveBinding spriteBinding = EditorCurveBinding.PPtrCurve(
+                string.Empty, typeof(SpriteRenderer), "m_Sprite");
+            AnimationUtility.SetObjectReferenceCurve(clip, spriteBinding, new[]
+            {
+                new ObjectReferenceKeyframe { time = 0f, value = sprite },
+                new ObjectReferenceKeyframe { time = 1f, value = sprite }
+            });
+
+            clip.SetCurve(string.Empty, typeof(Transform), "m_LocalScale.y", new AnimationCurve(
+                new Keyframe(0f, scaleY[0]),
+                new Keyframe(0.5f, scaleY[1]),
+                new Keyframe(1f, scaleY[2])));
+            clip.SetCurve(string.Empty, typeof(Transform), "m_LocalPosition.y", new AnimationCurve(
+                new Keyframe(0f, positionY[0]),
+                new Keyframe(0.5f, positionY[1]),
+                new Keyframe(1f, positionY[2])));
+
+            AnimationClipSettings settings = AnimationUtility.GetAnimationClipSettings(clip);
+            settings.loopTime = loop;
+            AnimationUtility.SetAnimationClipSettings(clip, settings);
+            EditorUtility.SetDirty(clip);
         }
 
         private static AnimationClip CreateClip(string path, string name)

@@ -1,5 +1,11 @@
 id,role,type,description,size/ratio,style line ref,source,relative_scale,status,provenance_id
 char_nomad_sheet,Playable Nomad animation set,spritesheet,"idle move shovel fire active hit downed, eight directions",1:1,SB-FORMULA-1,generate,1.0,planned_placeholder,prov_char_nomad_sheet
+char_nomad_walk_candidate,Nomad south-facing walk-cycle candidate,spritesheet,"twelve-frame south walk cycle derived from canonical Nomad",1:1,SB-FORMULA-1,generate,1.0,in_review,prov_char_nomad_walk_candidate
+char_nomad_locomotion_codex,Nomad base locomotion candidate,spritesheet,"four-frame idle walk run and roll rows generated with canonical references attached",1:1,SB-FORMULA-1,generate,1.0,in_review,prov_char_nomad_locomotion_codex
+char_nomad_actions_codex,Nomad action animation candidate,spritesheet,"four-frame dig melee shoot hurt and death rows with weapons separated",1:1,SB-FORMULA-1,generate,1.0,in_review,prov_char_nomad_actions_codex
+mob_spitter_actions_codex,Dune Spitter animation candidate,spritesheet,"four-frame idle charge spit and death rows generated from canonical Spitter references",1:1,SB-FORMULA-1,generate,1.0,in_review,prov_mob_spitter_actions_codex
+sandbox_weapons_fx_codex,Focused sandbox weapon and FX candidate,spritesheet,"starter shovel scimitar brass rifle muzzle casing bullet and enemy projectile",1:1,SB-FORMULA-1,generate,1.0,in_review,prov_sandbox_weapons_fx_codex
+char_nomad_walk_imagegen_candidate,Nomad south-facing walk-cycle imagegen candidate,spritesheet,"twelve-frame south walk cycle with canonical identity and walk references",1:1,SB-FORMULA-1,generate,1.0,in_review,prov_char_nomad_walk_imagegen_candidate
 char_surveyor_sheet,Playable Surveyor animation set,spritesheet,"idle move shovel fire active hit downed, eight directions",1:1,SB-FORMULA-1,generate,1.0,planned_placeholder,prov_char_surveyor_sheet
 char_warden_sheet,Playable Warden animation set,spritesheet,"idle move shovel fire active hit downed, eight directions",1:1,SB-FORMULA-1,generate,1.0,planned_placeholder,prov_char_warden_sheet
 char_scavenger_sheet,Playable Scavenger animation set,spritesheet,"idle move shovel fire active hit downed, eight directions",1:1,SB-FORMULA-1,generate,1.0,planned_placeholder,prov_char_scavenger_sheet

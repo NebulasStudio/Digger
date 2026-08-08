@@ -69,7 +69,7 @@ namespace Sandsunder.Tests.Gameplay
         }
 
         [UnityTest]
-        public IEnumerator Pickup_AutomaticallyAppliesOnceWithoutInventoryObject()
+        public IEnumerator Pickup_ExplicitInteractionAppliesExactlyOnceWithoutInventoryObject()
         {
             GameObject playerObject = new("Player Pickup Test");
             playerObject.SetActive(false);

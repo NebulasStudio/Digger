@@ -1,42 +1,62 @@
+using System;
+using Sandsunder.Gameplay;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace Sandsunder.Gameplay.UI
 {
-    /// <summary>
-    /// TAB inventory modal (Sandsunder Modern UI). Opens/closes the inventory root on Tab, pauses
-    /// gameplay input while open, and refreshes the paper-doll + weapon stat card. Layout is built
-    /// at 1280x720 reference resolution so it stays legible on supported resolutions.
-    /// </summary>
+    /// <summary>Controller-first inventory modal. Opening it never changes simulation time.</summary>
     [DisallowMultipleComponent]
     public sealed class TabInventoryController : MonoBehaviour
     {
         [SerializeField] private GameObject inventoryRoot;
-        [SerializeField] private WeaponStatCard statCard;
+        [SerializeField] private Selectable initialSelection;
+
+        private InputAction toggleAction;
+        private InputAction closeAction;
+        private Action refresh;
 
         public bool IsOpen { get; private set; }
+        public event Action<bool> OpenChanged;
 
-        /// <summary>Runtime wiring used by the auto-built modern HUD (SandboxModernHUD).</summary>
-        public void Setup(GameObject root, WeaponStatCard card)
+        public void Setup(GameObject root, Selectable firstSelection, Action refreshContent)
         {
             inventoryRoot = root;
-            statCard = card;
+            initialSelection = firstSelection;
+            refresh = refreshContent;
+            SetOpen(false);
         }
 
-        private void Update()
+        private void OnEnable()
         {
-            if (Input.GetKeyDown(KeyCode.Tab))
+            EnsureActions();
+            toggleAction.performed += OnTogglePerformed;
+            closeAction.performed += OnClosePerformed;
+            toggleAction.Enable();
+            closeAction.Enable();
+        }
+
+        private void OnDisable()
+        {
+            if (toggleAction != null)
             {
-                Toggle();
+                toggleAction.performed -= OnTogglePerformed;
+                toggleAction.Disable();
             }
 
-            if (IsOpen)
+            if (closeAction != null)
             {
-                // Esc closes the inventory too, instead of pausing the game.
-                if (Input.GetKeyDown(KeyCode.Escape))
-                {
-                    SetOpen(false);
-                }
+                closeAction.performed -= OnClosePerformed;
+                closeAction.Disable();
             }
+        }
+
+        private void OnDestroy()
+        {
+            toggleAction?.Dispose();
+            closeAction?.Dispose();
         }
 
         public void Toggle()
@@ -46,28 +66,47 @@ namespace Sandsunder.Gameplay.UI
 
         public void SetOpen(bool open)
         {
-            IsOpen = open;
-            if (inventoryRoot != null)
+            if (open && SandboxShopPanel.Instance != null && SandboxShopPanel.Instance.IsOpen)
             {
-                inventoryRoot.SetActive(open);
+                SandboxShopPanel.Instance.SetOpen(false);
             }
 
-            // Pause/unpause gameplay simulation while the inventory is open.
-            Time.timeScale = open ? 0f : 1f;
+            IsOpen = open;
+            if (inventoryRoot != null) inventoryRoot.SetActive(open);
 
             if (open)
             {
-                RefreshCard();
+                refresh?.Invoke();
+                if (EventSystem.current != null && initialSelection != null)
+                {
+                    EventSystem.current.SetSelectedGameObject(initialSelection.gameObject);
+                }
             }
+
+            OpenChanged?.Invoke(open);
         }
 
-        private void RefreshCard()
+        private void EnsureActions()
         {
-            if (statCard == null) return;
-            // Placeholder: real stats come from the WeaponCatalog (Design/balance/weapons.csv).
-            var equipped = new WeaponStatCard.WeaponStats { Damage = 60f, Range = 0.7f, FireRate = 0.5f };
-            var current = new WeaponStatCard.WeaponStats { Damage = 45f, Range = 0.55f, FireRate = 0.4f };
-            statCard.Show(PrototypeInventoryHUD.Instance?.InventoryItems?[0] ?? "shovel.default", current, equipped);
+            if (toggleAction != null) return;
+
+            toggleAction = new InputAction("Inventory", InputActionType.Button);
+            toggleAction.AddBinding("<Keyboard>/tab");
+            toggleAction.AddBinding("<Gamepad>/start");
+
+            closeAction = new InputAction("Close Inventory", InputActionType.Button);
+            closeAction.AddBinding("<Keyboard>/escape");
+            closeAction.AddBinding("<Gamepad>/buttonEast");
+        }
+
+        private void OnTogglePerformed(InputAction.CallbackContext context)
+        {
+            Toggle();
+        }
+
+        private void OnClosePerformed(InputAction.CallbackContext context)
+        {
+            if (IsOpen) SetOpen(false);
         }
     }
 }

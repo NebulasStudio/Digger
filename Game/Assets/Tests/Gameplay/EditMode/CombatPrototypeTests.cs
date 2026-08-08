@@ -17,10 +17,75 @@ namespace Sandsunder.Tests.Gameplay
             Assert.That(rules.PistolCooldownTicks, Is.EqualTo(12));
             Assert.That(rules.PistolProjectileSpeedMillimetresPerSecond, Is.EqualTo(24000));
             Assert.That(rules.PistolRangeMillimetres, Is.EqualTo(11000));
-            Assert.That(rules.RollDistanceMillimetres, Is.EqualTo(2400));
+            Assert.That(rules.RollDistanceMillimetres, Is.EqualTo(1200));
             Assert.That(rules.RollDurationTicks, Is.EqualTo(18));
             Assert.That(rules.RollInvulnerabilityTicks, Is.EqualTo(12));
             Assert.That(rules.RollCooldownTicks, Is.EqualTo(75));
+            Assert.That(rules.ShovelArcCosinePermille,
+                Is.EqualTo(SandboxGameplayCatalog.NinetyDegreeArcCosinePermille));
+        }
+
+        [Test]
+        public void SandboxCatalog_IsVersionedAndMatchesFocusedLoadout()
+        {
+            SandboxGameplayCatalog catalog = SandboxGameplayCatalog.MilestoneOne;
+
+            Assert.That(catalog.SchemaVersion, Is.EqualTo(1));
+            Assert.That(catalog.Version, Is.EqualTo("sandbox-gameplay-1"));
+            Assert.That(catalog.Shovel.Damage, Is.EqualTo(12));
+            Assert.That(catalog.Shovel.CooldownTicks, Is.EqualTo(33));
+            Assert.That(catalog.Shovel.ReachMillimetres, Is.EqualTo(1400));
+            Assert.That(catalog.Scimitar.Damage, Is.EqualTo(18));
+            Assert.That(catalog.Scimitar.CooldownTicks, Is.EqualTo(24));
+            Assert.That(catalog.Scimitar.ReachMillimetres, Is.EqualTo(1600));
+            Assert.That(catalog.Scimitar.ArcCosinePermille, Is.EqualTo(707));
+            Assert.That(catalog.Rifle.Damage, Is.EqualTo(6));
+            Assert.That(catalog.Rifle.CooldownTicks, Is.EqualTo(12));
+            Assert.That(catalog.Rifle.ProjectileSpeedMillimetresPerSecond, Is.EqualTo(24000));
+            Assert.That(catalog.Rifle.ProjectileRangeMillimetres, Is.EqualTo(11000));
+        }
+
+        [Test]
+        public void RifleMagazine_IsTickDeterministicAndBlocksShotsDuringReload()
+        {
+            SandboxRifleMagazine magazine = new();
+
+            for (int shot = 0; shot < SandboxRifleMagazine.DefaultCapacity; shot++)
+            {
+                Assert.That(magazine.TryConsumeShot(), Is.True);
+            }
+
+            Assert.That(magazine.Ammunition, Is.Zero);
+            Assert.That(magazine.IsReloading, Is.True);
+            Assert.That(magazine.TryConsumeShot(), Is.False);
+
+            magazine.AdvanceTicks(SandboxRifleMagazine.DefaultReloadTicks - 1);
+            Assert.That(magazine.CanFire, Is.False);
+            magazine.AdvanceTicks(1);
+
+            Assert.That(magazine.Ammunition, Is.EqualTo(SandboxRifleMagazine.DefaultCapacity));
+            Assert.That(magazine.IsReloading, Is.False);
+            Assert.That(magazine.TryConsumeShot(), Is.True);
+        }
+
+        [Test]
+        public void ScimitarArc_IsExactlyNinetyDegreesAndUsesIndependentCooldown()
+        {
+            SandboxWeaponDefinition scimitar = SandboxGameplayCatalog.MilestoneOne.Scimitar;
+            CombatantState player = new(1, team: 0, maximumHealth: 100, CombatRules.PrototypeOne);
+
+            Assert.That(CombatMath.IsInsideArc(
+                0, 0, 1000, 0, 1000, 999,
+                scimitar.ReachMillimetres, scimitar.ArcCosinePermille), Is.True);
+            Assert.That(CombatMath.IsInsideArc(
+                0, 0, 1000, 0, 1000, 1001,
+                scimitar.ReachMillimetres, scimitar.ArcCosinePermille), Is.False);
+
+            Assert.That(player.TryUse(CombatAction.Scimitar), Is.True);
+            player.AdvanceTo(scimitar.CooldownTicks - 1);
+            Assert.That(player.TryUse(CombatAction.Scimitar), Is.False);
+            player.AdvanceTo(scimitar.CooldownTicks);
+            Assert.That(player.TryUse(CombatAction.Scimitar), Is.True);
         }
 
         [Test]
@@ -135,6 +200,79 @@ namespace Sandsunder.Tests.Gameplay
             Assert.That(first.PositionYMillimetres, Is.Zero);
             Assert.That(first.PositionXMillimetres, Is.EqualTo(second.PositionXMillimetres));
             Assert.That(first.IsActive, Is.False);
+        }
+
+        [Test]
+        public void Oxygen_IsDeterministic_DepletesInOneHundredSeconds_AndRefillsAtFivePercent()
+        {
+            SubterraneanOxygenRules rules = SubterraneanOxygenRules.MilestoneOne;
+            SubterraneanOxygenState first = new(rules);
+            SubterraneanOxygenState second = new(rules);
+            int firstDamage = 0;
+            int secondDamage = 0;
+
+            for (int tick = 0; tick < (rules.TicksPerSecond * 100) - 1; tick++)
+            {
+                firstDamage += first.Step(isSubterranean: true);
+                secondDamage += second.Step(isSubterranean: true);
+            }
+
+            Assert.That(first.OxygenPercent, Is.GreaterThan(0d));
+            firstDamage += first.Step(isSubterranean: true);
+            secondDamage += second.Step(isSubterranean: true);
+            Assert.That(first.OxygenPercent, Is.Zero);
+            Assert.That(firstDamage, Is.Zero);
+
+            for (int tick = 0; tick < rules.TicksPerSecond; tick++)
+            {
+                firstDamage += first.Step(isSubterranean: true);
+                secondDamage += second.Step(isSubterranean: true);
+            }
+
+            Assert.That(firstDamage, Is.EqualTo(5));
+            Assert.That(secondDamage, Is.EqualTo(firstDamage));
+            Assert.That(second.ComputeStateHash(), Is.EqualTo(first.ComputeStateHash()));
+
+            for (int tick = 0; tick < rules.TicksPerSecond * 20; tick++)
+            {
+                first.Step(isSubterranean: false);
+            }
+
+            Assert.That(first.OxygenPercent, Is.EqualTo(100d));
+        }
+
+        [Test]
+        public void PlayerDepth_UsesAuthoritativeCellDepthAndThresholdTwo()
+        {
+            PlayerDepthState depth = new();
+
+            Assert.That(depth.ApplyAuthoritativeCellDepth(1), Is.True);
+            Assert.That(depth.IsSubterranean, Is.False);
+            Assert.That(depth.ApplyAuthoritativeCellDepth(1), Is.False);
+            Assert.That(depth.ApplyAuthoritativeCellDepth(2), Is.True);
+            Assert.That(depth.IsSubterranean, Is.True);
+            Assert.That(depth.ApplyAuthoritativeCellDepth(1), Is.False);
+            Assert.That(depth.CurrentDepth, Is.EqualTo(2));
+            Assert.That(depth.SetAuthoritativeDepth(0), Is.True);
+            Assert.That(depth.IsSubterranean, Is.False);
+        }
+
+        [Test]
+        public void OxygenFlask_RestoresThirtyFivePercentWithoutExceedingTank()
+        {
+            SubterraneanOxygenRules rules = SubterraneanOxygenRules.MilestoneOne;
+            SubterraneanOxygenState state = new(rules);
+            for (int tick = 0; tick < rules.TicksPerSecond * 80; tick++)
+            {
+                state.Step(isSubterranean: true);
+            }
+
+            Assert.That(state.OxygenPercent, Is.EqualTo(20d).Within(.001d));
+            Assert.That(state.RestorePercent(SubterraneanOxygenRules.OxygenFlaskRestorePercent), Is.True);
+            Assert.That(state.OxygenPercent, Is.EqualTo(55d).Within(.001d));
+            Assert.That(state.RestorePercent(100), Is.True);
+            Assert.That(state.OxygenPercent, Is.EqualTo(100d));
+            Assert.That(state.RestorePercent(1), Is.False);
         }
     }
 }

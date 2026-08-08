@@ -78,6 +78,22 @@ namespace Sandsunder.Gameplay
             return State.Heal(amount);
         }
 
+        public int ApplyEnvironmentalDamage(int amount)
+        {
+            bool wasAlive = !State.IsDead;
+            int applied = State.ApplyEnvironmentalDamage(amount);
+            if (applied > 0)
+            {
+                ApplyDamagePresentation(CombatDamageResult.Applied);
+            }
+            if (wasAlive && State.IsDead)
+            {
+                BeginDeath();
+            }
+
+            return applied;
+        }
+
         public CombatDamageResult ResolveProjectile(CombatProjectileState projectile)
         {
             if (projectile == null) throw new ArgumentNullException(nameof(projectile));
@@ -204,6 +220,8 @@ namespace Sandsunder.Gameplay
     public sealed partial class PrototypePlayerCombat
     {
         private static int nextProjectileId = 1000;
+        private const float RifleReloadSeconds = 1.2f;
+        private const float DigChannelSeconds = 3f;
 
         private PrototypeHealth health;
         private TopDownPlayerController movement;
@@ -212,6 +230,7 @@ namespace Sandsunder.Gameplay
         private InputAction shovelAction;
         private InputAction rollAction;
         private int pickupCount;
+        private readonly SandboxRifleMagazine rifleMagazine = new();
 
         public int PickupCount => pickupCount;
         public int CurrentHealth => health != null ? health.CurrentHealth : CombatRules.PrototypeOne.PlayerMaximumHealth;
@@ -219,7 +238,15 @@ namespace Sandsunder.Gameplay
         public bool IsInvulnerable => health != null && health.State.IsInvulnerable;
         public float PistolCooldownRemainingSeconds => CooldownSeconds(health?.State.PistolCooldownRemainingTicks ?? 0);
         public float ShovelCooldownRemainingSeconds => CooldownSeconds(health?.State.ShovelCooldownRemainingTicks ?? 0);
+        public float ScimitarCooldownRemainingSeconds => CooldownSeconds(health?.State.ScimitarCooldownRemainingTicks ?? 0);
         public float RollCooldownRemainingSeconds => CooldownSeconds(health?.State.RollCooldownRemainingTicks ?? 0);
+        public int CurrentRifleAmmo => rifleMagazine.Ammunition;
+        public int MaximumRifleAmmo => rifleMagazine.Capacity;
+        public bool IsReloading => rifleMagazine.IsReloading;
+        public bool IsDiggingChanneling => isDiggingChannel;
+        public float DiggingProgressRatio => isDiggingChannel
+            ? Mathf.Clamp01(digChannelTimer / DigChannelSeconds)
+            : 0f;
 
         public void Configure(int entityId)
         {
@@ -234,55 +261,29 @@ namespace Sandsunder.Gameplay
         public bool TryFireForTesting()
         {
             EnsureReferences();
+            string itemId = GetEquippedItemId();
+            if (itemId == "sword.scimitar" || itemId == "shovel.default")
+            {
+                return TryMeleeForTesting(itemId);
+            }
+
+            if (itemId != "rifle.brass" || !rifleMagazine.CanFire)
+            {
+                return false;
+            }
+
             if (!health.State.TryUse(CombatAction.Pistol))
             {
                 return false;
             }
 
-            CombatRules rules = CombatRules.PrototypeOne;
+            SandboxGameplayCatalog catalog = SandboxGameplayCatalog.MilestoneOne;
             Vector2 aim = movement.AimDirection.sqrMagnitude > 0.0001f
                 ? movement.AimDirection.normalized
                 : Vector2.right;
 
-            string itemId = GetEquippedItemId();
-
-            if (itemId == "shotgun.heavy")
-            {
-                float[] angles = { -15f, -7.5f, 0f, 7.5f, 15f };
-                foreach (float angle in angles)
-                {
-                    Vector2 spreadAim = Quaternion.Euler(0, 0, angle) * aim;
-                    PrototypeProjectile.Spawn(
-                        (Vector2)transform.position + (spreadAim * 0.42f),
-                        spreadAim, nextProjectileId++, health.EntityId, health.Team,
-                        22, 14.0f, 10.0f, 0f, new Color(0.98f, 0.75f, 0.30f));
-                }
-                GetComponent<SandboxActorVisual>()?.PlayFire(aim);
-                SandboxVisualEffects.SpawnMuzzle(transform.position, aim, new Color(0.98f, 0.75f, 0.30f));
-                SandboxVisualEffects.SpawnShellCasing(transform.position, aim, new Color(0.35f, 0.30f, 0.25f));
-                SandboxVisualEffects.SpawnDust(transform.position, 4, new Color(0.60f, 0.60f, 0.65f));
-                SandboxReloadBar.Instance?.StartReload(1.8f);
-                return true;
-            }
-            else if (itemId == "blaster.rune")
-            {
-                PrototypeProjectile.Spawn(
-                    (Vector2)transform.position + (aim * 0.42f),
-                    aim, nextProjectileId++, health.EntityId, health.Team,
-                    38, 22.0f, 16.0f, 0f, new Color(0.20f, 0.95f, 0.90f));
-                GetComponent<SandboxActorVisual>()?.PlayFire(aim);
-                SandboxVisualEffects.SpawnMuzzle(transform.position, aim, new Color(0.20f, 0.95f, 0.90f));
-                SandboxVisualEffects.SpawnShellCasing(transform.position, aim, new Color(0.20f, 0.95f, 0.90f));
-                SandboxVisualEffects.SpawnDust(transform.position, 2, new Color(0.20f, 0.95f, 0.90f));
-                SandboxReloadBar.Instance?.StartReload(0.9f);
-                return true;
-            }
-            else if (itemId == "sword.scimitar" || itemId == "shovel.default")
-            {
-                return TryShovelForTesting();
-            }
-
             // Rifle Brass (Firearm)
+            SandboxWeaponDefinition rifle = catalog.Rifle;
             GetComponent<SandboxActorVisual>()?.PlayFire(aim);
             SandboxVisualEffects.SpawnMuzzle(transform.position, aim, new Color(0.95f, 0.85f, 0.40f));
             SandboxVisualEffects.SpawnShellCasing(transform.position, aim, new Color(0.95f, 0.75f, 0.30f));
@@ -293,52 +294,69 @@ namespace Sandsunder.Gameplay
                 nextProjectileId++,
                 health.EntityId,
                 health.Team,
-                rules.PistolDamage,
-                rules.PistolProjectileSpeedMillimetresPerSecond / 1000f,
-                rules.PistolRangeMillimetres / 1000f,
+                rifle.Damage,
+                rifle.ProjectileSpeedMillimetresPerSecond / 1000f,
+                rifle.ProjectileRangeMillimetres / 1000f,
                 telegraphSeconds: 0f,
                 new Color(0.95f, 0.85f, 0.40f));
-            SandboxReloadBar.Instance?.StartReload(1.2f);
+            rifleMagazine.TryConsumeShot();
+            if (rifleMagazine.IsReloading) SandboxReloadBar.Instance?.StartReload(RifleReloadSeconds);
             return true;
         }
 
         public bool TryShovelForTesting()
         {
+            return TryMeleeForTesting("shovel.default");
+        }
+
+        public bool TryMeleeForTesting(string weaponId)
+        {
             EnsureReferences();
-            if (!health.State.TryUse(CombatAction.Shovel))
+            SandboxWeaponDefinition weapon = SandboxGameplayCatalog.MilestoneOne.GetWeapon(weaponId);
+            if (weapon.AttackKind != SandboxWeaponAttackKind.Melee)
             {
                 return false;
             }
 
-            CombatRules rules = CombatRules.PrototypeOne;
+            CombatAction action = weaponId == "sword.scimitar"
+                ? CombatAction.Scimitar
+                : CombatAction.Shovel;
+            if (!health.State.TryUse(action))
+            {
+                return false;
+            }
+
             Vector2 facing = movement.AimDirection.sqrMagnitude > 0.0001f
                 ? movement.AimDirection.normalized
                 : Vector2.right;
-            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, rules.ShovelReachMillimetres / 1000f);
+            Collider2D[] hits = Physics2D.OverlapCircleAll(
+                transform.position,
+                weapon.ReachMillimetres / 1000f);
             HashSet<int> processedHealth = new();
-            HashSet<int> processedNodes = new();
+            HashSet<int> processedVases = new();
 
             foreach (Collider2D hit in hits)
             {
+                PrototypeDestructibleVase vase = hit.GetComponentInParent<PrototypeDestructibleVase>();
+                if (vase != null
+                    && processedVases.Add(vase.GetInstanceID())
+                    && IsInsideWeaponArc(vase.transform.position, facing, weapon))
+                {
+                    vase.TakeDamage(weapon.Damage);
+                }
+
                 PrototypeHealth targetHealth = hit.GetComponentInParent<PrototypeHealth>();
                 if (targetHealth != null
                     && targetHealth != health
                     && processedHealth.Add(targetHealth.GetInstanceID())
-                    && IsInsideShovelArc(targetHealth.transform.position, facing, rules))
+                    && IsInsideWeaponArc(targetHealth.transform.position, facing, weapon))
                 {
-                    targetHealth.TryDamage(new CombatDamageRequest(health.EntityId, health.Team, rules.ShovelDamage));
-                }
-
-                PrototypeDigNode node = hit.GetComponentInParent<PrototypeDigNode>();
-                if (node != null
-                    && processedNodes.Add(node.GetInstanceID())
-                    && IsInsideShovelArc(node.transform.position, facing, rules))
-                {
-                    node.Strike();
+                    targetHealth.TryDamage(
+                        new CombatDamageRequest(health.EntityId, health.Team, weapon.Damage));
                 }
             }
 
-            PrototypeArcFlash.Spawn(transform.position, facing, rules.ShovelReachMillimetres / 1000f);
+            PrototypeArcFlash.Spawn(transform.position, facing, weapon.ReachMillimetres / 1000f);
             GetComponent<SandboxActorVisual>()?.PlayMelee(facing);
             SandboxVisualEffects.SpawnDust(
                 (Vector2)transform.position + (facing * 0.62f),
@@ -419,8 +437,6 @@ namespace Sandsunder.Gameplay
 
         private float digChannelTimer = 0f;
         private bool isDiggingChannel = false;
-        private float reloadTimer = 0f;
-        private bool isReloading = false;
 
         public string GetEquippedItemId()
         {
@@ -439,32 +455,15 @@ namespace Sandsunder.Gameplay
             EnsureReferences();
             if (movement == null) return;
 
-            if (Input.GetKeyDown(KeyCode.R) && !isReloading)
+            if (IsGameplayModalOpen())
             {
-                string itemId = GetEquippedItemId();
-                if (itemId == "rifle.brass" || itemId == "shotgun.heavy" || itemId == "blaster.rune")
-                {
-                    isReloading = true;
-                    reloadTimer = 1.2f;
-                    Debug.Log("[Combat] RICARICA ARMA IN CORSO...");
-                    SandboxVisualEffects.SpawnDust(transform.position, 6, new Color(0.95f, 0.70f, 0.30f));
-                    SandboxReloadBar.Instance?.StartReload(1.2f);
-                }
+                CancelDigChannel();
+                return;
             }
 
-            if (isReloading)
+            if (Input.GetKeyDown(KeyCode.R))
             {
-                reloadTimer -= Time.deltaTime;
-                if (reloadTimer <= 0f)
-                {
-                    isReloading = false;
-                    Debug.Log("[Combat] RICARICA COMPLETATA!");
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                TryUseConsumable();
+                BeginReload();
             }
 
             if (Input.GetKeyDown(KeyCode.M))
@@ -503,27 +502,22 @@ namespace Sandsunder.Gameplay
                         new Color(0.86f, 0.70f, 0.43f));
                 }
 
-                if (digChannelTimer >= 3.0f)
+                if (digChannelTimer >= DigChannelSeconds)
                 {
                     CompleteDigChanneling(facing);
-                    isDiggingChannel = false;
-                    digChannelTimer = 0f;
-                    movement.IsDiggingChanneling = false;
-                    SandDustEmitter.Instance?.SetChanneling(false, Vector2.zero);
+                    CancelDigChannel();
                 }
             }
             else if (isDiggingChannel)
             {
-                isDiggingChannel = false;
-                digChannelTimer = 0f;
-                movement.IsDiggingChanneling = false;
-                SandDustEmitter.Instance?.SetChanneling(false, Vector2.zero);
+                CancelDigChannel();
             }
         }
 
-        private void TryUseConsumable()
+        public bool TryUseSelectedConsumable()
         {
-            if (PrototypeInventoryHUD.Instance == null || health == null) return;
+            EnsureReferences();
+            if (PrototypeInventoryHUD.Instance == null || health == null) return false;
             int selectedIndex = PrototypeInventoryHUD.Instance.SelectedIndex;
             var items = PrototypeInventoryHUD.Instance.InventoryItems;
             if (selectedIndex >= 0 && selectedIndex < items.Count)
@@ -534,11 +528,42 @@ namespace Sandsunder.Gameplay
                     if (health.CurrentHealth < health.MaximumHealth)
                     {
                         health.Heal(35);
+                        PrototypeInventoryHUD.Instance.TryRemoveAt(selectedIndex, itemId);
                         SandboxVisualEffects.SpawnDust(transform.position, 12, new Color(0.20f, 0.95f, 0.40f));
                         Debug.Log("[Combat] CONSUMABILE UTILIZZATO! VITA RIPRISTINATA +35 HP!");
+                        return true;
+                    }
+                }
+                else if (itemId == "consumable.oxygen-flask")
+                {
+                    SubterraneanOxygenController oxygen = GetComponent<SubterraneanOxygenController>();
+                    if (oxygen != null && oxygen.TryRestoreFromFlask())
+                    {
+                        PrototypeInventoryHUD.Instance.TryRemoveAt(selectedIndex, itemId);
+                        SandboxVisualEffects.SpawnDust(transform.position, 12, new Color(0.10f, 0.95f, 0.92f));
+                        return true;
                     }
                 }
             }
+
+            return false;
+        }
+
+        private void CancelDigChannel()
+        {
+            isDiggingChannel = false;
+            digChannelTimer = 0f;
+            if (movement != null) movement.IsDiggingChanneling = false;
+            SandDustEmitter.Instance?.SetChanneling(false, Vector2.zero);
+        }
+
+        private static bool IsGameplayModalOpen()
+        {
+            bool inventoryOpen = SandboxModernHUD.Instance != null
+                && SandboxModernHUD.Instance.InventoryController != null
+                && SandboxModernHUD.Instance.InventoryController.IsOpen;
+            bool shopOpen = SandboxShopPanel.Instance != null && SandboxShopPanel.Instance.IsOpen;
+            return inventoryOpen || shopOpen;
         }
 
         private void CompleteDigChanneling(Vector2 facing)
@@ -546,15 +571,11 @@ namespace Sandsunder.Gameplay
             Vector2 targetDigPos = (Vector2)transform.position + (facing * 0.75f);
             if (PrototypeDigGridAuthority.Instance != null)
             {
-                PrototypeDigGridAuthority.Instance.TryDigAtWorldPosition(targetDigPos);
+                DigResult result = PrototypeDigGridAuthority.Instance.TryDigAtWorldPosition(targetDigPos);
+                DigDepthSystem.Instance?.ApplyAuthoritativeDigResult(result);
             }
 
-            PrototypeTunnelSystem.Instance?.TransitionToLayer(DigDepthSystem.Instance?.IsSubterranean == true
-                ? MatrixLayerDepth.Subterranean_L1
-                : MatrixLayerDepth.Surface_L0);
-
             // Feature 2 — Subterranean Depth: reaching depth >= 2 drops the Nomad to Level -1.
-            DigDepthSystem.Instance?.RaiseDepth(2);
             SandboxVisualEffects.SpawnDust(targetDigPos, 12, new Color(0.60f, 0.42f, 0.22f));
         }
 
@@ -573,7 +594,6 @@ namespace Sandsunder.Gameplay
 
             shovelAction = inputMap.AddAction("Shovel", InputActionType.Button);
             shovelAction.AddBinding("<Mouse>/rightButton");
-            shovelAction.AddBinding("<Keyboard>/f");
             shovelAction.AddBinding("<Gamepad>/buttonSouth");
 
             rollAction = inputMap.AddAction("Roll", InputActionType.Button);
@@ -587,14 +607,15 @@ namespace Sandsunder.Gameplay
 
         private void OnFirePerformed(InputAction.CallbackContext context)
         {
+            if (IsGameplayModalOpen()) return;
             string itemId = GetEquippedItemId();
-            if (itemId == "rifle.brass" || itemId == "shotgun.heavy" || itemId == "blaster.rune")
+            if (itemId == "rifle.brass")
             {
                 TryFireForTesting();
             }
             else if (itemId == "sword.scimitar" || itemId == "shovel.default")
             {
-                TryShovelForTesting();
+                TryMeleeForTesting(itemId);
             }
         }
 
@@ -605,49 +626,39 @@ namespace Sandsunder.Gameplay
 
         private void OnRollPerformed(InputAction.CallbackContext context)
         {
+            if (IsGameplayModalOpen()) return;
             TryRollForTesting();
+        }
+
+        public void AdvanceReloadForTesting(float elapsedSeconds)
+        {
+            if (elapsedSeconds <= 0f) return;
+            rifleMagazine.AdvanceTicks(Mathf.RoundToInt(
+                elapsedSeconds * SandboxGameplayCatalog.MilestoneOne.TicksPerSecond));
+        }
+
+        private void BeginReload()
+        {
+            if (GetEquippedItemId() != "rifle.brass" || !rifleMagazine.TryBeginReload()) return;
+            SandboxVisualEffects.SpawnDust(transform.position, 6, new Color(0.95f, 0.70f, 0.30f));
+            SandboxReloadBar.Instance?.StartReload(RifleReloadSeconds);
         }
 
         public bool TryShovelMeleeAttack()
         {
-            EnsureReferences();
             if (isDiggingChannel) return false;
-            if (!health.State.TryUse(CombatAction.Shovel))
+            string weaponId = GetEquippedItemId();
+            if (weaponId != "sword.scimitar" && weaponId != "shovel.default")
             {
-                return false;
+                weaponId = "shovel.default";
             }
-
-            CombatRules rules = CombatRules.PrototypeOne;
-            Vector2 facing = movement.AimDirection.sqrMagnitude > 0.0001f
-                ? movement.AimDirection.normalized
-                : Vector2.right;
-            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, rules.ShovelReachMillimetres / 1000f);
-            HashSet<int> processedHealth = new();
-
-            foreach (Collider2D hit in hits)
-            {
-                PrototypeDestructibleVase vase = hit.GetComponentInParent<PrototypeDestructibleVase>();
-                if (vase != null)
-                {
-                    vase.TakeDamage(35);
-                }
-
-                PrototypeHealth targetHealth = hit.GetComponentInParent<PrototypeHealth>();
-                if (targetHealth != null
-                    && targetHealth != health
-                    && processedHealth.Add(targetHealth.GetInstanceID())
-                    && IsInsideShovelArc(targetHealth.transform.position, facing, rules))
-                {
-                    targetHealth.TryDamage(new CombatDamageRequest(health.EntityId, health.Team, rules.ShovelDamage));
-                }
-            }
-
-            PrototypeArcFlash.Spawn(transform.position, facing, rules.ShovelReachMillimetres / 1000f);
-            GetComponent<SandboxActorVisual>()?.PlayMelee(facing);
-            return true;
+            return TryMeleeForTesting(weaponId);
         }
 
-        private bool IsInsideShovelArc(Vector3 targetPosition, Vector2 facing, CombatRules rules)
+        private bool IsInsideWeaponArc(
+            Vector3 targetPosition,
+            Vector2 facing,
+            SandboxWeaponDefinition weapon)
         {
             Vector2 origin = transform.position;
             return CombatMath.IsInsideArc(
@@ -657,8 +668,8 @@ namespace Sandsunder.Gameplay
                 Mathf.RoundToInt(facing.y * 1000f),
                 Mathf.RoundToInt(targetPosition.x * 1000f),
                 Mathf.RoundToInt(targetPosition.y * 1000f),
-                rules.ShovelReachMillimetres,
-                rules.ShovelArcCosinePermille);
+                weapon.ReachMillimetres,
+                weapon.ArcCosinePermille);
         }
 
         private void EnsureReferences()
@@ -950,10 +961,9 @@ namespace Sandsunder.Gameplay
         private float duration = 0.12f;
         private float remaining = 0.12f;
         private float startAngle;
-        private float sweepAngle = 180f;
+        private float sweepAngle = 90f;
         private Vector2 origin;
         private float radius;
-        private Vector2 baseDir;
 
         internal static void Spawn(Vector2 origin, Vector2 direction, float reach)
         {
@@ -974,8 +984,7 @@ namespace Sandsunder.Gameplay
             PrototypeArcFlash behavior = flash.AddComponent<PrototypeArcFlash>();
             behavior.origin = origin;
             behavior.radius = reach;
-            behavior.baseDir = direction;
-            behavior.startAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+            behavior.startAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 45f;
         }
 
         private void Update()
@@ -983,12 +992,13 @@ namespace Sandsunder.Gameplay
             remaining -= Time.deltaTime;
             float progress = 1f - (remaining / duration);
             
-            // Sweep rotation over 180 degrees!
+            // The visual sweep matches the authoritative 90-degree melee arc.
             float currentAngle = startAngle + (progress * sweepAngle);
             transform.rotation = Quaternion.Euler(0f, 0f, currentAngle);
             
             // Arc moves outward slightly during swing
-            transform.position = origin + (Vector2)(Quaternion.Euler(0f, 0f, currentAngle - 90f) * baseDir * (radius * 0.4f * progress));
+            Vector2 radial = Quaternion.Euler(0f, 0f, currentAngle) * Vector2.right;
+            transform.position = origin + (radial * (radius * 0.4f * progress));
 
             if (remaining <= 0f)
             {

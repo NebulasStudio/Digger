@@ -56,6 +56,13 @@ public sealed class TopDownPlayerController : MonoBehaviour
         get
         {
             EnsureRuntimeState();
+            if (rollMotion != null && rollMotion.IsActive)
+            {
+                return new Vector2(
+                    rollMotion.PositionXMillimetres / 1000f,
+                    rollMotion.PositionYMillimetres / 1000f);
+            }
+
             PlayerKinematicsState state = kinematics.State;
             return new Vector2(
                 state.PositionXMillimetres / 1000f,
@@ -63,34 +70,12 @@ public sealed class TopDownPlayerController : MonoBehaviour
         }
     }
 
-    private int currentDepth = 0;
-    private SpriteRenderer cachedRenderer;
+    public int CurrentDepth => DigDepthSystem.Instance?.CurrentDepth ?? 0;
 
-    public int CurrentDepth
-    {
-        get => currentDepth;
-        set
-        {
-            if (currentDepth != value)
-            {
-                currentDepth = value;
-                UpdateSubterraneanVisuals();
-            }
-        }
-    }
-
+    /// <summary>Compatibility entrypoint for authoritative scene interactions such as tunnel exits.</summary>
     public void SetDepth(int depth)
     {
-        CurrentDepth = depth;
-    }
-
-    private void UpdateSubterraneanVisuals()
-    {
-        var stealth = GetComponent<SubterraneanStealth>();
-        if (stealth != null)
-        {
-            stealth.SetDepthDirect(currentDepth);
-        }
+        DigDepthSystem.Instance?.SetAuthoritativeDepth(depth);
     }
 
     internal Vector2 CurrentMoveInput => moveInput;
@@ -216,7 +201,10 @@ public sealed class TopDownPlayerController : MonoBehaviour
         {
             Vector2 aim = aimArbiter.LastValidAim;
             bool rollingThisTick = rollMotion.IsActive;
-            Vector2 effectiveMove = (IsDiggingChanneling || rollingThisTick) ? Vector2.zero : moveInput;
+            bool modalBlocked = IsGameplayModalOpen();
+            Vector2 effectiveMove = (IsDiggingChanneling || rollingThisTick || modalBlocked)
+                ? Vector2.zero
+                : moveInput;
             PlayerKinematicsInput input = PlayerKinematicsInput.Create(
                 Mathf.RoundToInt(effectiveMove.x * PlayerKinematicsRules.AxisUnits),
                 Mathf.RoundToInt(effectiveMove.y * PlayerKinematicsRules.AxisUnits),
@@ -246,24 +234,12 @@ public sealed class TopDownPlayerController : MonoBehaviour
             return;
         }
 
+        // PlayerKinematics/CombatRollMotion are the sole movement authority. Rigidbody2D only
+        // projects their position so presentation and physics never integrate a second velocity.
         if (body != null)
         {
-            if (IsDiggingChanneling)
-            {
-                body.linearVelocity = Vector2.zero;
-            }
-            else if (rollMotion != null && rollMotion.IsActive)
-            {
-                Vector2 rollDir = moveInput.sqrMagnitude > 0.01f ? moveInput.normalized : AimDirection.normalized;
-                if (rollDir.sqrMagnitude <= 0.01f) rollDir = Vector2.right;
-                float speed = profile != null ? profile.BaseMoveSpeed : 5.5f;
-                body.linearVelocity = rollDir * (speed * 1.15f);
-            }
-            else
-            {
-                float speed = profile != null ? profile.BaseMoveSpeed : 5.5f;
-                body.linearVelocity = moveInput.normalized * speed;
-            }
+            body.linearVelocity = Vector2.zero;
+            body.MovePosition(AuthoritativeWorldPosition);
         }
     }
 
@@ -372,6 +348,15 @@ public sealed class TopDownPlayerController : MonoBehaviour
     private void ClearHeldInput()
     {
         moveInput = Vector2.zero;
+    }
+
+    private static bool IsGameplayModalOpen()
+    {
+        bool inventoryOpen = SandboxModernHUD.Instance != null
+            && SandboxModernHUD.Instance.InventoryController != null
+            && SandboxModernHUD.Instance.InventoryController.IsOpen;
+        bool shopOpen = SandboxShopPanel.Instance != null && SandboxShopPanel.Instance.IsOpen;
+        return inventoryOpen || shopOpen;
     }
 
     private void EnsureRuntimeState()

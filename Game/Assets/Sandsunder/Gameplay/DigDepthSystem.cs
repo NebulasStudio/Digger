@@ -1,12 +1,12 @@
 using System;
+using Sandsunder.Simulation;
 using UnityEngine;
 
 namespace Sandsunder.Gameplay
 {
     /// <summary>
-    /// Runtime owner of the player's excavation depth. It is ALWAYS a presentation-layer projection
-    /// of the server-owned dig state (see ADR-0001): the server decides depth; this system relays it
-    /// to the visuals and the stealth rules.
+    /// Unity adapter for the single, deterministic <see cref="PlayerDepthState"/>. The server-owned
+    /// cell depth is the only input; keyboard shortcuts and presentation code cannot raise depth.
     ///
     /// Reaching depth >= 2 takes the Nomad down to the subterranean level (-1). Depth 0 is the
     /// surface. The only consumer that decides the tunel layer is this system.
@@ -14,64 +14,77 @@ namespace Sandsunder.Gameplay
     [DefaultExecutionOrder(-10)]
     public sealed class DigDepthSystem : MonoBehaviour
     {
-        private const int SubterraneanThresholdDepth = 2;
-
         public static DigDepthSystem Instance { get; private set; }
 
-        public int CurrentDepth { get; private set; } = 0;
+        private readonly PlayerDepthState state = new();
 
-        /// <summary>True when the Nomad is subsurface (depth >= 1), i.e. fully underground.</summary>
-        public bool IsSubterranean => CurrentDepth >= 1;
+        public int CurrentDepth => state.CurrentDepth;
+
+        public bool IsSubterranean => state.IsSubterranean;
+        public ulong StateHash => state.ComputeStateHash();
 
         public event Action<int> DepthChanged;
         public event Action<bool> SubterraneanChanged;
 
         private void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                enabled = false;
+                return;
+            }
+
             Instance = this;
         }
 
-        private void Update()
+        private void OnDestroy()
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift) || Input.GetKeyDown(KeyCode.Space))
+            if (Instance == this)
             {
-                if (IsSubterranean)
-                {
-                    ReturnToSurface();
-                }
-                else
-                {
-                    RaiseDepth(2);
-                }
+                Instance = null;
             }
         }
 
-        /// <summary>Called by the dig channel completion (server-authorized depth gain).</summary>
-        public void RaiseDepth(int by = 2)
+        /// <summary>Consumes a server-authorized cell result without allowing local depth inflation.</summary>
+        public bool ApplyAuthoritativeDigResult(DigResult result)
         {
-            SetDepth(CurrentDepth + by);
+            return result.Changed && ApplyAuthoritativeCellDepth(result.NewDepth);
         }
 
-        public void SetDepth(int depth)
+        public bool ApplyAuthoritativeCellDepth(int depth)
         {
-            depth = Mathf.Max(0, depth);
-            if (depth == CurrentDepth) return;
+            bool wasSubterranean = IsSubterranean;
+            if (!state.ApplyAuthoritativeCellDepth(depth))
+            {
+                return false;
+            }
 
-            bool wasSub = IsSubterranean;
-            CurrentDepth = depth;
-            DepthChanged?.Invoke(depth);
+            PublishState(wasSubterranean);
+            return true;
+        }
 
-            if (wasSub != IsSubterranean)
+        /// <summary>Authoritative snapshot/reconnect entrypoint. Local input must never call this.</summary>
+        public bool SetAuthoritativeDepth(int depth)
+        {
+            bool wasSubterranean = IsSubterranean;
+            if (!state.SetAuthoritativeDepth(depth))
+            {
+                return false;
+            }
+
+            PublishState(wasSubterranean);
+            return true;
+        }
+
+        private void PublishState(bool wasSubterranean)
+        {
+            DepthChanged?.Invoke(CurrentDepth);
+
+            if (wasSubterranean != IsSubterranean)
             {
                 NotifyLayerTransition();
                 SubterraneanChanged?.Invoke(IsSubterranean);
             }
-        }
-
-        /// <summary>Depth required to leave the tunnels back to surface level 0.</summary>
-        public void ReturnToSurface()
-        {
-            SetDepth(0);
         }
 
         private void NotifyLayerTransition()

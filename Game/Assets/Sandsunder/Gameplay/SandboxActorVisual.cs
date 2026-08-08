@@ -33,6 +33,9 @@ namespace Sandsunder.Gameplay
         private NomadAnimator nomadAnimator;
 
         [SerializeField]
+        private SpitterAnimator spitterAnimator;
+
+        [SerializeField]
         private TopDownPlayerController controller;
 
         [SerializeField]
@@ -44,6 +47,7 @@ namespace Sandsunder.Gameplay
         private Sprite bodySprite;
         private Transform bodyRoot;
         private Transform weaponRoot;
+        private Transform weaponSpriteRoot;
         private Animator animator;
         private RuntimeAnimatorController runtimeAnimatorController;
         private Vector3 previousWorldPosition;
@@ -108,15 +112,11 @@ namespace Sandsunder.Gameplay
                             : "Assets/Sandsunder/Art/Generated/NomadAnimatorController.controller");
             }
 #endif
-            if (animator != null)
-            {
-                animator.runtimeAnimatorController = runtimeAnimatorController;
-                // Enable Animator ONLY for hostile mobs (Spitter) so player bodySprite nomad_32.png stays 100% intact
-                animator.enabled = hostile && runtimeAnimatorController != null;
-            }
-
-            bodySprite = body;
             EnsureHierarchy();
+            EnsureAnimationDriver();
+
+            animator.runtimeAnimatorController = runtimeAnimatorController;
+            animator.enabled = runtimeAnimatorController != null;
 
             if (body == null && !hostile)
             {
@@ -129,6 +129,11 @@ namespace Sandsunder.Gameplay
                 }
 #endif
             }
+
+            // The approved nomad_32 sprite is the stable fallback. When an approved controller is
+            // available, its clips own the body renderer; this fallback is restored only when the
+            // Animator is absent or disabled.
+            bodySprite = body;
 
             bodyRenderer.sprite = body != null
                 ? body
@@ -150,14 +155,19 @@ namespace Sandsunder.Gameplay
             weaponRenderer.enabled = weaponRenderer.sprite != null;
             bodyRenderer.transform.localScale = Vector3.one;
             shadowRenderer.transform.localScale = new Vector3(0.95f, 0.42f, 1f);
-            weaponRenderer.transform.localScale = new Vector3(0.42f, 0.42f, 1f);
+            ApplyWeaponVisualProfile(hostile ? string.Empty : "shovel.default");
 
             bodyRoot.localPosition = new Vector3(0f, 0.16f, 0f);
-            shadowRenderer.transform.localPosition = new Vector3(0f, -0.27f, 0f);
+            shadowRenderer.transform.localPosition = new Vector3(0f, -0.15f, 0f);
             shadowRenderer.transform.localScale = new Vector3(0.95f, 0.42f, 1f);
-            weaponRoot.localPosition = new Vector3(0.06f, 0.02f, 0f);
+            weaponRoot.localPosition = new Vector3(0.08f, 0.05f, 0f);
             previousWorldPosition = transform.position;
             initialized = true;
+            SpriteRenderer physicalRenderer = GetComponent<SpriteRenderer>();
+            if (physicalRenderer != null && physicalRenderer != bodyRenderer && physicalRenderer != weaponRenderer)
+            {
+                physicalRenderer.enabled = false;
+            }
             ApplySorting();
         }
 
@@ -169,18 +179,37 @@ namespace Sandsunder.Gameplay
             }
         }
 
+        /// <summary>
+        /// Applies the current aim to the visual-only weapon attachment. Kept public so editor
+        /// tooling and deterministic presentation tests do not need to invoke MonoBehaviour ticks.
+        /// </summary>
+        public void RefreshAttachmentPose()
+        {
+            EnsureHierarchy();
+            ApplyFacing();
+        }
+
         public void PlayFire(Vector2 direction)
         {
             SetAimDirection(direction);
             recoilRemaining = 0.10f;
-            if (weaponAnimator != null) weaponAnimator.PlayFire();
+            if (hostile)
+            {
+                spitterAnimator?.PlayCharge();
+            }
+            else
+            {
+                nomadAnimator?.PlayShoot();
+                weaponAnimator?.PlayFire();
+            }
         }
 
         public void PlayMelee(Vector2 direction)
         {
             SetAimDirection(direction);
             meleeRemaining = 0.18f;
-            if (weaponAnimator != null) weaponAnimator.PlaySwing();
+            nomadAnimator?.PlayMelee();
+            weaponAnimator?.PlaySwing();
         }
 
         public void PlayRoll(Vector2 direction)
@@ -188,11 +217,34 @@ namespace Sandsunder.Gameplay
             SetAimDirection(direction);
             rollRemaining = RollVisualDuration;
             afterimageCountdown = 0f;
+            nomadAnimator?.SetRolling(true);
         }
 
         public void PlayHit()
         {
             hitRemaining = 0.13f;
+            if (!hostile)
+            {
+                nomadAnimator?.PlayHurt();
+            }
+        }
+
+        /// <summary>Public visual API for Spitter telegraph state; does not affect combat authority.</summary>
+        public void SetSpitterCharging(bool charging)
+        {
+            if (hostile)
+            {
+                spitterAnimator?.SetCharging(charging);
+            }
+        }
+
+        /// <summary>Public visual API for Spitter death; presentation only, never changes health state.</summary>
+        public void PlaySpitterDeath()
+        {
+            if (hostile)
+            {
+                spitterAnimator?.PlayDeath();
+            }
         }
 
         public void SetVisible(bool visible)
@@ -252,19 +304,22 @@ namespace Sandsunder.Gameplay
             {
                 nomadAnimator.SetMoving(walking && !hostile ? 1f : 0f);
                 nomadAnimator.SetRolling(rollRemaining > 0f);
+                nomadAnimator.SetDigging(controller != null && controller.IsDiggingChanneling);
                 nomadAnimator.SetStealthed(stealthed && !hostile);
             }
 
+            bool animatorOwnsBodySprite = animator != null
+                && animator.enabled
+                && animator.runtimeAnimatorController != null;
             if (bodyRenderer != null && bodySprite != null)
             {
                 if (stealthed && !hostile)
                 {
-                    bodyRenderer.sprite = bodySprite;
+                    if (!animatorOwnsBodySprite) bodyRenderer.sprite = bodySprite;
                     bodyRenderer.color = new Color(0.2f, 0.9f, 1.0f, 0.75f);
                 }
-                else if (!hostile)
+                else if (!hostile && !animatorOwnsBodySprite)
                 {
-                    // Strict Nomad Invariance: Always render official nomad_32.png without sprite sheet slicing artifacts
                     bodyRenderer.sprite = bodySprite;
                     bodyRenderer.color = Color.white;
                 }
@@ -300,12 +355,25 @@ namespace Sandsunder.Gameplay
                 if (icon != null)
                 {
                     weaponRenderer.sprite = icon;
+                    ApplyWeaponVisualProfile(itemId);
                     weaponRenderer.enabled = true;
                     return;
                 }
             }
 
             weaponRenderer.enabled = false;
+        }
+
+        private void ApplyWeaponVisualProfile(string itemId)
+        {
+            float scale = itemId switch
+            {
+                "shovel.default" => 0.68f,
+                "sword.scimitar" => 0.70f,
+                "rifle.brass" => 0.72f,
+                _ => 0.55f
+            };
+            weaponRenderer.transform.localScale = new Vector3(scale, scale, 1f);
         }
 
         private void ApplyFacing()
@@ -328,7 +396,7 @@ namespace Sandsunder.Gameplay
                 weaponRenderer.flipY = false;
                 weaponRoot.localRotation = Quaternion.Euler(0f, 0f, angle);
             }
-            weaponRenderer.transform.localPosition = new Vector3(0.08f, 0f, 0f);
+            weaponRenderer.transform.localPosition = Vector3.zero;
         }
 
         private void ApplyActionAnimation()
@@ -337,15 +405,6 @@ namespace Sandsunder.Gameplay
             bool isSubterranean = isShiftHeld || (controller != null && controller.CurrentDepth > 0);
             bool isMoving = controller != null && controller.CurrentMoveInput.sqrMagnitude > 0.01f;
             bool isDigging = controller != null && controller.IsDiggingChanneling;
-
-            // Set Animator parameters dynamically
-            if (animator != null && animator.runtimeAnimatorController != null)
-            {
-                animator.SetBool("IsMoving", isMoving);
-                animator.SetBool("IsRolling", rollRemaining > 0f);
-                animator.SetBool("IsDigging", isDigging);
-                animator.SetFloat("Speed", controller != null ? controller.CurrentMoveInput.magnitude : 0f);
-            }
 
             if (rollRemaining > 0f)
             {
@@ -409,8 +468,13 @@ namespace Sandsunder.Gameplay
                 bodyRoot.localPosition = new Vector3(0f, 0.16f + spitterJumpY, 0f);
             }
 
-            weaponRoot.localPosition = new Vector3(0.22f - (recoil * 0.10f), 0.03f, 0f);
-            weaponRoot.localRotation *= Quaternion.Euler(0f, 0f, melee * (explicitAim.x >= 0f ? -42f : 42f));
+            // weaponRoot is the stable hand anchor. Recoil and swing are child offsets so that no
+            // later presentation pass can move the attachment away from (+/-0.08, 0.05).
+            weaponRenderer.transform.localPosition = new Vector3(-(recoil * 0.10f), 0f, 0f);
+            weaponRenderer.transform.localRotation = Quaternion.Euler(
+                0f,
+                0f,
+                melee * (explicitAim.x >= 0f ? -42f : 42f));
 
             Color bodyColor = Color.white;
             if (hitRemaining > 0f)
@@ -446,27 +510,33 @@ namespace Sandsunder.Gameplay
                         : visualRoot.Find("Body");
                 weaponRoot = weaponRoot != null
                     ? weaponRoot
+                    : visualRoot.Find("Weapon");
+                weaponSpriteRoot = weaponSpriteRoot != null
+                    ? weaponSpriteRoot
                     : weaponRenderer != null
                         ? weaponRenderer.transform
-                        : visualRoot.Find("Weapon");
+                        : weaponRoot != null
+                            ? weaponRoot.Find("Sprite")
+                            : null;
             }
 
             visualRoot = GetOrCreateChild(transform, "VisualRoot");
             Transform shadowRoot = GetOrCreateChild(visualRoot, "Shadow");
             bodyRoot = GetOrCreateChild(visualRoot, "Body");
             weaponRoot = GetOrCreateChild(visualRoot, "Weapon");
+            weaponSpriteRoot = GetOrCreateChild(weaponRoot, "Sprite");
             shadowRenderer = GetOrAddRenderer(shadowRoot);
             bodyRenderer = GetOrAddRenderer(bodyRoot);
-            weaponRenderer = GetOrAddRenderer(weaponRoot);
+            weaponRenderer = GetOrAddRenderer(weaponSpriteRoot);
 
             // Frame-player for weapon action animations (idle/fire/reload/swing). It is driven by
             // PlayFire/PlayMelee/PlayRoll and is a no-op until animation frames are assigned.
             if (weaponAnimator == null)
             {
-                weaponAnimator = weaponRoot.GetComponent<WeaponAnimator>();
+                weaponAnimator = weaponSpriteRoot.GetComponent<WeaponAnimator>();
                 if (weaponAnimator == null)
                 {
-                    weaponAnimator = weaponRoot.gameObject.AddComponent<WeaponAnimator>();
+                    weaponAnimator = weaponSpriteRoot.gameObject.AddComponent<WeaponAnimator>();
                 }
             }
 
@@ -479,9 +549,19 @@ namespace Sandsunder.Gameplay
                 }
             }
 
-            // NomadAnimator drives the AnimatorController (Idle/Walk/Run/Roll/Dig/StealthCrouch)
-            // from combat/movement state. Attached next to the Animator on the body root.
-            if (nomadAnimator == null)
+            if (animator.runtimeAnimatorController == null && runtimeAnimatorController != null)
+            {
+                animator.runtimeAnimatorController = runtimeAnimatorController;
+            }
+
+            initialized = true;
+        }
+
+        private void EnsureAnimationDriver()
+        {
+            // Awake runs before Configure, so drivers must be attached only after the actor role
+            // is known. This prevents a Spitter from inheriting Nomad-only controller parameters.
+            if (!hostile && nomadAnimator == null)
             {
                 nomadAnimator = bodyRoot.GetComponent<NomadAnimator>();
                 if (nomadAnimator == null)
@@ -490,12 +570,15 @@ namespace Sandsunder.Gameplay
                 }
             }
 
-            if (animator.runtimeAnimatorController == null && runtimeAnimatorController != null)
+            if (hostile && spitterAnimator == null)
             {
-                animator.runtimeAnimatorController = runtimeAnimatorController;
+                spitterAnimator = bodyRoot.GetComponent<SpitterAnimator>();
+                if (spitterAnimator == null)
+                {
+                    spitterAnimator = bodyRoot.gameObject.AddComponent<SpitterAnimator>();
+                }
+                spitterAnimator.Configure(GetComponent<PrototypeHealth>());
             }
-
-            initialized = true;
         }
 
         private static Transform GetOrCreateChild(Transform parent, string childName)

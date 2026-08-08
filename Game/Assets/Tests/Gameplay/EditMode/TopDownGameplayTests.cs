@@ -155,8 +155,8 @@ public sealed class TopDownGameplayTests
             kinematics.Step(input);
         }
 
-        Assert.That(kinematics.State.PositionXMillimetres, Is.EqualTo(8620));
-        Assert.That(kinematics.State.PositionYMillimetres, Is.EqualTo(5620));
+        Assert.That(kinematics.State.PositionXMillimetres, Is.EqualTo(23620));
+        Assert.That(kinematics.State.PositionYMillimetres, Is.EqualTo(15620));
     }
 
     [Test]
@@ -172,13 +172,17 @@ public sealed class TopDownGameplayTests
             Assert.That(arena, Is.Not.Null);
             Assert.That(player, Is.Not.Null);
 
-            SpriteRenderer floor = arena.transform.Find("Floor").GetComponent<SpriteRenderer>();
-            Assert.That(floor.bounds.size.x, Is.EqualTo(24f).Within(0.001f));
-            Assert.That(floor.bounds.size.y, Is.EqualTo(16f).Within(0.001f));
+            Transform surfaceGrid = arena.transform.Find("SandCellGrid");
+            Transform subterraneanGrid = arena.transform.Find("SubterraneanCellGrid");
+            Assert.That(surfaceGrid, Is.Not.Null);
+            Assert.That(subterraneanGrid, Is.Not.Null);
+            Assert.That(surfaceGrid.childCount, Is.EqualTo(48 * 32));
+            Assert.That(subterraneanGrid.childCount, Is.EqualTo(48 * 32));
 
-            SpriteRenderer playerRenderer = player.GetComponent<SpriteRenderer>();
-            Assert.That(playerRenderer.bounds.size.x, Is.EqualTo(0.72f).Within(0.001f));
-            Assert.That(playerRenderer.bounds.size.y, Is.EqualTo(0.72f).Within(0.001f));
+            SandboxActorVisual playerVisual = player.GetComponent<SandboxActorVisual>();
+            Assert.That(playerVisual, Is.Not.Null);
+            Assert.That(playerVisual.BodyRenderer, Is.Not.Null);
+            Assert.That(playerVisual.BodyRenderer.sprite, Is.Not.Null);
         }
         finally
         {

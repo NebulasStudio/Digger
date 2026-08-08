@@ -1,4 +1,5 @@
 using UnityEngine;
+using Sandsunder.Simulation;
 
 namespace Sandsunder.Gameplay
 {
@@ -21,6 +22,7 @@ namespace Sandsunder.Gameplay
 
         private SpriteRenderer[] cachedRenderers;
         private int[] baseSortingOrders;
+        private Color[] baseColors;
         private bool isStealthed;
 
         /// <summary>True while the Nomad is underground and immune to surface attacks.</summary>
@@ -43,20 +45,10 @@ namespace Sandsunder.Gameplay
             }
         }
 
-        public void SetDepthDirect(int depth)
-        {
-            ApplyDepth(depth);
-        }
-
         private void Start()
         {
-            // Ensure Nomad starts with 100% full real colors on surface
             CacheRenderers();
-            for (int i = 0; i < cachedRenderers.Length; i++)
-            {
-                if (cachedRenderers[i] != null) cachedRenderers[i].color = Color.white;
-            }
-            ApplyDepth(0);
+            ApplyDepth(DigDepthSystem.Instance?.CurrentDepth ?? 0, force: true);
         }
 
         private void OnDepthChanged(int depth)
@@ -64,10 +56,10 @@ namespace Sandsunder.Gameplay
             ApplyDepth(depth);
         }
 
-        private void ApplyDepth(int depth)
+        private void ApplyDepth(int depth, bool force = false)
         {
-            bool stealth = depth >= 2;
-            if (stealth == isStealthed) return;
+            bool stealth = depth >= PlayerDepthState.SubterraneanThresholdDepth;
+            if (!force && stealth == isStealthed) return;
             isStealthed = stealth;
 
             CacheRenderers();
@@ -84,7 +76,7 @@ namespace Sandsunder.Gameplay
                 }
                 else
                 {
-                    renderer.color = Color.white;
+                    renderer.color = baseColors[i];
                     renderer.sortingOrder = baseSortingOrders[i];
                 }
             }
@@ -95,9 +87,11 @@ namespace Sandsunder.Gameplay
             if (cachedRenderers != null && cachedRenderers.Length > 0) return;
             cachedRenderers = GetComponentsInChildren<SpriteRenderer>(includeInactive: true);
             baseSortingOrders = new int[cachedRenderers.Length];
+            baseColors = new Color[cachedRenderers.Length];
             for (int i = 0; i < cachedRenderers.Length; i++)
             {
                 baseSortingOrders[i] = cachedRenderers[i].sortingOrder;
+                baseColors[i] = cachedRenderers[i].color;
             }
         }
     }

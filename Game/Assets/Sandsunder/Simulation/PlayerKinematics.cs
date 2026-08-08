@@ -16,8 +16,8 @@ namespace Sandsunder.Simulation
             ticksPerSecond: 60,
             speedMillimetresPerSecond: 5200,
             aimDeadZoneUnits: 200,
-            arenaHalfWidthMillimetres: 9000,
-            arenaHalfHeightMillimetres: 6000,
+            arenaHalfWidthMillimetres: 24000,
+            arenaHalfHeightMillimetres: 16000,
             collisionRadiusMillimetres: 380);
 
         public PlayerKinematicsRules(

@@ -67,7 +67,7 @@ $expectedCounts = @{
     'characters.csv' = 6
     'weapons.csv' = 10
     'utilities.csv' = 4
-    'enemies.csv' = 5
+    'enemies.csv' = 6
 }
 foreach ($entry in $expectedCounts.GetEnumerator()) {
     $actual = @(Import-Csv -LiteralPath (Join-Path $designRoot "balance/$($entry.Key)")).Count

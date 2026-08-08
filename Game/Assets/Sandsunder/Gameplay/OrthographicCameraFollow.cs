@@ -196,6 +196,11 @@ namespace Sandsunder.Gameplay
             {
                 controlledCamera = GetComponent<Camera>();
             }
+
+            if (controlledCamera != null)
+            {
+                controlledCamera.orthographic = true;
+            }
         }
 
         private static float ClampWithCollapsedRange(float value, float minimum, float maximum)

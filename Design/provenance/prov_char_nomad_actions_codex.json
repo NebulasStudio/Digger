@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "provenance_id": "prov_char_nomad_actions_codex",
+  "asset_id": "char_nomad_actions_codex",
+  "status": "in_review",
+  "source": {
+    "type": "generated_ai",
+    "provider": "OpenAI",
+    "model": "built-in image_gen",
+    "job_id": "exec-d4da2d37-ac12-4f8a-8fa6-b274aaf8c6e8",
+    "created_at": "2026-08-08",
+    "style_formula_ref": "SB-FORMULA-1",
+    "reference_inputs": [
+      { "uri": "Game/Assets/Sandsunder/Art/Runtime/Characters/nomad_32.png", "sha256": "3bd1b7189c1c40df4b20f87438fc4c1bbc577c4a198757cb32195d91d5df2d8c" },
+      { "uri": "Game/Assets/Sandsunder/Art/Runtime/Animations/nomad_walk.png", "sha256": "ee783cd064dd126a504b836b83fce716630d3881c4414f3bfd77cf6de19936ad" }
+    ]
+  },
+  "processing": [],
+  "rights": { "commercial_use_reviewed": false, "third_party_ip_reviewed": false, "steam_ai_disclosure": "required" },
+  "review": { "style": "pending", "readability": "pending", "technical": "failed_alpha_check", "human_approver": null, "notes": "References were attached and weapons remain separated. Candidate must be normalized and human-approved before runtime use." },
+  "artifacts": [{ "kind": "original", "path_or_uri": "Game/Assets/Sandsunder/Art/Source/ImageGen/nomad_actions_codex_master.png", "sha256": "94fb17798c3abf7c0e6684efd1d61777b4ae957344cdb18925d6a6cada91d0e0", "content_type": "image/png", "published": false }]
+}

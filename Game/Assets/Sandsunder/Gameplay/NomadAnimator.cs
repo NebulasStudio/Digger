@@ -13,40 +13,59 @@ namespace Sandsunder.Gameplay
     public sealed class NomadAnimator : MonoBehaviour
     {
         private Animator animator;
+        private int speedHash;
+        private int movingHash;
+        private int rollingHash;
+        private int diggingHash;
+        private int stealthedHash;
+        private int attackHash;
+        private int shootHash;
+        private int hurtHash;
+        private int deathHash;
 
         private void Awake()
         {
             animator = GetComponent<Animator>();
+            speedHash = Animator.StringToHash("Speed");
+            movingHash = Animator.StringToHash("IsMoving");
+            rollingHash = Animator.StringToHash("IsRolling");
+            diggingHash = Animator.StringToHash("IsDigging");
+            stealthedHash = Animator.StringToHash("IsStealthed");
+            attackHash = Animator.StringToHash("Attack");
+            shootHash = Animator.StringToHash("Shoot");
+            hurtHash = Animator.StringToHash("Hurt");
+            deathHash = Animator.StringToHash("Death");
         }
 
         public void SetMoving(float speed)
         {
             if (!IsControllerReady) return;
-            animator.SetFloat("Speed", speed);
-            animator.SetBool("IsMoving", speed > 0.01f);
+            SetFloatIfPresent(speedHash, speed);
+            SetBoolIfPresent(movingHash, speed > 0.01f);
         }
 
         public void SetRolling(bool active)
         {
             if (!IsControllerReady) return;
-            animator.SetBool("IsRolling", active);
+            SetBoolIfPresent(rollingHash, active);
         }
 
         public void SetDigging(bool active)
         {
             if (!IsControllerReady) return;
-            animator.SetBool("IsDigging", active);
+            SetBoolIfPresent(diggingHash, active);
         }
 
         public void SetStealthed(bool active)
         {
             if (!IsControllerReady) return;
-            // "IsStealthed" gates the StealthCrouch state (added in the SpriteSheetImporter pass).
-            if (HasParameter("IsStealthed"))
-            {
-                animator.SetBool("IsStealthed", active);
-            }
+            SetBoolIfPresent(stealthedHash, active);
         }
+
+        public void PlayMelee() => SetTriggerIfPresent(attackHash);
+        public void PlayShoot() => SetTriggerIfPresent(shootHash);
+        public void PlayHurt() => SetTriggerIfPresent(hurtHash);
+        public void PlayDeath() => SetTriggerIfPresent(deathHash);
 
         /// <summary>
         /// True when the Animator drives a real controller. Avoids the "Animator is not playing an
@@ -62,11 +81,26 @@ namespace Sandsunder.Gameplay
             }
         }
 
-        private bool HasParameter(string name)
+        private void SetBoolIfPresent(int hash, bool value)
+        {
+            if (IsControllerReady && HasParameter(hash)) animator.SetBool(hash, value);
+        }
+
+        private void SetFloatIfPresent(int hash, float value)
+        {
+            if (IsControllerReady && HasParameter(hash)) animator.SetFloat(hash, value);
+        }
+
+        private void SetTriggerIfPresent(int hash)
+        {
+            if (IsControllerReady && HasParameter(hash)) animator.SetTrigger(hash);
+        }
+
+        private bool HasParameter(int hash)
         {
             foreach (AnimatorControllerParameter parameter in animator.parameters)
             {
-                if (parameter.name == name) return true;
+                if (parameter.nameHash == hash) return true;
             }
             return false;
         }

@@ -11,78 +11,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d862f1188d204f4aacec0edbc46ba27f, type: 3}
   m_Name: AnimationBuildManifest
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   sheets:
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/shovel_idle.png
-    clipName: Shovel_Idle
-    columns: 4
-    rows: 1
-    pixelsPerUnit: 64
-    fps: 12
-    loop: true
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/shovel_swing.png
-    clipName: Shovel_Swing
-    columns: 4
-    rows: 1
-    pixelsPerUnit: 64
-    fps: 12
-    loop: false
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/rifle_idle.png
-    clipName: Rifle_Idle
-    columns: 4
-    rows: 1
-    pixelsPerUnit: 64
-    fps: 12
-    loop: true
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/rifle_fire.png
-    clipName: Rifle_Fire
-    columns: 4
-    rows: 1
-    pixelsPerUnit: 64
-    fps: 12
-    loop: false
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/rifle_reload.png
-    clipName: Rifle_Reload
-    columns: 3
-    rows: 3
-    pixelsPerUnit: 64
-    fps: 12
-    loop: false
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/shotgun_idle.png
-    clipName: Shotgun_Idle
-    columns: 4
-    rows: 1
-    pixelsPerUnit: 64
-    fps: 12
-    loop: true
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/blaster_idle.png
-    clipName: Blaster_Idle
-    columns: 4
-    rows: 1
-    pixelsPerUnit: 64
-    fps: 12
-    loop: true
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/blaster_fire.png
-    clipName: Blaster_Fire
-    columns: 4
-    rows: 1
-    pixelsPerUnit: 64
-    fps: 12
-    loop: false
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/scimitar_swing.png
-    clipName: Scimitar_Swing
-    columns: 4
-    rows: 1
-    pixelsPerUnit: 64
-    fps: 12
-    loop: false
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/nomad_stealth_crouch.png
-    clipName: Nomad_StealthCrouch
-    columns: 4
-    rows: 2
-    pixelsPerUnit: 64
-    fps: 12
-    loop: true
   - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/nomad_walk.png
     clipName: Nomad_Walk
     columns: 4
@@ -93,14 +23,14 @@ MonoBehaviour:
   - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/nomad_run.png
     clipName: Nomad_Run
     columns: 4
-    rows: 4
+    rows: 2
     pixelsPerUnit: 32
     fps: 12
     loop: true
   - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/nomad_dig.png
     clipName: Nomad_Dig
     columns: 4
-    rows: 4
+    rows: 2
     pixelsPerUnit: 32
     fps: 12
     loop: false
@@ -130,82 +60,5 @@ MonoBehaviour:
     columns: 4
     rows: 2
     pixelsPerUnit: 32
-    fps: 12
-    loop: false
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/spitter_idle.png
-    clipName: Spitter_Idle
-    columns: 4
-    rows: 2
-    pixelsPerUnit: 64
-    fps: 12
-    loop: true
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/spitter_death_burst.png
-    clipName: Spitter_DeathBurst
-    columns: 4
-    rows: 2
-    pixelsPerUnit: 64
-    fps: 12
-    loop: false
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/spitter_charge.png
-    clipName: Spitter_Charge
-    columns: 4
-    rows: 4
-    pixelsPerUnit: 192
-    fps: 12
-    loop: false
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/scout_run.png
-    clipName: Scout_Run
-    columns: 4
-    rows: 2
-    pixelsPerUnit: 512
-    fps: 12
-    loop: true
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/wanderer_walk.png
-    clipName: Wanderer_Walk
-    columns: 4
-    rows: 1
-    pixelsPerUnit: 1024
-    fps: 12
-    loop: true
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/rogue_roll.png
-    clipName: Rogue_Roll
-    columns: 4
-    rows: 2
-    pixelsPerUnit: 512
-    fps: 12
-    loop: false
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/explorer_dig.png
-    clipName: Explorer_Dig
-    columns: 4
-    rows: 2
-    pixelsPerUnit: 512
-    fps: 12
-    loop: false
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/chest_open.png
-    clipName: Chest_Open
-    columns: 4
-    rows: 1
-    pixelsPerUnit: 64
-    fps: 12
-    loop: false
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/vase_break.png
-    clipName: Vase_Break
-    columns: 4
-    rows: 1
-    pixelsPerUnit: 64
-    fps: 12
-    loop: false
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/pickup_bob.png
-    clipName: Pickup_Bob
-    columns: 4
-    rows: 1
-    pixelsPerUnit: 64
-    fps: 12
-    loop: true
-  - sourcePath: Assets/Sandsunder/Art/Runtime/Animations/rifle_reload_v2.png
-    clipName: Rifle_Reload_V2
-    columns: 4
-    rows: 1
-    pixelsPerUnit: 64
     fps: 12
     loop: false

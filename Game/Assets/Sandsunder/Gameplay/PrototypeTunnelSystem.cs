@@ -41,6 +41,7 @@ namespace Sandsunder.Gameplay
                 mainCamera.backgroundColor = targetBgColor;
             }
             RenderSettings.ambientLight = targetAmbient;
+            ApplyLayerVisuals(CurrentLayer);
         }
 
         private void Update()
@@ -63,28 +64,35 @@ namespace Sandsunder.Gameplay
                 case MatrixLayerDepth.Surface_L0:
                     targetBgColor = new Color(0.86f, 0.70f, 0.43f);
                     targetAmbient = new Color(0.95f, 0.85f, 0.70f);
-                    SetSurfaceGridAlpha(1.0f);
                     break;
                 case MatrixLayerDepth.Subterranean_L1:
                     targetBgColor = new Color(0.18f, 0.14f, 0.10f);
                     targetAmbient = new Color(0.40f, 0.32f, 0.22f);
-                    SetSurfaceGridAlpha(0.35f);
                     break;
                 case MatrixLayerDepth.RuneVault_L2:
                     targetBgColor = new Color(0.05f, 0.12f, 0.18f);
                     targetAmbient = new Color(0.15f, 0.45f, 0.55f);
-                    SetSurfaceGridAlpha(0.15f);
                     break;
             }
+
+            ApplyLayerVisuals(targetLayer);
 
             SandboxVisualEffects.SpawnDust(Vector3.zero, 30, new Color(0.20f, 0.90f, 0.85f, 0.8f));
         }
 
-        private static void SetSurfaceGridAlpha(float alpha)
+        private static void ApplyLayerVisuals(MatrixLayerDepth layer)
         {
-            GameObject surfaceGrid = GameObject.Find("SandCellGrid");
-            if (surfaceGrid == null) return;
-            foreach (SpriteRenderer sr in surfaceGrid.GetComponentsInChildren<SpriteRenderer>())
+            float surfaceAlpha = layer == MatrixLayerDepth.Surface_L0 ? 1f : .08f;
+            float subterraneanAlpha = layer == MatrixLayerDepth.Surface_L0 ? 0f : 1f;
+            SetGridAlpha("SandCellGrid", surfaceAlpha);
+            SetGridAlpha("SubterraneanCellGrid", subterraneanAlpha);
+        }
+
+        private static void SetGridAlpha(string gridName, float alpha)
+        {
+            GameObject grid = GameObject.Find(gridName);
+            if (grid == null) return;
+            foreach (SpriteRenderer sr in grid.GetComponentsInChildren<SpriteRenderer>(includeInactive: true))
             {
                 if (sr == null) continue;
                 Color c = sr.color;

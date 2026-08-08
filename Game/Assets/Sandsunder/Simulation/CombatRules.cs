@@ -23,7 +23,7 @@ namespace Sandsunder.Simulation
             shovelDamage: 12,
             shovelCooldownTicks: 33,
             shovelReachMillimetres: 1400,
-            shovelArcCosinePermille: 500,
+            shovelArcCosinePermille: SandboxGameplayCatalog.NinetyDegreeArcCosinePermille,
             digStrikesRequired: 3,
             rollDurationTicks: 18,
             rollDistanceMillimetres: 1200,

@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -38,11 +39,19 @@ namespace Sandsunder.Editor
         {
             if (manifest == null || manifest.Sheets == null || manifest.Sheets.Length == 0) return;
 
+            var clipNames = new HashSet<string>();
+
             foreach (AnimationBuildManifest.SheetEntry entry in manifest.Sheets)
             {
                 if (entry == null || string.IsNullOrEmpty(entry.sourcePath) || string.IsNullOrEmpty(entry.clipName))
                 {
                     continue;
+                }
+
+                if (!clipNames.Add(entry.clipName))
+                {
+                    throw new System.InvalidOperationException(
+                        $"Animation manifest contains more than one entry for clip '{entry.clipName}'. Each generated clip must have one source sheet.");
                 }
 
                 Sprite[] frames = SpriteSheetImporter.SliceSheet(
@@ -51,14 +60,7 @@ namespace Sandsunder.Editor
                     entry.rows,
                     entry.pixelsPerUnit);
 
-                AnimationClip clip = SpriteSheetImporter.BuildClip(frames, entry.clipName, entry.fps);
-                if (!entry.loop)
-                {
-                    clip.wrapMode = WrapMode.Once;
-                    var settings = AnimationUtility.GetAnimationClipSettings(clip);
-                    settings.loopTime = false;
-                    AnimationUtility.SetAnimationClipSettings(clip, settings);
-                }
+                AnimationClip clip = SpriteSheetImporter.BuildClip(frames, entry.clipName, entry.fps, entry.loop);
 
                 Debug.Log($"[AnimationClipBuilder] Built {entry.clipName} ({frames.Length} frames) from {entry.sourcePath}");
             }

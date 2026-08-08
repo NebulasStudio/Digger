@@ -84,6 +84,8 @@ reports/
 # Private Higgsfield originals and non-shipping intermediates
 /Game/Assets/Sandsunder/Art/Source/Higgsfield/
 /Game/Assets/Sandsunder/Art/Source/Higgsfield.meta
+/Game/Assets/Sandsunder/Art/Source/ImageGen/
+/Game/Assets/Sandsunder/Art/Source/ImageGen.meta
 /Game/Assets/Sandsunder/Art/Runtime/sand_tile.png
 /Game/Assets/Sandsunder/Art/Runtime/sand_tile.png.meta
 /Game/Assets/Sandsunder/Art/Runtime/ruin_tile.png

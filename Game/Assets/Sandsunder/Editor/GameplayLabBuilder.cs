@@ -39,8 +39,11 @@ public static class GameplayLabBuilder
 
         Sprite squareSprite = LoadOrCreateGreyboxSprite();
         SandboxArtSet art = SandboxArtAssetFactory.LoadOrCreate();
+        GameObject depthSystem = new(nameof(DigDepthSystem));
+        DigDepthSystem depthAuthority = depthSystem.AddComponent<DigDepthSystem>();
         CreateArena(squareSprite, art);
         GameObject player = CreatePlayer(squareSprite, art);
+        player.GetComponent<SubterraneanOxygenController>().ConfigureDepthSource(depthAuthority);
         PrototypePlayerCombat playerCombat = player.GetComponent<PrototypePlayerCombat>();
         CreateCombatActors(squareSprite, art, playerCombat);
         CreateDigNodes(squareSprite, art);
@@ -51,7 +54,6 @@ public static class GameplayLabBuilder
 
         GameObject hudManagers = new("Gameplay HUD Managers");
         hudManagers.AddComponent<SandboxMinimap>();
-        hudManagers.AddComponent<SandboxInventoryWindow>();
         hudManagers.AddComponent<SandboxReloadBar>();
         playerController.Configure(profile, gameplayCamera);
 
@@ -140,17 +142,11 @@ public static class GameplayLabBuilder
                 SpriteRenderer sr = cell.AddComponent<SpriteRenderer>();
                 sr.sortingOrder = inRuinSanctuary ? -930 : -1000;
 
-                if (inRuinSanctuary)
-                {
-                    sr.sprite = art.RuinTile;
-                    sr.color = Color.white;
-                }
-                else
-                {
-                    int variantIndex = Mathf.Abs((x * 37 + y * 17) % sandVariants.Length);
-                    sr.sprite = sandVariants[variantIndex] != null ? sandVariants[variantIndex] : art.SandTile;
-                    sr.color = Color.white;
-                }
+                int variantIndex = Mathf.Abs((x * 37 + y * 17) % sandVariants.Length);
+                sr.sprite = sandVariants[variantIndex] != null ? sandVariants[variantIndex] : art.SandTile;
+                sr.color = inRuinSanctuary
+                    ? new Color(0.82f, 0.74f, 0.62f, 1f)
+                    : Color.white;
 
                 // 2. Subterranean Cell Tile (Tunnels Layer -1)
                 GameObject subCell = new($"SubCell_{x}_{y}");
@@ -172,7 +168,7 @@ public static class GameplayLabBuilder
             arena.transform,
             sortingOrder: -900);
         rune.transform.position = new Vector3(0f, 0f, 0f);
-        rune.transform.localScale = Vector3.one * 4.2f;
+        rune.transform.localScale = Vector3.one * 1.8f;
 
         // Expanded Outer Arena Boundary Ramparts (48x32m)
         CreateRuinWall("North Rampart", new Vector2(0f, 15.6f), new Vector2(48f, 1.2f), squareSprite, art.RuinTile, arena.transform);
@@ -199,13 +195,14 @@ public static class GameplayLabBuilder
     private static GameObject CreatePlayer(Sprite squareSprite, SandboxArtSet art)
     {
         GameObject player = new("Player");
-        player.transform.position = Vector3.zero;
+        player.transform.position = new Vector3(-4f, -2f, 0f);
 
         player.AddComponent<Rigidbody2D>();
         player.AddComponent<CircleCollider2D>();
         player.AddComponent<TopDownPlayerController>();
         PrototypeHealth health = player.AddComponent<PrototypeHealth>();
         health.Configure(configuredEntityId: 1, configuredTeam: 0, configuredMaximumHealth: 100, shouldRespawn: false);
+        player.AddComponent<SubterraneanOxygenController>();
         PrototypePlayerCombat combat = player.AddComponent<PrototypePlayerCombat>();
         combat.Configure(entityId: 1);
 
@@ -213,7 +210,7 @@ public static class GameplayLabBuilder
         actorVisual.Configure(
             art.Nomad,
             art.Shadow,
-            art.Pistol,
+            art.Shovel,
             player.GetComponent<TopDownPlayerController>(),
             combat,
             isHostile: false,
@@ -230,12 +227,7 @@ public static class GameplayLabBuilder
 
     private static void CreateCombatActors(Sprite squareSprite, SandboxArtSet art, PrototypePlayerCombat target)
     {
-        Vector2[] positions =
-        {
-            new(-1.8f, 1.2f),
-            new(2.2f, 1.0f),
-            new(0f, -3.5f),
-        };
+        Vector2[] positions = { new(2.2f, 1.0f) };
 
         GameObject enemies = new("Dune Spitters");
         for (int index = 0; index < positions.Length; index++)
@@ -416,17 +408,8 @@ public static class GameplayLabBuilder
 
         PrototypePickup.Spawn(new Vector2(-1.5f, 0.6f), 101, "weapon.scimitar");
         PrototypePickup.Spawn(new Vector2(-0.5f, 0.6f), 102, "weapon.rifle");
-        PrototypePickup.Spawn(new Vector2(0.5f, 0.6f), 103, "weapon.shotgun");
-        PrototypePickup.Spawn(new Vector2(1.5f, 0.6f), 104, "weapon.blaster");
-        PrototypePickup.Spawn(new Vector2(2.5f, 0.6f), 105, "relic.cyan");
+        // The focused sandbox exposes only the starter shovel, scimitar and brass rifle.
 
-        // Sandstorm Golem Boss (Feature 3) — spawned north of the arena, away from the start zone.
-        GameObject golemRoot = new("Sandstorm Golem Boss");
-        golemRoot.transform.SetParent(interactiveRoot.transform, false);
-        golemRoot.transform.position = new Vector3(0f, 9f, 0f);
-        golemRoot.AddComponent<PrototypeHealth>();
-        golemRoot.AddComponent<Rigidbody2D>();
-        golemRoot.AddComponent<SandstormGolemAI>();
     }
 
     private static void CreateRuinWall(

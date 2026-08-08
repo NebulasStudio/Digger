@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0.0",
+  "provenance_id": "prov_char_nomad_walk_imagegen_candidate",
+  "asset_id": "char_nomad_walk_imagegen_candidate",
+  "status": "in_review",
+  "source": {
+    "type": "generated_ai",
+    "provider": "OpenAI",
+    "model": "built-in image_gen",
+    "model_version": null,
+    "job_id": "exec-2538aba5-880e-4832-a0a2-654e5b5810ff",
+    "seed": null,
+    "prompt": "Use case: stylized-concept. Asset type: Unity 2D pixel-art animation source sheet, candidate only. Image 1 is the authoritative Nomad identity and exact palette/proportion reference. Image 2 is the existing directional walk-cycle layout and motion-language reference. Create a clean 4 by 3 grid containing exactly twelve sequential south-facing walk-cycle frames of the same Nomad walking in place. Preserve the compact body proportions, face, cream-white hood, blue coat #3466B8, turquoise scarf #26B8C6, boots, outline thickness, and top-down three-quarter orientation from Image 1. The character must remain the same size and identity in all twelve cells. One coherent walk cycle with readable alternating foot contacts, subtle coat movement, and a stable bottom-center feet baseline. No turning, no camera movement, no pose duplication except where required to close the cycle. Modern chunky pixel art with a crisp 32x32 grid feel, selective sub-pixel highlights, and no texture filtering. Use bold, readable silhouettes with two-pixel deep umber outlines, angular desert-worn shapes, and restrained interior detail. Environments use warm ochre, sand, clay, and charcoal shadows; playable characters use cool turquoise, cobalt, cream, and coral contrasts; hazards, rare loot, and objectives use luminous acid-cyan signals. Keep a tense yet adventurous desert mood under flat directional sunlight, with high gameplay contrast, clean readable silhouettes, and a consistent top-down three-quarter perspective across all assets. Twelve equally sized cells, filled left-to-right and top-to-bottom, generous transparent-safe padding in every cell, identical scale and baseline. Perfectly flat solid #FF00FF chroma-key background. Full body visible in every frame; no weapons, tools, props, labels, borders, grid lines, text, watermarks, cast shadows, floor plane, detached coat pieces, extra limbs, cropped pixels, gradients, texture, or lighting variation in the magenta background. Do not use #FF00FF inside the character.",
+    "negative_prompt": null,
+    "style_formula_ref": "SB-FORMULA-1",
+    "created_at": "2026-08-08T11:55:13.0982387Z",
+    "reference_inputs": [
+      {
+        "uri": "Game/Assets/Sandsunder/Art/Runtime/Characters/nomad_32.png",
+        "owner": "NebulasStudio",
+        "license": "Project-owned internal canonical reference; commercial review pending",
+        "sha256": "3bd1b7189c1c40df4b20f87438fc4c1bbc577c4a198757cb32195d91d5df2d8c"
+      },
+      {
+        "uri": "Game/Assets/Sandsunder/Art/Runtime/Animations/nomad_walk.png",
+        "owner": "NebulasStudio",
+        "license": "Project-owned internal animation reference; commercial review pending",
+        "sha256": "ee783cd064dd126a504b836b83fce716630d3881c4414f3bfd77cf6de19936ad"
+      }
+    ]
+  },
+  "processing": [],
+  "rights": {
+    "commercial_use_reviewed": false,
+    "third_party_ip_reviewed": false,
+    "steam_ai_disclosure": "required",
+    "license_notes": "Original non-IP prompt using two internal project references. Human commercial-rights and Steam disclosure review remain mandatory."
+  },
+  "review": {
+    "style": "pending",
+    "readability": "pending",
+    "technical": "pending",
+    "human_approver": null,
+    "approved_at": null,
+    "notes": "Candidate only. References were attached as required. The cycle is visually cleaner than the first pilot but still requires exact identity, baseline, frame uniqueness, chroma-key and 32 PPU review before runtime use."
+  },
+  "artifacts": [
+    {
+      "kind": "original",
+      "path_or_uri": "Game/Assets/Sandsunder/Art/Source/ImageGen/nomad_walk_candidate_imagegen_20260808.png",
+      "sha256": "bfdff91bb5c40bf1e10ceff7d7cf7250d70ff864ecc863a67c84ae5861f7bd3d",
+      "content_type": "image/png",
+      "published": false
+    }
+  ]
+}

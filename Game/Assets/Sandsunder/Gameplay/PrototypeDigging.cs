@@ -53,7 +53,6 @@ namespace Sandsunder.Gameplay
             {
                 SandboxVisualEffects.SpawnDust(worldPos, 6, new Color(0.72f, 0.52f, 0.28f));
                 Vector2 cellCenter = new Vector2(Mathf.Floor(worldPos.x) + 0.5f, Mathf.Floor(worldPos.y) + 0.5f);
-                SandboxPitDecal.SpawnAt(cellCenter, result.NewDepth);
 
                 // Feature 1 — Dynamic Sand Excavation & Crepe Cracks:
                 // per-cell 3-stage overlay (Intact -> Cracked -> Opened/Pit) + live starburst cracks.
@@ -62,7 +61,10 @@ namespace Sandsunder.Gameplay
 
                 if (!string.IsNullOrEmpty(result.RevealedLootId))
                 {
-                    PrototypePickup.Spawn(worldPos, nextPickupId++, result.RevealedLootId);
+                    int lootDepth = result.NewDepth >= SandboxDungeonController.DungeonDepth
+                        ? SandboxDungeonController.DungeonDepth
+                        : SandboxDungeonController.SurfaceDepth;
+                    PrototypePickup.Spawn(worldPos, nextPickupId++, result.RevealedLootId, lootDepth);
                 }
             }
             return result;
@@ -72,6 +74,14 @@ namespace Sandsunder.Gameplay
         {
             Instance = this;
             EnsureGrid();
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Instance = null;
+            }
         }
 
         private void EnsureGrid()
@@ -165,15 +175,41 @@ namespace Sandsunder.Gameplay
     }
 
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(Collider2D))]
-    public sealed partial class PrototypePickup
+    [RequireComponent(typeof(CircleCollider2D))]
+    public sealed partial class PrototypePickup : ISandboxInteractable
     {
         private CombatPickupState state;
 
-        public string LootId => state?.LootId;
-        public bool IsCollected => state != null && state.IsCollected;
+        [SerializeField]
+        private int pickupId = -1;
 
-        public static PrototypePickup Spawn(Vector2 position, int pickupId, string lootId)
+        [SerializeField]
+        private string lootId;
+
+        [SerializeField]
+        private int requiredDepth;
+
+        public string LootId
+        {
+            get
+            {
+                EnsureState();
+                return state?.LootId ?? lootId;
+            }
+        }
+        public bool IsCollected => state != null && state.IsCollected;
+        public int RequiredDepth => requiredDepth;
+        public MatrixLayerDepth LootLayer => requiredDepth >= SandboxDungeonController.DungeonDepth
+            ? MatrixLayerDepth.Subterranean_L1
+            : MatrixLayerDepth.Surface_L0;
+        public MonoBehaviour InteractionComponent => this;
+        public Transform InteractionTransform => transform;
+
+        public static PrototypePickup Spawn(
+            Vector2 position,
+            int pickupId,
+            string lootId,
+            int configuredDepth = int.MinValue)
         {
             GameObject pickupObject = new($"Pickup {lootId}");
             pickupObject.transform.position = position;
@@ -211,19 +247,61 @@ namespace Sandsunder.Gameplay
             collider.isTrigger = true;
             collider.radius = 0.65f;
             PrototypePickup pickup = pickupObject.AddComponent<PrototypePickup>();
-            pickup.Configure(pickupId, lootId);
+            int spawnDepth = configuredDepth != int.MinValue
+                ? configuredDepth
+                : DigDepthSystem.Instance?.CurrentDepth ?? SandboxDungeonController.SurfaceDepth;
+            pickup.Configure(pickupId, lootId, spawnDepth);
+            // Register explicitly because EditMode construction does not guarantee an OnEnable
+            // callback; HashSet registration remains idempotent in player builds.
+            SandboxInteractionController.Register(pickup);
             SandboxPickupVisual pickupVisual = pickupObject.AddComponent<SandboxPickupVisual>();
             pickupVisual.Configure(renderer, color);
             return pickup;
         }
 
-        public void Configure(int pickupId, string lootId)
+        public void Configure(int pickupId, string lootId, int configuredDepth = SandboxDungeonController.SurfaceDepth)
         {
+            this.pickupId = pickupId;
+            this.lootId = lootId;
             state = new CombatPickupState(pickupId, lootId);
+            requiredDepth = configuredDepth >= SandboxDungeonController.DungeonDepth
+                ? SandboxDungeonController.DungeonDepth
+                : SandboxDungeonController.SurfaceDepth;
+        }
+
+        public bool IsInteractionAvailable(PrototypePlayerCombat player)
+        {
+            EnsureState();
+            if (player == null || state == null || state.IsCollected) return false;
+            int playerDepth = ResolveCurrentPlayerDepth();
+            return IsAvailableAtDepth(playerDepth);
+        }
+
+        public bool IsAvailableAtDepth(int playerDepth)
+        {
+            bool playerIsSubterranean = playerDepth >= SandboxDungeonController.DungeonDepth;
+            bool lootIsSubterranean = requiredDepth >= SandboxDungeonController.DungeonDepth;
+            return playerIsSubterranean == lootIsSubterranean;
+        }
+
+        public string GetInteractionPrompt(PrototypePlayerCombat player)
+        {
+            return string.IsNullOrWhiteSpace(LootId)
+                ? string.Empty
+                : $"E / GAMEPAD WEST: RACCOGLI {LootId}";
+        }
+
+        public bool TryInteract(PrototypePlayerCombat player)
+        {
+            if (!TryCollect(player)) return false;
+            if (Application.isPlaying) Destroy(gameObject);
+            else DestroyImmediate(gameObject);
+            return true;
         }
 
         public bool TryCollect(PrototypePlayerCombat player)
         {
+            EnsureState();
             if (player == null || state == null)
             {
                 return false;
@@ -231,7 +309,8 @@ namespace Sandsunder.Gameplay
 
             // Feature 2 — Interaction rule: surface chests/objects cannot be collected while the
             // Nomad is in the subterranean layer (-1). Return to Level 0 first.
-            if (DigDepthSystem.Instance != null && DigDepthSystem.Instance.IsSubterranean)
+            int playerDepth = ResolveCurrentPlayerDepth();
+            if (!IsAvailableAtDepth(playerDepth))
             {
                 return false;
             }
@@ -249,10 +328,60 @@ namespace Sandsunder.Gameplay
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            PrototypePlayerCombat player = other.GetComponentInParent<PrototypePlayerCombat>();
-            if (TryCollect(player))
+            // Collection is explicit through SandboxInteractionController (E / gamepad west).
+        }
+
+        private static int ResolveCurrentPlayerDepth()
+        {
+            if (SandboxDungeonController.Instance != null)
             {
-                Destroy(gameObject);
+                return SandboxDungeonController.Instance.CurrentDepth;
+            }
+
+            return DigDepthSystem.Instance?.CurrentDepth ?? SandboxDungeonController.SurfaceDepth;
+        }
+
+        private void OnEnable()
+        {
+            EnsureState();
+            SandboxInteractionController.Register(this);
+        }
+
+        private void OnDisable()
+        {
+            SandboxInteractionController.Unregister(this);
+        }
+
+        private void EnsureState()
+        {
+            if (state != null) return;
+
+            if (string.IsNullOrWhiteSpace(lootId))
+            {
+                const string pickupPrefix = "Pickup ";
+                if (gameObject.name.StartsWith(pickupPrefix, StringComparison.Ordinal))
+                {
+                    lootId = gameObject.name.Substring(pickupPrefix.Length).Trim();
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(lootId)) return;
+            if (pickupId < 0) pickupId = StablePickupId(lootId);
+            state = new CombatPickupState(pickupId, lootId);
+        }
+
+        private static int StablePickupId(string value)
+        {
+            unchecked
+            {
+                uint hash = 2166136261;
+                foreach (char character in value)
+                {
+                    hash ^= character;
+                    hash *= 16777619;
+                }
+
+                return (int)(hash & 0x7fffffff);
             }
         }
     }

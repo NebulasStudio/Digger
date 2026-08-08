@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0.0",
+  "provenance_id": "prov_char_nomad_walk_candidate",
+  "asset_id": "char_nomad_walk_candidate",
+  "status": "in_review",
+  "source": {
+    "type": "generated_ai",
+    "provider": "Higgsfield",
+    "model": "gpt_image_2",
+    "model_version": "GPT Image 2 medium 1k",
+    "job_id": "fa5b59d5-6714-4c2c-a38d-aadc28085f94",
+    "seed": null,
+    "prompt": "Game animation sprite sheet of the exact supplied Nomad, twelve sequential walk-cycle frames arranged left-to-right and top-to-bottom in a clean 4 by 3 grid. Preserve the same blue coat #3466B8, white hood, turquoise scarf #26B8C6, body proportions, face and silhouette in every frame. Full body visible in every cell, walking in place facing south, no weapons, no loose detached cloth, identical feet baseline and scale. Modern chunky pixel art with a crisp 32x32 grid feel, selective sub-pixel highlights, and no texture filtering. Use bold, readable silhouettes with two-pixel deep umber outlines, angular desert-worn shapes, and restrained interior detail. Environments use warm ochre, sand, clay, and charcoal shadows; playable characters use cool turquoise, cobalt, cream, and coral contrasts; hazards, rare loot, and objectives use luminous acid-cyan signals. Keep a tense yet adventurous desert mood under flat directional sunlight, with high gameplay contrast, clean readable silhouettes, and a consistent top-down three-quarter perspective across all assets. Solid uniform bright magenta #FF00FF background in every cell, no shadows cast on the background, no ground plane, nothing cropped at the edges, no labels, no borders.",
+    "negative_prompt": null,
+    "style_formula_ref": "SB-FORMULA-1",
+    "created_at": "2026-08-08T11:47:36.7570000Z",
+    "reference_inputs": [
+      {
+        "uri": "Game/Assets/Sandsunder/Art/Runtime/Characters/nomad_32.png",
+        "owner": "NebulasStudio",
+        "license": "Project-owned internal canonical reference; commercial review pending",
+        "sha256": "3bd1b7189c1c40df4b20f87438fc4c1bbc577c4a198757cb32195d91d5df2d8c"
+      }
+    ]
+  },
+  "processing": [],
+  "rights": {
+    "commercial_use_reviewed": false,
+    "third_party_ip_reviewed": false,
+    "steam_ai_disclosure": "required",
+    "license_notes": "Original non-IP prompt using the project-owned Nomad reference. Human commercial-rights and Steam disclosure review remain mandatory."
+  },
+  "review": {
+    "style": "pending",
+    "readability": "pending",
+    "technical": "pending",
+    "human_approver": null,
+    "approved_at": null,
+    "notes": "Candidate only. Visual audit found useful walk poses but face, scale and silhouette drift from nomad_32.png; do not import into the runtime controller until manually normalized and approved."
+  },
+  "artifacts": [
+    {
+      "kind": "original",
+      "path_or_uri": "Game/Assets/Sandsunder/Art/Source/Higgsfield/nomad_walk_candidate_hf_fa5b59d5.png",
+      "sha256": "998bfd218b3cf7b2429bfaea9b64677680c3dd7536fc6898c0b7658290f2cd2f",
+      "content_type": "image/png",
+      "published": false
+    }
+  ]
+}

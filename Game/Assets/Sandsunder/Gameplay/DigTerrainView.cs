@@ -25,8 +25,10 @@ namespace Sandsunder.Gameplay
         [SerializeField] private Sprite intactSprite;
         [SerializeField] private Sprite crackedSprite;
         [SerializeField] private Sprite openedSprite;
+        [SerializeField] private Sprite dungeonEntranceSprite;
 
         private readonly Dictionary<Vector2Int, SpriteRenderer> _overlays = new();
+        private readonly Dictionary<Vector2Int, SpriteRenderer> _specialTellMarkers = new();
         private readonly Stack<SpriteRenderer> _pool = new();
         private readonly List<Object> _runtimeAssets = new();
 
@@ -34,8 +36,16 @@ namespace Sandsunder.Gameplay
         private Sprite _intact;
         private Sprite _cracked;
         private Sprite _opened;
+        private Sprite _dungeonEntrance;
+        private Sprite _specialTell;
 
         public int ActiveCellCount => _overlays.Count;
+
+        public Sprite GetCellSpriteForTesting(Vector2 cellCenter)
+        {
+            Vector2Int key = new(Mathf.FloorToInt(cellCenter.x), Mathf.FloorToInt(cellCenter.y));
+            return _overlays.TryGetValue(key, out SpriteRenderer renderer) ? renderer.sprite : null;
+        }
 
         private void Awake()
         {
@@ -72,6 +82,7 @@ namespace Sandsunder.Gameplay
                     Release(existing);
                     _overlays.Remove(key);
                 }
+                RemoveSpecialTell(key);
                 return;
             }
 
@@ -90,6 +101,50 @@ namespace Sandsunder.Gameplay
             renderer.transform.localScale = new Vector3(1.25f, 1.25f, 1f);
             renderer.gameObject.SetActive(true);
             _overlays[key] = renderer;
+        }
+
+        public void SetSpecialTell(Vector2 cellCenter, bool visible)
+        {
+            Vector2Int key = new(Mathf.FloorToInt(cellCenter.x), Mathf.FloorToInt(cellCenter.y));
+            if (!visible)
+            {
+                RemoveSpecialTell(key);
+                return;
+            }
+
+            if (_specialTellMarkers.ContainsKey(key)) return;
+            GameObject markerObject = new("DungeonTellRune");
+            markerObject.transform.SetParent(transform, false);
+            markerObject.transform.position = new Vector3(cellCenter.x, cellCenter.y + 0.12f, 0f);
+            SpriteRenderer marker = markerObject.AddComponent<SpriteRenderer>();
+            marker.sprite = _specialTell ??= CreateRuntimeTellSprite();
+            marker.color = new Color(0.20f, 0.90f, 0.95f, 0.92f);
+            marker.sortingOrder = OverlaySortingOrder + 2;
+            _specialTellMarkers[key] = marker;
+        }
+
+        /// <summary>
+        /// Replaces the depth-two pit presentation with the discovered entrance landmark. This is
+        /// presentation-only; the authoritative dig result and dungeon instance remain elsewhere.
+        /// </summary>
+        public void SetDungeonEntrance(Vector2 cellCenter)
+        {
+            Vector2Int key = new(Mathf.FloorToInt(cellCenter.x), Mathf.FloorToInt(cellCenter.y));
+            Sprite stage = _dungeonEntrance ?? _opened ?? _cracked ?? _intact;
+            if (stage == null) return;
+
+            if (!_overlays.TryGetValue(key, out SpriteRenderer renderer))
+            {
+                renderer = _pool.Count > 0 ? _pool.Pop() : CreatePooledRenderer();
+                renderer.transform.position = new Vector3(cellCenter.x, cellCenter.y, 0f);
+                renderer.transform.localScale = new Vector3(1.25f, 1.25f, 1f);
+                renderer.gameObject.SetActive(true);
+                _overlays[key] = renderer;
+            }
+
+            renderer.sprite = stage;
+            renderer.gameObject.name = "DungeonEntranceOverlay";
+            RemoveSpecialTell(key);
         }
 
         private SpriteRenderer CreatePooledRenderer()
@@ -120,12 +175,14 @@ namespace Sandsunder.Gameplay
             _intact = intactSprite;
             _cracked = crackedSprite;
             _opened = openedSprite;
+            _dungeonEntrance = dungeonEntranceSprite;
 
             // Build-safe fallback for dynamically created scene roots. No UnityEditor API or
             // generated asset path is required in a player build.
             _intact ??= CreateRuntimeStageSprite(0);
             _cracked ??= CreateRuntimeStageSprite(1);
             _opened ??= CreateRuntimeStageSprite(2);
+            _dungeonEntrance ??= _opened;
         }
 
         /// <summary>Optional runtime wiring when the editor factory is unavailable.</summary>
@@ -137,6 +194,12 @@ namespace Sandsunder.Gameplay
             _intact = intact;
             _cracked = cracked;
             _opened = opened;
+        }
+
+        public void SetDungeonEntranceSprite(Sprite entrance)
+        {
+            dungeonEntranceSprite = entrance;
+            _dungeonEntrance = entrance;
         }
 
         private Sprite CreateRuntimeStageSprite(int stage)
@@ -178,6 +241,48 @@ namespace Sandsunder.Gameplay
             _runtimeAssets.Add(sprite);
             _runtimeAssets.Add(texture);
             return sprite;
+        }
+
+        private Sprite CreateRuntimeTellSprite()
+        {
+            const int Size = 8;
+            Texture2D texture = new(Size, Size, TextureFormat.RGBA32, mipChain: false)
+            {
+                filterMode = FilterMode.Point,
+                wrapMode = TextureWrapMode.Clamp,
+                hideFlags = HideFlags.HideAndDontSave,
+                name = "DungeonTellRuneRuntimeTexture"
+            };
+            Color clear = Color.clear;
+            Color cyan = new(0.20f, 0.90f, 0.95f, 1f);
+            for (int y = 0; y < Size; y++)
+            for (int x = 0; x < Size; x++)
+            {
+                int dx = Mathf.Abs(x - 3);
+                int dy = Mathf.Abs(y - 3);
+                texture.SetPixel(x, y, dx + dy == 2 || (x == 3 && y == 3) ? cyan : clear);
+            }
+            texture.Apply(updateMipmaps: false, makeNoLongerReadable: true);
+            Sprite sprite = Sprite.Create(texture, new Rect(0f, 0f, Size, Size), new Vector2(0.5f, 0.5f), 16f);
+            sprite.name = "DungeonTellRuneRuntimeSprite";
+            sprite.hideFlags = HideFlags.HideAndDontSave;
+            _runtimeAssets.Add(sprite);
+            _runtimeAssets.Add(texture);
+            return sprite;
+        }
+
+        private void RemoveSpecialTell(Vector2Int key)
+        {
+            if (!_specialTellMarkers.TryGetValue(key, out SpriteRenderer marker)) return;
+            _specialTellMarkers.Remove(key);
+            if (marker == null) return;
+            if (Application.isPlaying)
+            {
+                marker.gameObject.SetActive(false);
+                marker.transform.SetParent(null, worldPositionStays: true);
+                Destroy(marker.gameObject);
+            }
+            else DestroyImmediate(marker.gameObject);
         }
     }
 }

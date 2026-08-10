@@ -159,20 +159,22 @@ namespace Sandsunder.Tests.Gameplay
             try
             {
                 GameObject[] roots = scene.GetRootGameObjects();
-                GameObject arena = System.Array.Find(roots, root => root.name == "Arena");
+                GameObject surfaceWorld = System.Array.Find(roots, root => root.name == "SurfaceWorldRoot");
+                GameObject arena = surfaceWorld?.transform.Find("Arena")?.gameObject;
                 GameObject player = System.Array.Find(roots, root => root.name == "Player");
-                GameObject spitters = System.Array.Find(roots, root => root.name == "Dune Spitters");
-                GameObject digNodes = System.Array.Find(roots, root => root.name == "Dig Nodes");
+                GameObject spitters = surfaceWorld?.transform.Find("Dune Spitters")?.gameObject;
+                GameObject digNodes = surfaceWorld?.transform.Find("Dig Nodes")?.gameObject;
                 GameObject cameraObject = System.Array.Find(roots, root => root.name == "Gameplay Camera");
                 GameObject depthSystem = System.Array.Find(roots, root => root.name == nameof(DigDepthSystem));
+                GameObject dungeonSystem = System.Array.Find(roots, root => root.name == nameof(SandboxDungeonController));
 
+                Assert.That(surfaceWorld, Is.Not.Null);
                 Assert.That(arena, Is.Not.Null);
                 Transform surfaceGrid = arena.transform.Find("SandCellGrid");
                 Transform subterraneanGrid = arena.transform.Find("SubterraneanCellGrid");
                 Assert.That(surfaceGrid, Is.Not.Null);
-                Assert.That(subterraneanGrid, Is.Not.Null);
+                Assert.That(subterraneanGrid, Is.Null, "A full-map subterranean duplicate defeats the dungeon path.");
                 Assert.That(surfaceGrid.childCount, Is.EqualTo(48 * 32));
-                Assert.That(subterraneanGrid.childCount, Is.EqualTo(48 * 32));
                 SpriteRenderer sample = surfaceGrid.GetChild(0).GetComponent<SpriteRenderer>();
                 Assert.That(sample.sprite, Is.Not.Null);
                 Assert.That(sample.sprite.texture.filterMode, Is.EqualTo(FilterMode.Point));
@@ -182,6 +184,7 @@ namespace Sandsunder.Tests.Gameplay
                 Assert.That(playerVisual.BodyRenderer.sprite, Is.Not.Null);
                 Assert.That(player.GetComponent<SubterraneanOxygenController>(), Is.Not.Null);
                 Assert.That(depthSystem?.GetComponent<DigDepthSystem>(), Is.Not.Null);
+                Assert.That(dungeonSystem?.GetComponent<SandboxDungeonController>(), Is.Not.Null);
                 Assert.That(spitters.GetComponentsInChildren<PrototypeDuneSpitter>(true), Has.Length.EqualTo(1));
                 Assert.That(Object.FindObjectsByType<SandstormGolemAI>(FindObjectsSortMode.None), Is.Empty);
                 Assert.That(digNodes.GetComponentsInChildren<SandboxDigVisual>(true), Has.Length.EqualTo(6));

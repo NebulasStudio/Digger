@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0.0",
+  "provenance_id": "prov_sand_dungeon_entrance_codex",
+  "asset_id": "sand_dungeon_entrance_codex",
+  "status": "in_review",
+  "source": {
+    "type": "generated_ai",
+    "provider": "OpenAI",
+    "model": "built-in image_gen",
+    "job_id": "exec-d27f78f2-0ed5-42cd-94fc-1e2f85d8639d",
+    "created_at": "2026-08-10",
+    "style_formula_ref": "SB-FORMULA-1",
+    "prompt_summary": "Top-down collapsed sand dungeon entrance with descending sandstone steps and restrained cyan runes.",
+    "reference_inputs": [
+      {
+        "uri": "Game/Assets/Sandsunder/Art/Runtime/Terrain/sand_tile.png",
+        "sha256": "afd90df0b0c44caf175d291e817bac74c1626fde440e24b8763f1b9e3e707bb5"
+      },
+      {
+        "uri": "Game/Assets/Sandsunder/Art/Runtime/Environment/env_ruin_door_32.png",
+        "sha256": "37da251e5601e8b54b4afc8e7e3db56a3b9fdd62e72177bd14c9a36ebbec5b9d"
+      }
+    ]
+  },
+  "processing": [
+    {
+      "operation": "nearest_neighbor_resize",
+      "from": "1254x1254",
+      "to": "256x256",
+      "tool": "System.Drawing"
+    }
+  ],
+  "rights": {
+    "commercial_use_reviewed": false,
+    "third_party_ip_reviewed": false,
+    "steam_ai_disclosure": "required"
+  },
+  "review": {
+    "style": "pending_human",
+    "readability": "passed_internal_preview",
+    "technical": "passed_internal_preview",
+    "human_approver": null,
+    "notes": "Internal sandbox candidate only until human art, rights, and Steam disclosure review."
+  },
+  "artifacts": [
+    {
+      "kind": "source",
+      "path_or_uri": "Game/Assets/Sandsunder/Art/Review/CodexImage/DungeonDigStates/env_sand_dungeon_entrance_source.png",
+      "sha256": "dd0ffb210e9035528ea01c04cf090578cddc44bc23e0a967298d0e3149730b75",
+      "content_type": "image/png",
+      "published": false
+    },
+    {
+      "kind": "runtime_candidate",
+      "path_or_uri": "Game/Assets/Sandsunder/Art/Runtime/Terrain/env_sand_dungeon_entrance_256.png",
+      "sha256": "9364e594884ecaa6dc917f9b829cc9abc5947471046adf976de0b515e93ce947",
+      "content_type": "image/png",
+      "published": false
+    }
+  ]
+}

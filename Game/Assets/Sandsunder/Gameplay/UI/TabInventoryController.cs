@@ -17,8 +17,10 @@ namespace Sandsunder.Gameplay.UI
         private InputAction toggleAction;
         private InputAction closeAction;
         private Action refresh;
+        private GameObject previousSelection;
 
         public bool IsOpen { get; private set; }
+        public bool BlocksGameplayInput => IsOpen;
         public event Action<bool> OpenChanged;
 
         public void Setup(GameObject root, Selectable firstSelection, Action refreshContent)
@@ -71,19 +73,37 @@ namespace Sandsunder.Gameplay.UI
                 SandboxShopPanel.Instance.SetOpen(false);
             }
 
+            bool changed = IsOpen != open;
             IsOpen = open;
-            if (inventoryRoot != null) inventoryRoot.SetActive(open);
+            if (inventoryRoot != null)
+            {
+                inventoryRoot.SetActive(open);
+                if (inventoryRoot.TryGetComponent(out CanvasGroup canvasGroup))
+                {
+                    canvasGroup.interactable = open;
+                    canvasGroup.blocksRaycasts = open;
+                }
+            }
 
             if (open)
             {
+                previousSelection = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
                 refresh?.Invoke();
                 if (EventSystem.current != null && initialSelection != null)
                 {
                     EventSystem.current.SetSelectedGameObject(initialSelection.gameObject);
                 }
             }
+            else if (changed && EventSystem.current != null)
+            {
+                GameObject restore = previousSelection != null && previousSelection.activeInHierarchy
+                    ? previousSelection
+                    : null;
+                EventSystem.current.SetSelectedGameObject(restore);
+                previousSelection = null;
+            }
 
-            OpenChanged?.Invoke(open);
+            if (changed) OpenChanged?.Invoke(open);
         }
 
         private void EnsureActions()

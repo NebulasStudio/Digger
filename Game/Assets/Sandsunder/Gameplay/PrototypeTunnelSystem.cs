@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Sandsunder.Gameplay
 {
@@ -82,10 +83,30 @@ namespace Sandsunder.Gameplay
 
         private static void ApplyLayerVisuals(MatrixLayerDepth layer)
         {
+            bool surfaceVisible = layer == MatrixLayerDepth.Surface_L0;
+            if (SetRootActive("SurfaceWorldRoot", surfaceVisible)) return;
+
+            // Legacy-scene fallback kept for old test fixtures that predate the explicit roots.
             float surfaceAlpha = layer == MatrixLayerDepth.Surface_L0 ? 1f : .08f;
             float subterraneanAlpha = layer == MatrixLayerDepth.Surface_L0 ? 0f : 1f;
             SetGridAlpha("SandCellGrid", surfaceAlpha);
             SetGridAlpha("SubterraneanCellGrid", subterraneanAlpha);
+        }
+
+        private static bool SetRootActive(string rootName, bool active)
+        {
+            Scene scene = SceneManager.GetActiveScene();
+            if (!scene.IsValid() || !scene.isLoaded) return false;
+            GameObject[] roots = scene.GetRootGameObjects();
+            for (int index = 0; index < roots.Length; index++)
+            {
+                GameObject root = roots[index];
+                if (root == null || root.name != rootName) continue;
+                root.SetActive(active);
+                return true;
+            }
+
+            return false;
         }
 
         private static void SetGridAlpha(string gridName, float alpha)
@@ -101,15 +122,5 @@ namespace Sandsunder.Gameplay
             }
         }
 
-        public void ToggleNextLayer()
-        {
-            MatrixLayerDepth next = CurrentLayer switch
-            {
-                MatrixLayerDepth.Surface_L0 => MatrixLayerDepth.Subterranean_L1,
-                MatrixLayerDepth.Subterranean_L1 => MatrixLayerDepth.RuneVault_L2,
-                _ => MatrixLayerDepth.Surface_L0
-            };
-            TransitionToLayer(next);
-        }
     }
 }

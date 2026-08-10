@@ -22,6 +22,9 @@ namespace Sandsunder.Tests.Gameplay
             DestroyAll<SandboxModernHUD>();
             DestroyAll<PrototypeInventoryHUD>();
             DestroyAll<SandboxInventoryWindow>();
+            DestroyAll<TopDownPlayerController>();
+            DestroyAll<SandboxDungeonController>();
+            DestroyAll<DigDepthSystem>();
             DestroyAll<EventSystem>();
         }
 
@@ -32,6 +35,9 @@ namespace Sandsunder.Tests.Gameplay
             DestroyAll<SandboxModernHUD>();
             DestroyAll<PrototypeInventoryHUD>();
             DestroyAll<SandboxInventoryWindow>();
+            DestroyAll<TopDownPlayerController>();
+            DestroyAll<SandboxDungeonController>();
+            DestroyAll<DigDepthSystem>();
             DestroyAll<EventSystem>();
         }
 
@@ -50,7 +56,10 @@ namespace Sandsunder.Tests.Gameplay
             Assert.That(hud.HudCanvas.GetComponent<CanvasScaler>().uiScaleMode,
                 Is.EqualTo(CanvasScaler.ScaleMode.ScaleWithScreenSize));
             Assert.That(hud.HotbarSlotCount, Is.EqualTo(5));
+            Assert.That(hud.InventoryHotbarSlotCount, Is.EqualTo(5));
             Assert.That(hud.InventorySlotCount, Is.EqualTo(15));
+            Assert.That(hud.IsStaminaVisible, Is.True);
+            Assert.That(hud.IsDropActionVisible, Is.False);
             Assert.That(hud.PaperDollSprite, Is.Not.Null);
             Assert.That(hud.InventoryRoot.activeSelf, Is.False);
 
@@ -78,11 +87,33 @@ namespace Sandsunder.Tests.Gameplay
 
             Assert.That(hud.InventoryController.IsOpen, Is.True);
             Assert.That(hud.InventoryRoot.activeSelf, Is.True);
+            Assert.That(hud.InventoryController.BlocksGameplayInput, Is.True);
+            Assert.That(hud.InventoryRoot.GetComponent<CanvasGroup>().blocksRaycasts, Is.True);
             Assert.That(Time.timeScale, Is.EqualTo(.65f));
             Assert.That(hud.InspectedItemName, Is.EqualTo("STEEL SHOVEL"));
+            Assert.That(hud.InventoryRoot.GetComponentsInChildren<Button>(true)
+                .Any(button => button.name.Contains("Drop", StringComparison.OrdinalIgnoreCase)), Is.False);
 
             hud.InventoryController.SetOpen(false);
+            Assert.That(hud.InventoryController.BlocksGameplayInput, Is.False);
             Assert.That(Time.timeScale, Is.EqualTo(.65f));
+        }
+
+        [Test]
+        public void PlayerBinding_ProjectsHealthAndAlwaysReadableStamina()
+        {
+            GameObject playerObject = new("Player", typeof(Rigidbody2D), typeof(CircleCollider2D), typeof(PrototypeHealth), typeof(TopDownPlayerController));
+            TopDownPlayerController player = playerObject.GetComponent<TopDownPlayerController>();
+            Assert.That(player.TryConsumeStamina(25f), Is.True);
+
+            SandboxModernHUD hud = new GameObject("HUD Test").AddComponent<SandboxModernHUD>();
+            hud.BindPlayerController(player);
+            hud.RefreshAll();
+
+            Assert.That(hud.DisplayedHealthRatio, Is.EqualTo(1f).Within(.0001f));
+            Assert.That(hud.DisplayedStaminaRatio, Is.EqualTo(.75f).Within(.0001f));
+            Assert.That(hud.StaminaLabelText, Does.Contain("75 / 100"));
+            Assert.That(hud.IsStaminaVisible, Is.True);
         }
 
         [Test]
@@ -97,12 +128,46 @@ namespace Sandsunder.Tests.Gameplay
 
             provider.IsSubterranean = true;
             provider.Publish(25f, 100f);
-            hud.BindOxygenProvider(null);
-            hud.BindOxygenProvider(provider);
 
             Assert.That(hud.DisplayedOxygenRatio, Is.EqualTo(.25f).Within(.0001f));
             Assert.That(hud.IsOxygenVisible, Is.True);
+            Assert.That(hud.OxygenWarning, Is.EqualTo(SandboxHudOxygenWarning.Low));
+            Assert.That(hud.OxygenLabelText, Does.Contain("LOW"));
+
+            provider.Publish(10f, 100f);
+            Assert.That(hud.OxygenWarning, Is.EqualTo(SandboxHudOxygenWarning.Critical));
+            Assert.That(hud.OxygenLabelText, Does.Contain("CRITICAL"));
+
+            provider.IsSubterranean = false;
+            provider.Publish(9f, 100f);
+            Assert.That(hud.IsOxygenVisible, Is.False);
+            Assert.That(hud.OxygenWarning, Is.EqualTo(SandboxHudOxygenWarning.None));
             UnityEngine.Object.DestroyImmediate(provider.gameObject);
+        }
+
+        [Test]
+        public void DungeonBinding_ShowsObjectiveBannerOnlyBelowSurface()
+        {
+            DigDepthSystem depth = new GameObject("Depth").AddComponent<DigDepthSystem>();
+            SandboxDungeonController dungeon = new GameObject("Dungeon").AddComponent<SandboxDungeonController>();
+            dungeon.Configure(depth, null);
+            dungeon.ConfigureDungeon(71UL, new Sandsunder.Domain.GridCell(32, 32), Vector2.zero);
+            SandboxModernHUD hud = new GameObject("HUD Test").AddComponent<SandboxModernHUD>();
+            hud.BindDungeonController(dungeon);
+
+            Assert.That(hud.IsDungeonObjectiveVisible, Is.False);
+            Assert.That(dungeon.EnterDungeon(), Is.True);
+            Assert.That(hud.IsDungeonObjectiveVisible, Is.True);
+            Assert.That(hud.DungeonObjectiveText, Does.Contain("OBJECTIVE"));
+            Assert.That(hud.DepthLabelText, Does.Contain("L-1"));
+
+            Assert.That(dungeon.TryClaimFinalChest(out int awardedGold), Is.True);
+            Assert.That(awardedGold, Is.EqualTo(75));
+            Assert.That(hud.DungeonObjectiveText, Does.Contain("CHEST SECURED"));
+            Assert.That(hud.DungeonObjectiveText, Does.Contain("GOLD 75"));
+
+            Assert.That(dungeon.ExitDungeon(), Is.True);
+            Assert.That(hud.IsDungeonObjectiveVisible, Is.False);
         }
 
         [Test]

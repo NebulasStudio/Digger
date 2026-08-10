@@ -28,6 +28,14 @@ namespace Sandsunder.Gameplay.UI
         event Action<float, float> OxygenChanged;
     }
 
+    /// <summary>Presentation severity derived from the current underground oxygen ratio.</summary>
+    public enum SandboxHudOxygenWarning
+    {
+        None = 0,
+        Low = 1,
+        Critical = 2
+    }
+
     public readonly struct SandboxHudItemDefinition
     {
         public SandboxHudItemDefinition(

@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0.0",
+  "provenance_id": "prov_dig_sand_cracked_codex",
+  "asset_id": "dig_sand_cracked_codex",
+  "status": "in_review",
+  "source": {
+    "type": "generated_ai",
+    "provider": "OpenAI",
+    "model": "built-in image_gen",
+    "job_id": "exec-05fb5b57-83c8-4720-9e2d-147157874564",
+    "created_at": "2026-08-10",
+    "style_formula_ref": "SB-FORMULA-1",
+    "prompt_summary": "Top-down one-shovel sand depression with natural cracks, matching the canonical Sandsunder terrain palette.",
+    "reference_inputs": [
+      {
+        "uri": "Game/Assets/Sandsunder/Art/Runtime/Terrain/sand_tile.png",
+        "sha256": "afd90df0b0c44caf175d291e817bac74c1626fde440e24b8763f1b9e3e707bb5"
+      }
+    ]
+  },
+  "processing": [
+    {
+      "operation": "nearest_neighbor_resize",
+      "from": "1254x1254",
+      "to": "256x256",
+      "tool": "System.Drawing"
+    }
+  ],
+  "rights": {
+    "commercial_use_reviewed": false,
+    "third_party_ip_reviewed": false,
+    "steam_ai_disclosure": "required"
+  },
+  "review": {
+    "style": "pending_human",
+    "readability": "passed_internal_preview",
+    "technical": "passed_internal_preview",
+    "human_approver": null,
+    "notes": "Internal sandbox candidate only until human art, rights, and Steam disclosure review."
+  },
+  "artifacts": [
+    {
+      "kind": "source",
+      "path_or_uri": "Game/Assets/Sandsunder/Art/Review/CodexImage/DungeonDigStates/dig_sand_cracked_source.png",
+      "sha256": "b892f3701c471cf09156e38bd252347fe44b292fecfab8d34a94c95670af82de",
+      "content_type": "image/png",
+      "published": false
+    },
+    {
+      "kind": "runtime_candidate",
+      "path_or_uri": "Game/Assets/Sandsunder/Art/Runtime/Terrain/dig_sand_cracked_256.png",
+      "sha256": "718745cdbe31920e51d936528cf23ac474df325668c670294a2ee63332a23dc7",
+      "content_type": "image/png",
+      "published": false
+    }
+  ]
+}

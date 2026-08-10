@@ -571,8 +571,9 @@ namespace Sandsunder.Gameplay
             Vector2 targetDigPos = (Vector2)transform.position + (facing * 0.75f);
             if (PrototypeDigGridAuthority.Instance != null)
             {
-                DigResult result = PrototypeDigGridAuthority.Instance.TryDigAtWorldPosition(targetDigPos);
-                DigDepthSystem.Instance?.ApplyAuthoritativeDigResult(result);
+                // Excavation depth and player location are separate. Depth two reveals an entrance;
+                // only the contextual interaction may enter and start oxygen consumption.
+                PrototypeDigGridAuthority.Instance.TryDigAtWorldPosition(targetDigPos);
             }
 
             // Feature 2 — Subterranean Depth: reaching depth >= 2 drops the Nomad to Level -1.

@@ -27,6 +27,7 @@ namespace Sandsunder.Editor
         public Sprite DigIntact { get; set; }
         public Sprite DigCracked { get; set; }
         public Sprite DigOpened { get; set; }
+        public Sprite DungeonEntrance { get; set; }
         public Sprite SandTuft { get; set; }
         public Sprite Bone { get; set; }
         public Sprite CyanRune { get; set; }
@@ -56,6 +57,9 @@ namespace Sandsunder.Editor
             Sprite sandFinal = ImportTileOptional($"{RuntimeRoot}/Terrain/sand_final_basecolor.png", 256f) ?? sand;
             Sprite sandRolled = ImportTileOptional($"{RuntimeRoot}/Terrain/sand_rolled.png", 256f) ?? sand;
             Sprite ruin = ImportTile($"{RuntimeRoot}/Terrain/ruin_basecolor.png", pixelsPerUnit: 256f);
+            Sprite digCracked = ImportTileOptional($"{RuntimeRoot}/Terrain/dig_sand_cracked_256.png", 256f);
+            Sprite digOpened = ImportTileOptional($"{RuntimeRoot}/Terrain/dig_sand_opened_256.png", 256f);
+            Sprite dungeonEntrance = ImportTileOptional($"{RuntimeRoot}/Terrain/env_sand_dungeon_entrance_256.png", 256f);
             Sprite nomad = ImportSprite(
                 $"{RuntimeRoot}/Characters/nomad_32.png",
                 pixelsPerUnit: 32f,
@@ -99,12 +103,12 @@ namespace Sandsunder.Editor
                     ?? CreateProceduralSprite("SandstormMortar", 32, 14, 32f, DrawMortar),
                 Relic = ImportSpriteOptional($"{RuntimeRoot}/Environment/env_relic_chest_32.png", 32f, new Vector2(0.5f, 0.5f))
                     ?? CreateProceduralSprite("CyanRelic", 24, 24, 32f, DrawRelic),
-                DigIntact = CreateProceduralSprite("DigIntact", 32, 24, 32f,
-                    (pixels, width, height) => DrawDigNode(pixels, width, height, 0)),
-                DigCracked = CreateProceduralSprite("DigCracked", 32, 24, 32f,
+                DigIntact = sand,
+                DigCracked = digCracked ?? CreateProceduralSprite("DigCracked", 32, 32, 32f,
                     (pixels, width, height) => DrawDigNode(pixels, width, height, 1)),
-                DigOpened = CreateProceduralSprite("DigOpened", 32, 24, 32f,
+                DigOpened = digOpened ?? CreateProceduralSprite("DigOpened", 32, 32, 32f,
                     (pixels, width, height) => DrawDigNode(pixels, width, height, 2)),
+                DungeonEntrance = dungeonEntrance ?? digOpened,
                 SandTuft = CreateProceduralSprite("SandTuft", 20, 20, 32f, DrawSandTuft),
                 Bone = CreateProceduralSprite("DesertBone", 24, 16, 32f, DrawBone),
                 CyanRune = CreateProceduralSprite("CyanRune", 32, 32, 32f, DrawCyanRune),

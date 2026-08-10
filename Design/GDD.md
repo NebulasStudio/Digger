@@ -76,6 +76,7 @@ These metrics are frozen before mass map or animation production. A proposed cha
 
 - Gamepad: left stick move, right stick aim, right trigger fire, left trigger active, south button shovel, west button interact/reload, shoulder buttons swap/use utility, view button map.
 - Keyboard/mouse: physical `WASD` movement, pointer aim, left click fire, right click active, `Space` shovel, `E` interact/reload, number keys/scroll swap, `Q` utility, `Tab` map.
+- Local dungeon sandbox override (`ADR-0002`): `Tab` / gamepad start opens the adapted inventory; the map is temporarily unbound until the production input map is revisited.
 - All bindings are remappable. Simultaneous opposite movement axes resolve to zero; the most recently active aiming device owns aim until another device crosses its dead zone.
 - Focus loss does not pause a network match. The local player stops sending held actions; the server times out stale input safely.
 
@@ -135,6 +136,8 @@ Canonical foundation values live in `balance/*.csv`. Code must reference stable 
 The MVP has six characters. Each has one passive, one active, and one shovel trait. All share 100 HP, 5.2 m/s base movement, identical inventory, and the same rarity curve. Character differences are sidegrades with explicit trade-offs; see `balance/characters.csv`.
 
 Account persistence includes account XP, character mastery, cosmetics, challenges, and sidegrade unlock access. Matchmaking never considers paid ownership as power. No purchasable stat boosts, loot odds, respawns, inventory slots, or in-match currency enter the MVP.
+
+The local dungeon sandbox may display idempotent `treasure.gold` as a non-spendable match score under `ADR-0002`; it is not account currency, shop currency, progression, or competitive power.
 
 Rewards are granted only from a signed, idempotent server result. Leaving early grants already-earned non-exploitable participation XP only after the match closes; reconnect never creates a second reward path.
 

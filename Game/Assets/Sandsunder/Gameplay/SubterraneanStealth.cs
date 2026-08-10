@@ -23,6 +23,8 @@ namespace Sandsunder.Gameplay
         private SpriteRenderer[] cachedRenderers;
         private int[] baseSortingOrders;
         private Color[] baseColors;
+        private bool[] baseEnabled;
+        private Vector3[] baseLocalScales;
         private bool isStealthed;
 
         /// <summary>True while the Nomad is underground and immune to surface attacks.</summary>
@@ -56,6 +58,18 @@ namespace Sandsunder.Gameplay
             ApplyDepth(depth);
         }
 
+        private void Update()
+        {
+            if (!isStealthed || cachedRenderers == null) return;
+            float pulse = 0.58f + (Mathf.Sin(Time.unscaledTime * 4.5f) * 0.07f);
+            for (int index = 0; index < cachedRenderers.Length; index++)
+            {
+                SpriteRenderer renderer = cachedRenderers[index];
+                if (renderer == null || IsShadow(renderer)) continue;
+                renderer.color = new Color(silhouetteColor.r, silhouetteColor.g, silhouetteColor.b, pulse);
+            }
+        }
+
         private void ApplyDepth(int depth, bool force = false)
         {
             bool stealth = depth >= PlayerDepthState.SubterraneanThresholdDepth;
@@ -73,11 +87,22 @@ namespace Sandsunder.Gameplay
                     baseSortingOrders[i] = renderer.sortingOrder;
                     renderer.color = new Color(silhouetteColor.r, silhouetteColor.g, silhouetteColor.b, silhouetteOpacity);
                     renderer.sortingOrder = silhouetteSortingOrder;
+                    if (IsShadow(renderer))
+                    {
+                        renderer.enabled = false;
+                    }
+                    else
+                    {
+                        Vector3 scale = baseLocalScales[i];
+                        renderer.transform.localScale = new Vector3(scale.x, scale.y * 0.5f, scale.z);
+                    }
                 }
                 else
                 {
                     renderer.color = baseColors[i];
                     renderer.sortingOrder = baseSortingOrders[i];
+                    renderer.enabled = baseEnabled[i];
+                    renderer.transform.localScale = baseLocalScales[i];
                 }
             }
         }
@@ -88,11 +113,21 @@ namespace Sandsunder.Gameplay
             cachedRenderers = GetComponentsInChildren<SpriteRenderer>(includeInactive: true);
             baseSortingOrders = new int[cachedRenderers.Length];
             baseColors = new Color[cachedRenderers.Length];
+            baseEnabled = new bool[cachedRenderers.Length];
+            baseLocalScales = new Vector3[cachedRenderers.Length];
             for (int i = 0; i < cachedRenderers.Length; i++)
             {
                 baseSortingOrders[i] = cachedRenderers[i].sortingOrder;
                 baseColors[i] = cachedRenderers[i].color;
+                baseEnabled[i] = cachedRenderers[i].enabled;
+                baseLocalScales[i] = cachedRenderers[i].transform.localScale;
             }
+        }
+
+        private static bool IsShadow(SpriteRenderer renderer)
+        {
+            return renderer != null
+                && renderer.transform.name.IndexOf("shadow", System.StringComparison.OrdinalIgnoreCase) >= 0;
         }
     }
 }

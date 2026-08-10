@@ -45,29 +45,62 @@ namespace Sandsunder.Gameplay
                 return default;
             }
 
-            int gridX = Mathf.Clamp(Mathf.FloorToInt(worldPos.x) + 32, 0, 63);
-            int gridY = Mathf.Clamp(Mathf.FloorToInt(worldPos.y) + 32, 0, 63);
-
-            DigResult result = grid.Dig(new Domain.GridCell(gridX, gridY));
+            Domain.GridCell cell = WorldToGridCell(worldPos);
+            DigResult result = grid.Dig(cell);
             if (result.Changed)
             {
                 SandboxVisualEffects.SpawnDust(worldPos, 6, new Color(0.72f, 0.52f, 0.28f));
-                Vector2 cellCenter = new Vector2(Mathf.Floor(worldPos.x) + 0.5f, Mathf.Floor(worldPos.y) + 0.5f);
+                Vector2 cellCenter = GridCellToWorldCenter(cell);
 
                 // Feature 1 — Dynamic Sand Excavation & Crepe Cracks:
                 // per-cell 3-stage overlay (Intact -> Cracked -> Opened/Pit) + live starburst cracks.
                 DigTerrainView.Instance?.SetCellDepth(cellCenter, result.NewDepth);
                 SandCrepeCracksFX.Instance?.SpawnStarburst(cellCenter, result.NewDepth);
 
+                PublicDigCell publicCell = grid.GetPublicCell(cell);
+                DigTerrainView.Instance?.SetSpecialTell(
+                    cellCenter,
+                    result.NewDepth == 1 && publicCell.HasSpecialTell);
+
+                if (result.IsTunnel)
+                {
+                    // A depth-two excavation reveals a context-action entrance. It must never
+                    // mutate the player's depth or award the hidden marker as a pickup.
+                    SandboxDungeonController dungeon = SandboxDungeonController.EnsureInstance();
+                    SandboxDungeonLayout authorizedLayout = SandboxDungeonLayout.Create(unchecked((ulong)mapSeed), cell);
+                    dungeon.ConfigureDungeon(authorizedLayout, cellCenter);
+                    DigTerrainView.Instance?.SetDungeonEntrance(cellCenter);
+                    return result;
+                }
+
                 if (!string.IsNullOrEmpty(result.RevealedLootId))
                 {
-                    int lootDepth = result.NewDepth >= SandboxDungeonController.DungeonDepth
-                        ? SandboxDungeonController.DungeonDepth
-                        : SandboxDungeonController.SurfaceDepth;
-                    PrototypePickup.Spawn(worldPos, nextPickupId++, result.RevealedLootId, lootDepth);
+                    PrototypePickup.Spawn(
+                        cellCenter,
+                        nextPickupId++,
+                        result.RevealedLootId,
+                        SandboxDungeonController.SurfaceDepth);
                 }
             }
             return result;
+        }
+
+        public PublicDigCell GetPublicCellAtWorldPosition(Vector2 worldPos)
+        {
+            EnsureGrid();
+            return grid.GetPublicCell(WorldToGridCell(worldPos));
+        }
+
+        public static Domain.GridCell WorldToGridCell(Vector2 worldPos)
+        {
+            return new Domain.GridCell(
+                Mathf.Clamp(Mathf.FloorToInt(worldPos.x) + 32, 0, 63),
+                Mathf.Clamp(Mathf.FloorToInt(worldPos.y) + 32, 0, 63));
+        }
+
+        public static Vector2 GridCellToWorldCenter(Domain.GridCell cell)
+        {
+            return new Vector2(cell.X - 32 + 0.5f, cell.Y - 32 + 0.5f);
         }
 
         private void Awake()
@@ -251,6 +284,13 @@ namespace Sandsunder.Gameplay
                 ? configuredDepth
                 : DigDepthSystem.Instance?.CurrentDepth ?? SandboxDungeonController.SurfaceDepth;
             pickup.Configure(pickupId, lootId, spawnDepth);
+            Transform layerRoot = spawnDepth >= SandboxDungeonController.DungeonDepth
+                ? SandboxDungeonController.Instance?.DungeonRoot
+                : GameObject.Find("SurfaceWorldRoot")?.transform;
+            if (layerRoot != null)
+            {
+                pickupObject.transform.SetParent(layerRoot, worldPositionStays: true);
+            }
             // Register explicitly because EditMode construction does not guarantee an OnEnable
             // callback; HashSet registration remains idempotent in player builds.
             SandboxInteractionController.Register(pickup);

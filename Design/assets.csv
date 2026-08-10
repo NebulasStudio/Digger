@@ -36,6 +36,9 @@ tile_inner_sand,Inner ring traversable ground,tile,"dark glass-flecked scorched 
 tile_ruin_floor,Ruin interior traversable floor,tile,"cracked clay mosaic floor",1:1,SB-FORMULA-1,generate,NA,planned_placeholder,prov_tile_ruin_floor
 tile_ruin_wall,Ruin wall modular set,tile,"sun-baked geometric ruin wall",1:1,SB-FORMULA-1,generate,NA,planned_placeholder,prov_tile_ruin_wall
 atlas_dig_states,Authoritative dig-cell visual states,spritesheet,"intact cracked opened collapsed sand cells",1:1,SB-FORMULA-1,generate,1.0,planned_placeholder,prov_atlas_dig_states
+dig_sand_cracked_codex,One-shovel sand cell state,tile,"shallow excavated bowl with natural branching cracks",1:1,SB-FORMULA-1,generate,1.0,in_review,prov_dig_sand_cracked_codex
+dig_sand_opened_codex,Two-shovel sand cell state,tile,"deep opened pit with carved ledges and dark center",1:1,SB-FORMULA-1,generate,1.0,in_review,prov_dig_sand_opened_codex
+sand_dungeon_entrance_codex,Discovered dungeon entrance,tile,"collapsed sand opening with descending sandstone steps and cyan runes",1:1,SB-FORMULA-1,generate,1.0,in_review,prov_sand_dungeon_entrance_codex
 prop_chest,Public loot chest,sprite,"reinforced desert expedition chest",1:1,SB-FORMULA-1,generate,0.75,planned_placeholder,prov_prop_chest
 prop_buried_shrine,Buried Sigil source,sprite,"half-buried cyan desert shrine",1:1,SB-FORMULA-1,generate,1.6,planned_placeholder,prov_prop_buried_shrine
 prop_ritual_station,Ritual station objective,sprite,"tall cyan-ringed ritual station",1:1,SB-FORMULA-1,generate,2.0,planned_placeholder,prov_prop_ritual_station

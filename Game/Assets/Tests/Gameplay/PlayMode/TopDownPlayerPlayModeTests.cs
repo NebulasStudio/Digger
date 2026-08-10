@@ -223,13 +223,21 @@ public sealed class TopDownPlayerPlayModeTests
     {
         GameObject viewObject = new("Dig Terrain View Test");
         DigTerrainView view = viewObject.AddComponent<DigTerrainView>();
+        Sprite entrance = PrototypePixelArt.GetCachedSprite(
+            PrototypePixelKind.DigNode,
+            new Color(0.20f, 0.90f, 0.95f));
+        view.SetDungeonEntranceSprite(entrance);
 
         view.SetCellDepth(new Vector2(2.5f, -1.5f), 1);
+        view.SetSpecialTell(new Vector2(2.5f, -1.5f), true);
+        Assert.That(viewObject.transform.Find("DungeonTellRune"), Is.Not.Null);
         view.SetCellDepth(new Vector2(2.5f, -1.5f), 2);
         view.SetCellDepth(new Vector2(2.75f, -1.25f), 2);
 
         Assert.That(view.ActiveCellCount, Is.EqualTo(1));
-        Assert.That(viewObject.GetComponentsInChildren<SpriteRenderer>().Length, Is.EqualTo(1));
+        view.SetDungeonEntrance(new Vector2(2.5f, -1.5f));
+        Assert.That(view.GetCellSpriteForTesting(new Vector2(2.5f, -1.5f)), Is.SameAs(entrance));
+        Assert.That(viewObject.transform.Find("DungeonTellRune"), Is.Null);
 
         view.SetCellDepth(new Vector2(2.5f, -1.5f), 0);
         Assert.That(view.ActiveCellCount, Is.Zero);

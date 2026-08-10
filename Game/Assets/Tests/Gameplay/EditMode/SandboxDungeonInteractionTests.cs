@@ -1,5 +1,7 @@
 using NUnit.Framework;
+using Sandsunder.Domain;
 using Sandsunder.Gameplay;
+using Sandsunder.Simulation;
 using UnityEngine;
 
 namespace Sandsunder.Tests.Gameplay
@@ -74,6 +76,7 @@ namespace Sandsunder.Tests.Gameplay
         public void EnterAndExit_RestoreAuthoritativeDepthAndMatrixLayer()
         {
             TestRig rig = CreateRig();
+            rig.Dungeon.ConfigureDungeon(1337UL, new GridCell(32, 32), Vector2.zero);
 
             Assert.That(rig.Dungeon.EnterDungeon(), Is.True);
             Assert.That(rig.Depth.CurrentDepth, Is.EqualTo(SandboxDungeonController.DungeonDepth));
@@ -85,9 +88,28 @@ namespace Sandsunder.Tests.Gameplay
         }
 
         [Test]
+        public void TunnelLayer_DisablesSurfaceRenderersAndCollidersThenRestoresRoot()
+        {
+            TestRig rig = CreateRig();
+            GameObject surfaceRoot = new("SurfaceWorldRoot");
+            GameObject wall = new("Surface Wall");
+            wall.transform.SetParent(surfaceRoot.transform, false);
+            wall.AddComponent<BoxCollider2D>();
+            wall.AddComponent<SpriteRenderer>();
+
+            rig.Tunnel.TransitionToLayer(MatrixLayerDepth.Subterranean_L1);
+            Assert.That(surfaceRoot.activeSelf, Is.False);
+
+            rig.Tunnel.TransitionToLayer(MatrixLayerDepth.Surface_L0);
+            Assert.That(surfaceRoot.activeSelf, Is.True);
+            Object.DestroyImmediate(surfaceRoot);
+        }
+
+        [Test]
         public void LootSpawnedAtDepthTwo_RemainsReachableOnSubterraneanLayerOnly()
         {
             TestRig rig = CreateRig();
+            rig.Dungeon.ConfigureDungeon(1337UL, new GridCell(32, 32), new Vector2(-2f, 0f));
             PrototypePickup pickup = PrototypePickup.Spawn(
                 new Vector2(0.4f, 0f),
                 201,
@@ -107,10 +129,43 @@ namespace Sandsunder.Tests.Gameplay
                 $"playerNull={rig.Player == null}; collected={pickup.IsCollected}; "
                 + $"dungeonInstanceNull={SandboxDungeonController.Instance == null}; "
                 + $"instanceDepth={SandboxDungeonController.Instance?.CurrentDepth}; rigDepth={rig.Depth.CurrentDepth}");
-            rig.Interaction.RefreshTarget();
-            Assert.That(rig.Interaction.HasWorldTarget, Is.True);
-            Assert.That(rig.Interaction.TryInteractNearest(), Is.True);
+            Assert.That(pickup.TryCollect(rig.Player), Is.True);
             Assert.That(pickup.IsCollected, Is.True);
+        }
+
+        [Test]
+        public void SecondDig_RevealsContextEntranceWithoutAutoEntering_ThenEEnters()
+        {
+            TestRig rig = CreateRig();
+            PrototypeDigGridAuthority authority = new GameObject("Dig Authority Test")
+                .AddComponent<PrototypeDigGridAuthority>();
+            new GameObject("Dig Terrain Test").AddComponent<DigTerrainView>();
+
+            Vector2 digPosition = FindSpecialDigPosition(authority);
+            rig.Player.transform.position = digPosition;
+            DigResult first = authority.TryDigAtWorldPosition(digPosition);
+            foreach (PrototypePickup pickup in Object.FindObjectsByType<PrototypePickup>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None))
+            {
+                Object.DestroyImmediate(pickup.gameObject);
+            }
+
+            DigResult second = authority.TryDigAtWorldPosition(digPosition);
+
+            Assert.That(first.NewDepth, Is.EqualTo(1));
+            Assert.That(second.Changed, Is.True);
+            Assert.That(second.IsTunnel, Is.True);
+            Assert.That(second.NewDepth, Is.EqualTo(2));
+            Assert.That(rig.Depth.CurrentDepth, Is.EqualTo(SandboxDungeonController.SurfaceDepth));
+            Assert.That(rig.Dungeon.Runtime, Is.Not.Null);
+            Assert.That(rig.Dungeon.IsInsideDungeon, Is.False);
+
+            rig.Interaction.RefreshTarget();
+            Assert.That(rig.Interaction.CurrentTarget, Is.TypeOf<SandboxDungeonEntrance>());
+            Assert.That(rig.Interaction.TryInteractNearest(), Is.True);
+            Assert.That(rig.Depth.CurrentDepth, Is.EqualTo(SandboxDungeonController.DungeonDepth));
+            Assert.That(rig.Dungeon.IsInsideDungeon, Is.True);
         }
 
         private static TestRig CreateRig()
@@ -139,6 +194,23 @@ namespace Sandsunder.Tests.Gameplay
             DestroyAll<DigDepthSystem>();
             DestroyAll<PrototypeInventoryHUD>();
             DestroyAll<PrototypePlayerCombat>();
+            DestroyAll<PrototypeDigGridAuthority>();
+            DestroyAll<DigTerrainView>();
+            DestroyAll<SandboxModernHUD>();
+            DestroyAll<SandboxShopPanel>();
+        }
+
+        private static Vector2 FindSpecialDigPosition(PrototypeDigGridAuthority authority)
+        {
+            for (int y = -8; y <= 8; y++)
+            for (int x = -8; x <= 8; x++)
+            {
+                Vector2 position = new(x + 0.5f, y + 0.5f);
+                if (authority.GetPublicCellAtWorldPosition(position).HasSpecialTell) return position;
+            }
+
+            Assert.Fail("The deterministic sandbox grid did not expose a special dig cell.");
+            return default;
         }
 
         private static void DestroyAll<T>() where T : Object

@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0.0",
+  "provenance_id": "prov_dig_sand_opened_codex",
+  "asset_id": "dig_sand_opened_codex",
+  "status": "in_review",
+  "source": {
+    "type": "generated_ai",
+    "provider": "OpenAI",
+    "model": "built-in image_gen",
+    "job_id": "exec-b615f11d-5049-47cb-8c4e-950c39dc71a2",
+    "created_at": "2026-08-10",
+    "style_formula_ref": "SB-FORMULA-1",
+    "prompt_summary": "Top-down depth-two sand pit with carved ledges and dark umber center, matching canonical terrain.",
+    "reference_inputs": [
+      {
+        "uri": "Game/Assets/Sandsunder/Art/Runtime/Terrain/sand_tile.png",
+        "sha256": "afd90df0b0c44caf175d291e817bac74c1626fde440e24b8763f1b9e3e707bb5"
+      }
+    ]
+  },
+  "processing": [
+    {
+      "operation": "nearest_neighbor_resize",
+      "from": "1254x1254",
+      "to": "256x256",
+      "tool": "System.Drawing"
+    }
+  ],
+  "rights": {
+    "commercial_use_reviewed": false,
+    "third_party_ip_reviewed": false,
+    "steam_ai_disclosure": "required"
+  },
+  "review": {
+    "style": "pending_human",
+    "readability": "passed_internal_preview",
+    "technical": "passed_internal_preview",
+    "human_approver": null,
+    "notes": "Internal sandbox candidate only until human art, rights, and Steam disclosure review."
+  },
+  "artifacts": [
+    {
+      "kind": "source",
+      "path_or_uri": "Game/Assets/Sandsunder/Art/Review/CodexImage/DungeonDigStates/dig_sand_opened_source.png",
+      "sha256": "eb3fd23f24cef9004cc13bad7721d4d8f1ca45d31d40542df01044f25bf49bfc",
+      "content_type": "image/png",
+      "published": false
+    },
+    {
+      "kind": "runtime_candidate",
+      "path_or_uri": "Game/Assets/Sandsunder/Art/Runtime/Terrain/dig_sand_opened_256.png",
+      "sha256": "ab240de620543e2290c8622e8a4eb94f250f1d3f85802c59ea54d60faf6a7154",
+      "content_type": "image/png",
+      "published": false
+    }
+  ]
+}

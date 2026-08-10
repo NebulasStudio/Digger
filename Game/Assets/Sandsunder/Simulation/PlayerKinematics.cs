@@ -217,6 +217,22 @@ namespace Sandsunder.Simulation
             facingY = aimY;
         }
 
+        /// <summary>
+        /// Applies a server-authorized position snapshot, for example when entering or leaving a
+        /// dungeon instance. Input and presentation code must not use this as free teleportation.
+        /// </summary>
+        public bool SetAuthoritativePositionMillimetres(long xMillimetres, long yMillimetres)
+        {
+            long previousX = positionXMillimetres;
+            long previousY = positionYMillimetres;
+            positionXMillimetres = xMillimetres;
+            positionYMillimetres = yMillimetres;
+            movementRemainderX = 0;
+            movementRemainderY = 0;
+            ApplyArenaBounds();
+            return previousX != positionXMillimetres || previousY != positionYMillimetres;
+        }
+
         public ulong ComputeStateHash()
         {
             ulong hash = StableHash.Offset;

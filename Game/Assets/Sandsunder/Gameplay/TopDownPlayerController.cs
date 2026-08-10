@@ -72,10 +72,29 @@ public sealed class TopDownPlayerController : MonoBehaviour
 
     public int CurrentDepth => DigDepthSystem.Instance?.CurrentDepth ?? 0;
 
-    /// <summary>Compatibility entrypoint for authoritative scene interactions such as tunnel exits.</summary>
-    public void SetDepth(int depth)
+    /// <summary>Projects a server-authorized location snapshot into deterministic movement state.</summary>
+    public bool SetAuthoritativeWorldPosition(Vector2 worldPosition)
     {
-        DigDepthSystem.Instance?.SetAuthoritativeDepth(depth);
+        EnsureRuntimeState();
+        bool changed = kinematics.SetAuthoritativePositionMillimetres(
+            Mathf.RoundToInt(worldPosition.x * 1000f),
+            Mathf.RoundToInt(worldPosition.y * 1000f));
+        committedRollOffset = Vector2.zero;
+        rollMotion = new CombatRollMotion(
+            CombatRules.PrototypeOne,
+            PlayerKinematicsRules.MilestoneOne.ArenaHalfWidthMillimetres,
+            PlayerKinematicsRules.MilestoneOne.ArenaHalfHeightMillimetres,
+            PlayerKinematicsRules.MilestoneOne.CollisionRadiusMillimetres);
+
+        Vector2 authorized = AuthoritativeWorldPosition;
+        transform.position = new Vector3(authorized.x, authorized.y, transform.position.z);
+        if (body != null)
+        {
+            body.position = authorized;
+            body.linearVelocity = Vector2.zero;
+        }
+
+        return changed;
     }
 
     internal Vector2 CurrentMoveInput => moveInput;
@@ -232,6 +251,17 @@ public sealed class TopDownPlayerController : MonoBehaviour
         if (!stepped)
         {
             return;
+        }
+
+        SandboxDungeonController dungeon = SandboxDungeonController.Instance;
+        if (dungeon != null && dungeon.IsInsideDungeon && dungeon.Layout != null)
+        {
+            Vector2 current = AuthoritativeWorldPosition;
+            Vector2 confined = dungeon.ConfineWorldPosition(current);
+            if ((confined - current).sqrMagnitude > 0.0000001f)
+            {
+                SetAuthoritativeWorldPosition(confined);
+            }
         }
 
         // PlayerKinematics/CombatRollMotion are the sole movement authority. Rigidbody2D only

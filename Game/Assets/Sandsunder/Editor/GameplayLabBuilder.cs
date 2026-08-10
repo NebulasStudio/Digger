@@ -41,14 +41,28 @@ public static class GameplayLabBuilder
         SandboxArtSet art = SandboxArtAssetFactory.LoadOrCreate();
         GameObject depthSystem = new(nameof(DigDepthSystem));
         DigDepthSystem depthAuthority = depthSystem.AddComponent<DigDepthSystem>();
-        CreateArena(squareSprite, art);
+        Transform surfaceWorld = new GameObject("SurfaceWorldRoot").transform;
+        GameObject tunnelSystemObject = new(nameof(PrototypeTunnelSystem));
+        PrototypeTunnelSystem tunnelSystem = tunnelSystemObject.AddComponent<PrototypeTunnelSystem>();
+        GameObject dungeonSystemObject = new(nameof(SandboxDungeonController));
+        SandboxDungeonController dungeonController = dungeonSystemObject.AddComponent<SandboxDungeonController>();
+        dungeonController.Configure(depthAuthority, tunnelSystem);
+        dungeonController.ConfigureArt(art.RuinTile, art.RuinTile, art.DungeonEntrance, art.RunedChest ?? art.Relic);
+
+        CreateArena(squareSprite, art, surfaceWorld);
         GameObject player = CreatePlayer(squareSprite, art);
         player.GetComponent<SubterraneanOxygenController>().ConfigureDepthSource(depthAuthority);
         PrototypePlayerCombat playerCombat = player.GetComponent<PrototypePlayerCombat>();
-        CreateCombatActors(squareSprite, art, playerCombat);
-        CreateDigNodes(squareSprite, art);
-        CreateWorldDressing(art);
-        CreateInteractiveObjects(art);
+        CreateCombatActors(squareSprite, art, playerCombat, surfaceWorld);
+        CreateDigNodes(squareSprite, art, surfaceWorld);
+        CreateWorldDressing(art, surfaceWorld);
+        CreateInteractiveObjects(art, surfaceWorld);
+
+        GameObject digTerrainObject = new(nameof(DigTerrainView));
+        digTerrainObject.transform.SetParent(surfaceWorld, false);
+        DigTerrainView digTerrain = digTerrainObject.AddComponent<DigTerrainView>();
+        digTerrain.SetStageSprites(art.DigIntact, art.DigCracked, art.DigOpened);
+        digTerrain.SetDungeonEntranceSprite(art.DungeonEntrance);
         TopDownPlayerController playerController = player.GetComponent<TopDownPlayerController>();
         Camera gameplayCamera = CreateCamera(player.transform, playerController, profile);
 
@@ -114,16 +128,14 @@ public static class GameplayLabBuilder
         return sprite;
     }
 
-    private static void CreateArena(Sprite squareSprite, SandboxArtSet art)
+    private static void CreateArena(Sprite squareSprite, SandboxArtSet art, Transform surfaceWorld)
     {
         GameObject arena = new("Arena");
+        arena.transform.SetParent(surfaceWorld, false);
 
         // Real 1x1m Cell Ground Grid across 48x32m Arena
         GameObject cellGrid = new("SandCellGrid");
         cellGrid.transform.SetParent(arena.transform, false);
-
-        GameObject subGrid = new("SubterraneanCellGrid");
-        subGrid.transform.SetParent(arena.transform, false);
 
         Sprite[] sandVariants = { art.SandTile, art.SandFeather, art.SandFinal, art.SandRolled };
 
@@ -148,15 +160,6 @@ public static class GameplayLabBuilder
                     ? new Color(0.82f, 0.74f, 0.62f, 1f)
                     : Color.white;
 
-                // 2. Subterranean Cell Tile (Tunnels Layer -1)
-                GameObject subCell = new($"SubCell_{x}_{y}");
-                subCell.transform.SetParent(subGrid.transform, false);
-                subCell.transform.position = pos;
-
-                SpriteRenderer subSr = subCell.AddComponent<SpriteRenderer>();
-                subSr.sprite = art.RuinTile != null ? art.RuinTile : art.SandTile;
-                subSr.color = new Color(0.18f, 0.14f, 0.10f); // Dark Amber/Bronze Cavern
-                subSr.sortingOrder = -1500;
             }
         }
 
@@ -225,11 +228,16 @@ public static class GameplayLabBuilder
         return player;
     }
 
-    private static void CreateCombatActors(Sprite squareSprite, SandboxArtSet art, PrototypePlayerCombat target)
+    private static void CreateCombatActors(
+        Sprite squareSprite,
+        SandboxArtSet art,
+        PrototypePlayerCombat target,
+        Transform surfaceWorld)
     {
         Vector2[] positions = { new(2.2f, 1.0f) };
 
         GameObject enemies = new("Dune Spitters");
+        enemies.transform.SetParent(surfaceWorld, false);
         for (int index = 0; index < positions.Length; index++)
         {
             GameObject spitter = new($"Dune Spitter {index + 1}");
@@ -256,9 +264,10 @@ public static class GameplayLabBuilder
         }
     }
 
-    private static void CreateDigNodes(Sprite squareSprite, SandboxArtSet art)
+    private static void CreateDigNodes(Sprite squareSprite, SandboxArtSet art, Transform surfaceWorld)
     {
         GameObject digRoot = new("Dig Nodes");
+        digRoot.transform.SetParent(surfaceWorld, false);
         PrototypeDigGridAuthority authority = digRoot.AddComponent<PrototypeDigGridAuthority>();
         Vector2[] positions =
         {
@@ -285,9 +294,10 @@ public static class GameplayLabBuilder
         }
     }
 
-    private static void CreateWorldDressing(SandboxArtSet art)
+    private static void CreateWorldDressing(SandboxArtSet art, Transform surfaceWorld)
     {
         GameObject dressing = new("Desert Dressing");
+        dressing.transform.SetParent(surfaceWorld, false);
         Vector2[] tufts =
         {
             new(-7.7f, 4.8f), new(-7.9f, 0.9f), new(-7.55f, -2.3f),
@@ -371,9 +381,10 @@ public static class GameplayLabBuilder
         }
     }
 
-    private static void CreateInteractiveObjects(SandboxArtSet art)
+    private static void CreateInteractiveObjects(SandboxArtSet art, Transform surfaceWorld)
     {
         GameObject interactiveRoot = new("Interactive Objects");
+        interactiveRoot.transform.SetParent(surfaceWorld, false);
 
         // Destructible Vases
         GameObject vasesRoot = new("Destructible Vases");
@@ -394,20 +405,14 @@ public static class GameplayLabBuilder
             vaseObj.AddComponent<PrototypeDestructibleVase>();
         }
 
-        // Ruin Doors
-        GameObject doorsRoot = new("Ruin Doors");
-        doorsRoot.transform.SetParent(interactiveRoot.transform, false);
-        GameObject door1 = new("Ruin Door Sanctuary");
-        door1.transform.SetParent(doorsRoot.transform, false);
-        door1.transform.position = new Vector3(0f, 3.5f, 0f);
-        door1.AddComponent<PrototypeDesertRuinDoor>();
-
         // Interactive Weapon Pickups placed right in front of player spawn
         GameObject weaponsRoot = new("Ground Pickups");
         weaponsRoot.transform.SetParent(interactiveRoot.transform, false);
 
-        PrototypePickup.Spawn(new Vector2(-1.5f, 0.6f), 101, "weapon.scimitar");
-        PrototypePickup.Spawn(new Vector2(-0.5f, 0.6f), 102, "weapon.rifle");
+        PrototypePickup scimitar = PrototypePickup.Spawn(new Vector2(-1.5f, 0.6f), 101, "weapon.scimitar");
+        PrototypePickup rifle = PrototypePickup.Spawn(new Vector2(-0.5f, 0.6f), 102, "weapon.rifle");
+        scimitar.transform.SetParent(weaponsRoot.transform, worldPositionStays: true);
+        rifle.transform.SetParent(weaponsRoot.transform, worldPositionStays: true);
         // The focused sandbox exposes only the starter shovel, scimitar and brass rifle.
 
     }

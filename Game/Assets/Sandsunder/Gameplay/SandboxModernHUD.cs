@@ -17,18 +17,24 @@ namespace Sandsunder.Gameplay
     {
         private static readonly Color Gold = new(0.84f, 0.70f, 0.21f, 1f);
         private static readonly Color Red = new(0.78f, 0.12f, 0.10f, 1f);
+        private static readonly Color Orange = new(1f, 0.50f, 0.08f, 1f);
         private static readonly Color Cyan = new(0f, 0.94f, 0.90f, 1f);
         private static readonly Color Ink = new(0.055f, 0.06f, 0.075f, 0.96f);
         private static readonly Color SlotIdle = new(0.12f, 0.13f, 0.16f, 0.98f);
         private static readonly Color SlotSelected = new(0.56f, 0.42f, 0.12f, 1f);
 
         private readonly List<SlotView> hotbarSlots = new();
+        private readonly List<SlotView> inventoryHotbarSlots = new();
         private readonly List<SlotView> inventorySlots = new();
         private PrototypeInventoryHUD inventory;
+        private TopDownPlayerController playerController;
         private PrototypeHealth playerHealth;
         private IPlayerOxygenProvider oxygenProvider;
         private Image healthFill;
         private Text healthLabel;
+        private Image staminaFill;
+        private Text staminaLabel;
+        private RectTransform staminaFrame;
         private Image oxygenFill;
         private Text oxygenLabel;
         private RectTransform oxygenFrame;
@@ -36,6 +42,9 @@ namespace Sandsunder.Gameplay
         private RectTransform digProgressRoot;
         private Image digProgressFill;
         private Text actionHintLabel;
+        private RectTransform dungeonObjectiveBanner;
+        private Text dungeonObjectiveLabel;
+        private SandboxDungeonController dungeonController;
         private PrototypePlayerCombat playerCombat;
         private SandboxInteractionController interactionController;
         private Text itemName;
@@ -47,6 +56,7 @@ namespace Sandsunder.Gameplay
         private GridLayoutGroup inventoryGrid;
         private int inspectedIndex;
         private float nextProviderSearchTime;
+        private SandboxHudOxygenWarning oxygenWarning;
 
         private sealed class SlotView
         {
@@ -62,9 +72,19 @@ namespace Sandsunder.Gameplay
         public GameObject InventoryRoot { get; private set; }
         public TabInventoryController InventoryController { get; private set; }
         public int HotbarSlotCount => hotbarSlots.Count;
+        public int InventoryHotbarSlotCount => inventoryHotbarSlots.Count;
         public int InventorySlotCount => inventorySlots.Count;
+        public float DisplayedHealthRatio => healthFill != null ? healthFill.rectTransform.anchorMax.x : 0f;
+        public float DisplayedStaminaRatio => staminaFill != null ? staminaFill.rectTransform.anchorMax.x : 0f;
         public float DisplayedOxygenRatio => oxygenFill != null ? oxygenFill.rectTransform.anchorMax.x : 0f;
+        public bool IsStaminaVisible => staminaFrame != null && staminaFrame.gameObject.activeSelf;
         public bool IsOxygenVisible => oxygenFrame != null && oxygenFrame.gameObject.activeSelf;
+        public SandboxHudOxygenWarning OxygenWarning => oxygenWarning;
+        public string OxygenLabelText => oxygenLabel != null ? oxygenLabel.text : string.Empty;
+        public string StaminaLabelText => staminaLabel != null ? staminaLabel.text : string.Empty;
+        public bool IsDungeonObjectiveVisible => dungeonObjectiveBanner != null && dungeonObjectiveBanner.gameObject.activeSelf;
+        public string DungeonObjectiveText => dungeonObjectiveLabel != null ? dungeonObjectiveLabel.text : string.Empty;
+        public bool IsDropActionVisible => false;
         public bool IsDigProgressVisible => digProgressRoot != null && digProgressRoot.gameObject.activeSelf;
         public string DepthLabelText => depthLabel != null ? depthLabel.text : string.Empty;
         public string ActionHintText => actionHintLabel != null ? actionHintLabel.text : string.Empty;
@@ -114,7 +134,14 @@ namespace Sandsunder.Gameplay
         private void OnDestroy()
         {
             UnsubscribeInventory();
-            BindOxygenProvider(null);
+            if (oxygenProvider != null) oxygenProvider.OxygenChanged -= OnOxygenChanged;
+            if (dungeonController != null)
+            {
+                dungeonController.DungeonStateChanged -= OnDungeonStateChanged;
+                dungeonController.MatchGoldChanged -= OnMatchGoldChanged;
+            }
+            oxygenProvider = null;
+            dungeonController = null;
             if (Instance == this) Instance = null;
         }
 
@@ -124,15 +151,47 @@ namespace Sandsunder.Gameplay
             RefreshContextState();
             ResizeInventoryCells();
 
-            if (oxygenProvider == null && Time.unscaledTime >= nextProviderSearchTime)
+            if ((oxygenProvider == null || dungeonController == null) && Time.unscaledTime >= nextProviderSearchTime)
             {
                 nextProviderSearchTime = Time.unscaledTime + 1f;
-                TryDiscoverOxygenProvider();
+                if (oxygenProvider == null) TryDiscoverOxygenProvider();
+                if (dungeonController == null) TryDiscoverDungeonController();
             }
+        }
+
+        /// <summary>Explicit test/scene binding; the HUD remains a read-only projection.</summary>
+        public void BindPlayerController(TopDownPlayerController controller)
+        {
+            if (HudCanvas == null) EnsureInitialized();
+            playerController = controller;
+            playerHealth = controller != null ? controller.GetComponent<PrototypeHealth>() : null;
+            playerCombat = controller != null ? controller.GetComponent<PrototypePlayerCombat>() : null;
+            interactionController = controller != null ? controller.GetComponent<SandboxInteractionController>() : null;
+            RefreshPlayerStatus();
+            RefreshContextState();
+        }
+
+        public void BindDungeonController(SandboxDungeonController controller)
+        {
+            if (HudCanvas == null) EnsureInitialized();
+            if (ReferenceEquals(dungeonController, controller)) return;
+            if (dungeonController != null)
+            {
+                dungeonController.DungeonStateChanged -= OnDungeonStateChanged;
+                dungeonController.MatchGoldChanged -= OnMatchGoldChanged;
+            }
+            dungeonController = controller;
+            if (dungeonController != null)
+            {
+                dungeonController.DungeonStateChanged += OnDungeonStateChanged;
+                dungeonController.MatchGoldChanged += OnMatchGoldChanged;
+            }
+            RefreshDungeonObjective();
         }
 
         public void BindOxygenProvider(IPlayerOxygenProvider provider)
         {
+            if (HudCanvas == null) EnsureInitialized();
             if (ReferenceEquals(oxygenProvider, provider)) return;
             if (oxygenProvider != null) oxygenProvider.OxygenChanged -= OnOxygenChanged;
             oxygenProvider = provider;
@@ -144,8 +203,10 @@ namespace Sandsunder.Gameplay
             }
             else
             {
+                oxygenWarning = SandboxHudOxygenWarning.None;
                 SetBar(oxygenFill, oxygenLabel, 0f, 0f, "O2  --");
                 if (oxygenFrame != null) oxygenFrame.gameObject.SetActive(false);
+                RefreshDungeonObjective();
             }
         }
 
@@ -173,6 +234,7 @@ namespace Sandsunder.Gameplay
             scaler.referencePixelsPerUnit = 32f;
 
             BuildStatusPanel(canvasObject.transform);
+            BuildDungeonObjectiveBanner(canvasObject.transform);
             BuildHotbar(canvasObject.transform);
             BuildContextPanel(canvasObject.transform);
             BuildInventoryModal(canvasObject.transform);
@@ -181,15 +243,25 @@ namespace Sandsunder.Gameplay
         private void BuildStatusPanel(Transform parent)
         {
             RectTransform panel = CreatePanel(parent, "PlayerStatus", new Vector2(0f, 1f), new Vector2(0f, 1f),
-                new Vector2(20f, -20f), new Vector2(330f, 112f), new Vector2(0f, 1f));
+                new Vector2(20f, -20f), new Vector2(330f, 144f), new Vector2(0f, 1f));
             CreateLabel(panel, "NomadLabel", "NOMAD", 15, TextAnchor.MiddleLeft, Gold,
                 new Vector2(12, -8), new Vector2(-24, 22), new Vector2(0, 1), new Vector2(1, 1), new Vector2(0, 1));
             depthLabel = CreateLabel(panel, "DepthLabel", "SURFACE  /  L0", 12, TextAnchor.MiddleRight, Cyan,
                 new Vector2(12, -8), new Vector2(-24, 22), new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 1));
             CreateStatusBar(panel, "Health", "HP", Red, new Vector2(12, -38), out healthFill, out healthLabel);
-            CreateStatusBar(panel, "Oxygen", "O2", Cyan, new Vector2(12, -70), out oxygenFill, out oxygenLabel);
+            staminaFrame = CreateStatusBar(panel, "Stamina", "STAMINA", Gold, new Vector2(12, -70), out staminaFill, out staminaLabel);
+            CreateStatusBar(panel, "Oxygen", "O2", Cyan, new Vector2(12, -102), out oxygenFill, out oxygenLabel);
             oxygenFrame = oxygenFill != null ? oxygenFill.transform.parent.parent as RectTransform : null;
             if (oxygenFrame != null) oxygenFrame.gameObject.SetActive(false);
+        }
+
+        private void BuildDungeonObjectiveBanner(Transform parent)
+        {
+            dungeonObjectiveBanner = CreatePanel(parent, "DungeonObjectiveBanner", new Vector2(.5f, 1f), new Vector2(.5f, 1f),
+                new Vector2(0f, -20f), new Vector2(510f, 46f), new Vector2(.5f, 1f));
+            dungeonObjectiveLabel = CreateLabel(dungeonObjectiveBanner, "DungeonObjective", "DUNGEON L-1  |  OBJECTIVE: LOCATE THE RELIC CHEST",
+                14, TextAnchor.MiddleCenter, Cyan, Vector2.zero, Vector2.zero, Vector2.zero, Vector2.one, new Vector2(.5f, .5f));
+            dungeonObjectiveBanner.gameObject.SetActive(false);
         }
 
         private void BuildHotbar(Transform parent)
@@ -288,14 +360,48 @@ namespace Sandsunder.Gameplay
 
         private Button BuildInventoryGrid(RectTransform panel)
         {
-            CreateLabel(panel, "BackpackTitle", $"BACKPACK  {PrototypeInventoryHUD.BackpackCapacity} SLOTS", 15,
+            CreateLabel(panel, "HotbarTitle", $"HOTBAR  {PrototypeInventoryHUD.HotbarCapacity} SLOTS", 15,
                 TextAnchor.MiddleLeft, Gold, new Vector2(10, -8), new Vector2(-20, 26),
+                new Vector2(0, 1), new Vector2(1, 1), new Vector2(0, 1));
+
+            GameObject hotbarObject = new("InventoryHotbar", typeof(RectTransform), typeof(GridLayoutGroup));
+            hotbarObject.transform.SetParent(panel, false);
+            RectTransform hotbarRect = hotbarObject.GetComponent<RectTransform>();
+            hotbarRect.anchorMin = new Vector2(0f, 1f);
+            hotbarRect.anchorMax = new Vector2(1f, 1f);
+            hotbarRect.pivot = new Vector2(.5f, 1f);
+            hotbarRect.anchoredPosition = new Vector2(0f, -42f);
+            hotbarRect.sizeDelta = new Vector2(-20f, 58f);
+            GridLayoutGroup hotbarGrid = hotbarObject.GetComponent<GridLayoutGroup>();
+            hotbarGrid.cellSize = new Vector2(50f, 50f);
+            hotbarGrid.spacing = new Vector2(7f, 0f);
+            hotbarGrid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            hotbarGrid.constraintCount = PrototypeInventoryHUD.HotbarCapacity;
+            hotbarGrid.childAlignment = TextAnchor.UpperCenter;
+
+            Button first = null;
+            for (int index = 0; index < PrototypeInventoryHUD.HotbarCapacity; index++)
+            {
+                int captured = index;
+                SlotView slot = CreateSlot(hotbarRect, index, Vector2.zero, new Vector2(50f, 50f), (index + 1).ToString(), layoutDriven: true);
+                slot.Button.onClick.AddListener(() =>
+                {
+                    inventory.SetSelectedSlot(captured);
+                    inspectedIndex = captured;
+                    ShowItem(captured);
+                });
+                inventoryHotbarSlots.Add(slot);
+                first ??= slot.Button;
+            }
+
+            CreateLabel(panel, "BackpackTitle", $"BACKPACK  {PrototypeInventoryHUD.BackpackCapacity} SLOTS", 15,
+                TextAnchor.MiddleLeft, Gold, new Vector2(10, -108), new Vector2(-20, 26),
                 new Vector2(0, 1), new Vector2(1, 1), new Vector2(0, 1));
 
             GameObject gridObject = new("InventoryGrid_15", typeof(RectTransform), typeof(GridLayoutGroup));
             gridObject.transform.SetParent(panel, false);
             RectTransform gridRect = gridObject.GetComponent<RectTransform>();
-            Stretch(gridRect, Vector2.zero, Vector2.one, new Vector2(10, 10), new Vector2(-10, -42));
+            Stretch(gridRect, Vector2.zero, Vector2.one, new Vector2(10, 10), new Vector2(-10, -142));
             inventoryGrid = gridObject.GetComponent<GridLayoutGroup>();
             inventoryGrid.cellSize = new Vector2(58, 58);
             inventoryGrid.spacing = new Vector2(8, 8);
@@ -303,7 +409,6 @@ namespace Sandsunder.Gameplay
             inventoryGrid.constraintCount = 5;
             inventoryGrid.childAlignment = TextAnchor.UpperCenter;
 
-            Button first = null;
             for (int visible = 0; visible < PrototypeInventoryHUD.BackpackCapacity; visible++)
             {
                 int itemIndex = PrototypeInventoryHUD.HotbarCapacity + visible;
@@ -366,6 +471,13 @@ namespace Sandsunder.Gameplay
                 slot.Icon.enabled = !string.IsNullOrEmpty(itemId);
                 slot.Background.color = slot.Index == inventory.SelectedIndex ? SlotSelected : SlotIdle;
             }
+            foreach (SlotView slot in inventoryHotbarSlots)
+            {
+                string itemId = inventory.GetItemAt(slot.Index);
+                slot.Icon.sprite = SandboxHudSpriteLibrary.GetItemSprite(itemId);
+                slot.Icon.enabled = !string.IsNullOrEmpty(itemId);
+                slot.Background.color = slot.Index == inventory.SelectedIndex ? SlotSelected : SlotIdle;
+            }
         }
 
         private void RefreshInventory()
@@ -399,15 +511,10 @@ namespace Sandsunder.Gameplay
 
         private void RefreshPlayerStatus()
         {
-            if (playerHealth == null)
+            if (playerController == null)
             {
                 TopDownPlayerController player = FindFirstObjectByType<TopDownPlayerController>();
-                if (player != null)
-                {
-                    playerHealth = player.GetComponent<PrototypeHealth>();
-                    playerCombat = player.GetComponent<PrototypePlayerCombat>();
-                    interactionController = player.GetComponent<SandboxInteractionController>();
-                }
+                if (player != null) BindPlayerController(player);
             }
 
             if (playerHealth != null)
@@ -420,6 +527,23 @@ namespace Sandsunder.Gameplay
                 SetBar(healthFill, healthLabel, 0f, 0f, "HP  --");
             }
 
+            if (playerController != null)
+            {
+                SetBar(staminaFill, staminaLabel, playerController.CurrentStamina, playerController.MaxStamina,
+                    $"STAMINA  {Mathf.CeilToInt(playerController.CurrentStamina)} / {Mathf.CeilToInt(playerController.MaxStamina)}");
+                if (staminaFill != null)
+                {
+                    float ratio = playerController.MaxStamina > 0f
+                        ? Mathf.Clamp01(playerController.CurrentStamina / playerController.MaxStamina)
+                        : 0f;
+                    staminaFill.color = ratio <= .25f ? Orange : Gold;
+                }
+            }
+            else
+            {
+                SetBar(staminaFill, staminaLabel, 0f, 0f, "STAMINA  --");
+            }
+
             if (oxygenProvider != null)
             {
                 OnOxygenChanged(oxygenProvider.CurrentOxygen, oxygenProvider.MaximumOxygen);
@@ -430,6 +554,8 @@ namespace Sandsunder.Gameplay
                     depthLabel.color = oxygenProvider.IsSubterranean ? Cyan : Gold;
                 }
             }
+
+            RefreshDungeonObjective();
         }
 
         private void RefreshContextState()
@@ -472,7 +598,8 @@ namespace Sandsunder.Gameplay
                 return;
             }
 
-            bool underground = oxygenProvider != null && oxygenProvider.IsSubterranean;
+            bool underground = (oxygenProvider != null && oxygenProvider.IsSubterranean)
+                || (dungeonController != null && dungeonController.IsInsideDungeon);
             actionHintLabel.text = underground
                 ? "DUNGEON L-1   |   E  INTERACT / USE   |   TAB  INVENTORY"
                 : "HOLD RMB / A  DIG   |   E  INTERACT / USE   |   TAB  INVENTORY";
@@ -492,19 +619,79 @@ namespace Sandsunder.Gameplay
             }
         }
 
+        private void TryDiscoverDungeonController()
+        {
+            BindDungeonController(SandboxDungeonController.Instance ?? FindFirstObjectByType<SandboxDungeonController>());
+        }
+
+        private void OnDungeonStateChanged(bool isInside)
+        {
+            RefreshDungeonObjective();
+            RefreshContextState();
+        }
+
+        private void OnMatchGoldChanged(int matchGold)
+        {
+            RefreshDungeonObjective();
+        }
+
+        private void RefreshDungeonObjective()
+        {
+            bool underground = (dungeonController != null && dungeonController.IsInsideDungeon)
+                || (oxygenProvider != null && oxygenProvider.IsSubterranean);
+            if (dungeonObjectiveBanner != null) dungeonObjectiveBanner.gameObject.SetActive(underground);
+            if (dungeonObjectiveLabel != null)
+            {
+                bool chestClaimed = dungeonController?.Runtime?.IsFinalChestClaimed == true;
+                int matchGold = dungeonController?.MatchGold ?? 0;
+                dungeonObjectiveLabel.text = chestClaimed
+                    ? $"CHEST SECURED  |  GOLD {matchGold}  |  RETURN TO THE EXIT"
+                    : $"DUNGEON L-1  |  OBJECTIVE: LOCATE THE RELIC CHEST  |  GOLD {matchGold}";
+            }
+            if (depthLabel != null)
+            {
+                depthLabel.text = underground ? "DUNGEON  /  L-1" : "SURFACE  /  L0";
+                depthLabel.color = underground ? Cyan : Gold;
+            }
+        }
+
         private void OnOxygenChanged(float current, float maximum)
         {
-            string label = maximum > 0f ? $"O2  {Mathf.CeilToInt(current)} / {Mathf.CeilToInt(maximum)}" : "O2  --";
+            bool underground = oxygenProvider != null && oxygenProvider.IsSubterranean;
+            float ratio = maximum > 0f ? Mathf.Clamp01(current / maximum) : 0f;
+            oxygenWarning = !underground || maximum <= 0f
+                ? SandboxHudOxygenWarning.None
+                : ratio <= .10f
+                    ? SandboxHudOxygenWarning.Critical
+                    : ratio <= .25f
+                        ? SandboxHudOxygenWarning.Low
+                        : SandboxHudOxygenWarning.None;
+            string warning = oxygenWarning switch
+            {
+                SandboxHudOxygenWarning.Critical => "CRITICAL  ",
+                SandboxHudOxygenWarning.Low => "LOW  ",
+                _ => string.Empty
+            };
+            string label = maximum > 0f
+                ? $"O2  {warning}{Mathf.CeilToInt(current)} / {Mathf.CeilToInt(maximum)}"
+                : "O2  --";
             SetBar(oxygenFill, oxygenLabel, current, maximum, label);
+            if (oxygenFrame != null) oxygenFrame.gameObject.SetActive(underground);
             if (oxygenFill != null)
             {
-                float ratio = maximum > 0f ? Mathf.Clamp01(current / maximum) : 0f;
                 oxygenFill.color = ratio <= .10f
                     ? Red
                     : ratio <= .25f
-                        ? new Color(1f, .50f, .08f, 1f)
+                        ? Orange
                         : Cyan;
             }
+            if (oxygenLabel != null)
+            {
+                oxygenLabel.color = oxygenWarning == SandboxHudOxygenWarning.Critical
+                    ? Color.white
+                    : oxygenWarning == SandboxHudOxygenWarning.Low ? new Color(1f, .95f, .82f) : Color.white;
+            }
+            RefreshDungeonObjective();
         }
 
         private void ResizeInventoryCells()
